@@ -5,7 +5,7 @@ import com.xorker.xpr.user.UserId
 interface RefreshTokenRepository {
     fun getUserIdOrThrow(refreshToken: String): UserId
 
-    fun saveRefreshToken(userId: UserId, refreshToken: String)
+    fun createRefreshToken(userId: UserId): String
 
     fun deleteRefreshToken(userId: UserId)
 }

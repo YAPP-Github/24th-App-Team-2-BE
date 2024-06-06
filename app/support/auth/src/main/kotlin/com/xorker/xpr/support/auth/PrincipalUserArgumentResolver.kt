@@ -1,5 +1,6 @@
 package com.xorker.xpr.support.auth
 
+import com.xorker.xpr.user.UserId
 import org.springframework.core.MethodParameter
 import org.springframework.lang.Nullable
 import org.springframework.security.core.context.SecurityContextHolder
@@ -20,10 +21,10 @@ internal class PrincipalUserArgumentResolver : HandlerMethodArgumentResolver {
         @Nullable mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         @Nullable binderFactory: WebDataBinderFactory?,
-    ): PrincipalUser? {
+    ): PrincipalUser {
         val principal = SecurityContextHolder.getContext()
             .authentication
-            .principal
-        return null
+            .principal as Long
+        return PrincipalUser(UserId(principal))
     }
 }

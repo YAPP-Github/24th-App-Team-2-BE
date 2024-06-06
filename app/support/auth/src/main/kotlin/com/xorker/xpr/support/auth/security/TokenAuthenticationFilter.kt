@@ -16,7 +16,7 @@ internal class TokenAuthenticationFilter(
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         val accessToken = getAccessToken(request)
         if (accessToken != null) {
@@ -41,7 +41,6 @@ internal class TokenAuthenticationFilter(
         val securityContext = SecurityContextHolder.getContext()
         securityContext.authentication = authentication
     }
-
 
     companion object {
         private const val HEADER_AUTHORIZATION = "Authorization"

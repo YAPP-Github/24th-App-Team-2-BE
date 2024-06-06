@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
     id("org.springframework.boot")
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
 
 repositories {
@@ -14,7 +15,7 @@ dependencies {
 subprojects {
     apply(plugin = "kotlin")
     apply(plugin = "kotlin-kapt")
-//    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
     repositories {
         mavenCentral()

@@ -9,5 +9,5 @@ data class AuthTokenResponse(
 
 fun Token.toResponse(): AuthTokenResponse = AuthTokenResponse(
     accessToken = this.accessToken,
-    refreshToken = this.refreshToken
+    refreshToken = this.refreshToken,
 )

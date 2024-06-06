@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class AuthController(
-    private val authUserCase: AuthUseCase
+    private val authUserCase: AuthUseCase,
 ) {
     @PostMapping("/api/v1/auth/signin")
     fun signIn(@RequestBody request: AuthSignInRequest): AuthTokenResponse {

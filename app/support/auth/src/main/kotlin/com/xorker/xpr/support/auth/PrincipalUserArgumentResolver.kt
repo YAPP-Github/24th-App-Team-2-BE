@@ -19,7 +19,7 @@ internal class PrincipalUserArgumentResolver : HandlerMethodArgumentResolver {
         parameter: MethodParameter,
         @Nullable mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        @Nullable binderFactory: WebDataBinderFactory?
+        @Nullable binderFactory: WebDataBinderFactory?,
     ): PrincipalUser? {
         val principal = SecurityContextHolder.getContext()
             .authentication

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerExceptionResolver
 
 @Component
-class SecurityExceptionHandler(
+internal class SecurityExceptionHandler(
     @Qualifier("handlerExceptionResolver") private val handler: HandlerExceptionResolver,
 ) : AuthenticationEntryPoint, AccessDeniedHandler {
     override fun commence(

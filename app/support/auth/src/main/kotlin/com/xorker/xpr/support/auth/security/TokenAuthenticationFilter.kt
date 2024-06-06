@@ -7,8 +7,10 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
+import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
+@Component
 internal class TokenAuthenticationFilter(
     private val tokenUseCase: TokenUseCase,
 ) : OncePerRequestFilter() {
@@ -28,7 +30,7 @@ internal class TokenAuthenticationFilter(
 
     private fun getAccessToken(request: HttpServletRequest): String? {
         val accessToken = request.getHeader(HEADER_AUTHORIZATION)
-        if (accessToken != null && accessToken.startsWith(HEADER_BEARER)) {
+        if (accessToken.isNullOrBlank() && accessToken.startsWith(HEADER_BEARER)) {
             return accessToken.substring(HEADER_BEARER.length)
         }
         return null

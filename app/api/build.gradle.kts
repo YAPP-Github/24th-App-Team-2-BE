@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     val springBootVersion by properties
+    implementation(project(":app:support:auth"))
     implementation(project(":core"))
 
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")

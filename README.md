@@ -7,8 +7,8 @@
     </tr>
     <tr>
         <td rowspan="2">Domain</td>
-        <td>UseCase / Interactor</td>
-        <td>In Port 인터페이스 (아직 미정) </td>
+        <td>UseCase</td>
+        <td>In Port 인터페이스 </td>
     </tr>
     <tr>
         <td>Repository</td>

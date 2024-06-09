@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class AuthService(
+internal class AuthService(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
     private val accessTokenRepository: AccessTokenRepository,

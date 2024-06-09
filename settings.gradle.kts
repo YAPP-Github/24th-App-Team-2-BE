@@ -15,6 +15,7 @@ pluginManagement {
 include(
     "adapter:rdb",
     "app:api",
+    "app:support:auth",
     "domain",
     "core",
 )

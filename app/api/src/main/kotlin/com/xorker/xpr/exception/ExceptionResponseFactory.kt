@@ -20,9 +20,8 @@ class ExceptionResponseFactory(
         val title = messageSource.getMessage("exception.${ex.code}.title", null, locale)
         val description = messageSource.getMessage("exception.${ex.code}.description", null, locale)
             ?: messageSource.getMessage("exception.default.description", null, locale)
-
-        // TODO Button
-        val responseBody = ExceptionResponse(ex.code, title, description)
+        val buttons = ex.getButtons().map { it.toResponse(messageSource, locale) }
+        val responseBody = ExceptionResponse(ex.code, title, description, buttons)
 
         return ResponseEntity
             .status(status)

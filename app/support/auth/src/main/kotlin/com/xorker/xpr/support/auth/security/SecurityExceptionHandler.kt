@@ -21,7 +21,7 @@ internal class SecurityExceptionHandler(
         response: HttpServletResponse,
         authenticationException: AuthenticationException,
     ) {
-        handler.resolveException(request, response, null, authenticationException)
+        handler.resolveException(request, response, null, UnAuthenticationException)
     }
 
     override fun handle(
@@ -29,6 +29,6 @@ internal class SecurityExceptionHandler(
         response: HttpServletResponse,
         accessDeniedException: AccessDeniedException,
     ) {
-        handler.resolveException(request, response, null, accessDeniedException)
+        handler.resolveException(request, response, null, UnAuthorizedException)
     }
 }

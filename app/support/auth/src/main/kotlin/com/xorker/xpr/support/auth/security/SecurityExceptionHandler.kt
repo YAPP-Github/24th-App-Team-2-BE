@@ -1,5 +1,7 @@
 package com.xorker.xpr.support.auth.security
 
+import com.xorker.xpr.exception.UnAuthenticationException
+import com.xorker.xpr.exception.UnAuthorizedException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Qualifier

@@ -13,6 +13,7 @@ pluginManagement {
 }
 
 include(
+    "adapter:oidc",
     "adapter:rdb",
     "app:api",
     "app:support:auth",

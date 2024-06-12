@@ -29,6 +29,7 @@ enum class ExceptionButtonType(
     }
 }
 
+private val buttonOk = listOf(ExceptionButtonType.OK)
 private val buttonOkCancel = listOf(ExceptionButtonType.OK, ExceptionButtonType.CANCEL)
 private val buttonOkClose = listOf(ExceptionButtonType.OK, ExceptionButtonType.CLOSE)
 
@@ -41,5 +42,10 @@ fun XprException.getButtons(): List<ExceptionButtonType> {
         UnAuthenticationException,
         is UnknownException,
         -> buttonOkCancel
+
+        NotFoundUserException,
+        OAuthFailureException,
+        InvalidUserStatusException,
+        -> buttonOk
     }
 }

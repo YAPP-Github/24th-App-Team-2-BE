@@ -13,10 +13,13 @@ data object InvalidRequestValueException : ClientException("c001", "Request 값 
 
 //region Server
 sealed class ServerException(code: String, message: String, cause: Throwable? = null) : XprException(code, message, cause)
+
+data object NotFoundUserException : ClientException("s001", "유저가 존재하지 않음") { private fun readResolve(): Any = UnAuthorizedException }
 //endregion
 
 //region Critical
 sealed class CriticalException(code: String, message: String, cause: Throwable? = null) : XprException(code, message, cause)
 
 class UnknownException(cause: Throwable) : CriticalException("crt001", "정의하지 못한 예외", cause)
+data object InvalidUserStatusException : CriticalException("crt002", "유효하지 않는 상태를 가진 유저를 조회함") { private fun readResolve(): Any = UnAuthorizedException }
 //endregion

@@ -8,6 +8,7 @@ dependencies {
     val springBootVersion by properties
     implementation(project(":app:support:auth"))
     implementation(project(":core"))
+    implementation(project(":support:yaml"))
 
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation:$springBootVersion")

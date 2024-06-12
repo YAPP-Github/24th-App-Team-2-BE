@@ -18,4 +18,5 @@ include(
     "app:support:auth",
     "domain",
     "core",
+    "support:yaml",
 )

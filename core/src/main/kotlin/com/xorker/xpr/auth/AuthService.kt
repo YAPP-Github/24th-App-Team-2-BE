@@ -3,6 +3,7 @@ package com.xorker.xpr.auth
 import com.xorker.xpr.auth.token.AccessTokenRepository
 import com.xorker.xpr.auth.token.RefreshTokenRepository
 import com.xorker.xpr.auth.token.Token
+import com.xorker.xpr.user.User
 import com.xorker.xpr.user.UserId
 import com.xorker.xpr.user.UserRepository
 import org.springframework.stereotype.Service
@@ -16,9 +17,11 @@ internal class AuthService(
     private val refreshTokenRepository: RefreshTokenRepository,
 ) : AuthUseCase {
 
+    @Transactional
     override fun signIn(authType: AuthType, token: String): Token {
         val platformUserId = authRepository.getPlatformUserId(authType, token)
-        val user = userRepository.getOrCreateUser(authType.authPlatform, platformUserId)
+        val user = userRepository.getUser(authType.authPlatform, platformUserId) ?: createUser(authType, platformUserId)
+
         return createToken(user.id)
     }
 
@@ -31,6 +34,11 @@ internal class AuthService(
     override fun withdrawal(userId: UserId) {
         refreshTokenRepository.deleteRefreshToken(userId)
         userRepository.withdrawal(userId)
+    }
+
+    private fun createUser(authType: AuthType, platformUserId: String): User {
+        val userName = authRepository.getPlatformUserName(authType, platformUserId)
+        return userRepository.createUser(authType.authPlatform, platformUserId, userName)
     }
 
     private fun createToken(userId: UserId): Token {

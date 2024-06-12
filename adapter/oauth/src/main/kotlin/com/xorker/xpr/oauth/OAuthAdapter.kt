@@ -14,4 +14,8 @@ internal class OAuthAdapter(
             AuthType.APPLE_ID_TOKEN -> appleAuthService.getPlatformUserId(token)
         }
     }
+
+    override fun getPlatformUserName(authType: AuthType, platformUserId: String): String {
+        return ""
+    }
 }

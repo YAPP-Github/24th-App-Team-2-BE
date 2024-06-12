@@ -24,3 +24,16 @@ create table auth_user
     KEY              IDX_userid(user_id),
     KEY              IDX_platformUserId(platform_user_id)
 ) COMMENT '유저 소셜 로그인 정보';
+
+create table auth_refresh_token
+(
+    token                 binary(45) NOT NULL COMMENT 'PK, 리프래쉬 토큰 내용물 (60자)',
+    user_id               bigint   NOT NULL COMMENT 'FK - Users, 토큰 주인',
+    expired_at            datetime NOT NULL COMMENT '리프래쉬 토큰 만료 날짜',
+    created_at            datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at            datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY PK_token (token),
+    KEY                   IDX_userid(user_id),
+    KEY                   IDX_createdat(created_at),
+    KEY                   IDX_updatedat(updated_at)
+) COMMENT '발급한 Refresh Token 목록';

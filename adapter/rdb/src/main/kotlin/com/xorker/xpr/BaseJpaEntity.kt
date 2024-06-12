@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
-abstract class BaseJpaEntity {
+internal abstract class BaseJpaEntity {
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
     var createdDate: LocalDateTime = LocalDateTime.now()

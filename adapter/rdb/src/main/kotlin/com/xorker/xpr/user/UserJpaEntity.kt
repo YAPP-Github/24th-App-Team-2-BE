@@ -7,9 +7,11 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 
-@Entity(name = "users")
-class UserJpaEntity : BaseJpaEntity() {
+@Entity
+@Table(name = "users")
+internal class UserJpaEntity : BaseJpaEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "users_id", nullable = false)
@@ -30,7 +32,9 @@ class UserJpaEntity : BaseJpaEntity() {
     }
 
     companion object {
-        fun of(
+        internal fun of(id: Long): UserJpaEntity = UserJpaEntity().apply { this.id = id }
+
+        internal fun of(
             id: Long,
             name: String,
         ): UserJpaEntity = UserJpaEntity().apply {
@@ -38,7 +42,7 @@ class UserJpaEntity : BaseJpaEntity() {
             this.name = name
         }
 
-        fun from(user: User): UserJpaEntity =
+        internal fun from(user: User): UserJpaEntity =
             UserJpaEntity().apply {
                 this.id = user.id.value
                 this.name = user.name
@@ -46,7 +50,7 @@ class UserJpaEntity : BaseJpaEntity() {
     }
 }
 
-fun UserJpaEntity.toDomain(): User = User(
+internal fun UserJpaEntity.toDomain(): User = User(
     id = UserId(this.id),
     name = this.name ?: throw InvalidUserStatusException,
 )

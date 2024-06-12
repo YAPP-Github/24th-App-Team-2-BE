@@ -1,4 +1,4 @@
-package com.xorker.xpr.oidc.config
+package com.xorker.xpr.oauth.config
 
 import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.context.annotation.Configuration

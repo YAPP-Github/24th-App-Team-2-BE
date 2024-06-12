@@ -1,4 +1,4 @@
-package com.xorker.xpr.oidc.apple
+package com.xorker.xpr.oauth.apple
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DatabindException

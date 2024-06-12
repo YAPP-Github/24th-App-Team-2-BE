@@ -1,12 +1,12 @@
-package com.xorker.xpr.oidc
+package com.xorker.xpr.oauth
 
 import com.xorker.xpr.auth.AuthRepository
 import com.xorker.xpr.auth.AuthType
-import com.xorker.xpr.oidc.apple.AppleOidcHandler
+import com.xorker.xpr.oauth.apple.AppleOidcHandler
 import org.springframework.stereotype.Component
 
 @Component
-internal class OidcFacade(
+internal class OAuthAdapter(
     private val appleOidcHandler: AppleOidcHandler,
 ) : AuthRepository {
     override fun getPlatformUserId(authType: AuthType, token: String): String {

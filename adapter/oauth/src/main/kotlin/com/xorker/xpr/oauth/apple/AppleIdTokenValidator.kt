@@ -1,4 +1,4 @@
-package com.xorker.xpr.oidc.apple
+package com.xorker.xpr.oauth.apple
 
 import com.xorker.xpr.exception.UnAuthenticationException
 import io.jsonwebtoken.Claims

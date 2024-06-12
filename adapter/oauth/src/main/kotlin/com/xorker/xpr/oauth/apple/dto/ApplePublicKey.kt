@@ -1,4 +1,4 @@
-package com.xorker.xpr.oidc.apple.dto
+package com.xorker.xpr.oauth.apple.dto
 
 internal data class ApplePublicKey(
     val kty: String,

@@ -1,7 +1,7 @@
-package com.xorker.xpr.oidc.apple
+package com.xorker.xpr.oauth.apple
 
 import com.xorker.xpr.exception.UnAuthenticationException
-import com.xorker.xpr.oidc.apple.dto.ApplePublicKey
+import com.xorker.xpr.oauth.apple.dto.ApplePublicKey
 import org.springframework.stereotype.Component
 
 @Component

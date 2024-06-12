@@ -16,7 +16,7 @@ internal class RefreshTokenJpaEntity : BaseJpaEntity() {
     lateinit var token: ByteArray
         protected set
 
-    @Column(name = "users_id")
+    @Column(name = "user_id")
     var userId: Long = 0
         protected set
 

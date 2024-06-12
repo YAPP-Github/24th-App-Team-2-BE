@@ -14,7 +14,7 @@ import jakarta.persistence.Table
 internal class UserJpaEntity : BaseJpaEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "users_id", nullable = false)
+    @Column(name = "user_id", nullable = false)
     var id: Long = 0
         protected set
 

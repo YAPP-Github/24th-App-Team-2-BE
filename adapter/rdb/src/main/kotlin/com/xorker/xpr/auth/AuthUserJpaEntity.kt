@@ -26,7 +26,7 @@ internal class AuthUserJpaEntity : BaseJpaEntity() {
         protected set
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "platform")
+    @Column(name = "platform", columnDefinition = "varchar(20)")
     lateinit var platform: AuthPlatform
         protected set
 

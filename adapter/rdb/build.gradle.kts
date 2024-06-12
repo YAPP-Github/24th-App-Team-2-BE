@@ -24,7 +24,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.flywaydb:flyway-core:10.14.0")
-    implementation("org.flywaydb:flyway-mysql")
+    implementation("org.flywaydb:flyway-mysql:10.14.0")
 
 //    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
 //    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")

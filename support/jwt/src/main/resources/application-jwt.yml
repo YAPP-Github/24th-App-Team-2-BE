@@ -1,0 +1,9 @@
+---
+spring.config.activate.on-profile: local, dev
+jwt:
+    secret: ${JWT_DEV_SECRET}
+
+---
+spring.config.activate.on-profile: prod
+jwt:
+    secret: ${JWT_PROD_SECRET}

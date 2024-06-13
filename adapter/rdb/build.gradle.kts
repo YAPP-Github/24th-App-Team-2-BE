@@ -19,6 +19,7 @@ noArg {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":support:jwt"))
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:${Versions.SPRING_BOOT_VERSION}")
     runtimeOnly("mysql:mysql-connector-java:${Versions.MYSQL_VERSION}")

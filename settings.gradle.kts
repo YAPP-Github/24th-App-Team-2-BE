@@ -6,4 +6,5 @@ include(
     "domain",
     "core",
     "support:yaml",
+    "support:jwt",
 )

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -29,6 +30,7 @@ class AuthController(
                 description = "요청이 성공했습니다.",
                 content = [
                     Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = Schema(implementation = AuthTokenResponse::class),
                     ),
                 ],

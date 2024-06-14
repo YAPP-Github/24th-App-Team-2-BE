@@ -4,14 +4,11 @@ on:
     push:
         branches:
             - "sandbox"
-            - "feature/XPR-18"
 
 env:
     REGISTRY_URL: ${{ secrets.REGISTRY_URL }}
     IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
     IMAGE_TAG: ${{ github.sha }}
-    ARGO_CD_REPO: ${{ secrets.ARGO_CD_REPO }}
-    ARGO_CD_PATH: ${{ secrets.ARGO_CD_PATH }}
 
 jobs:
     test:
@@ -71,7 +68,6 @@ jobs:
                     -t $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG .
             -   name: Push Docker image
                 run: docker push $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG
-
     deploy:
         name: Deploy
         runs-on: ubuntu-latest
@@ -81,16 +77,16 @@ jobs:
             - build
         steps:
             -   name: Checkout repository
-                uses: actions/checkout@v2
+                uses: actions/checkout@v3
                 with:
-                    repository: $ARGO_CD_REPO
-                    branch: dev
+                    repository: ${{ secrets.ARGO_CD_REPO }}
+                    ref: dev
                     token: ${{ secrets.TOKEN_GITHUB }}
 
             -   name: Update YAML file
                 run: |
                     # 변경할 YAML 파일 경로
-                    yaml_file="${ARGO_CD_PATH}/values.yaml"
+                    yaml_file="${{ secrets.ARGO_CD_PATH }}/values.yaml"
                     
                     # 변경할 키와 새 값
                     key="tag"
@@ -107,7 +103,7 @@ jobs:
                 run: |
                     git config --global user.name 'github-actions[bot]'
                     git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-                    git add ${ARGO_CD_PATH}/values.yaml
+                    git add ${{ secrets.ARGO_CD_PATH }}/values.yaml
                     git commit -m "Update YAML file value"
                     git push
                 env:

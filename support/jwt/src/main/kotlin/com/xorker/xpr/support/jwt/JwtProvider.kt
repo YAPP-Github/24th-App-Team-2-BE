@@ -1,5 +1,6 @@
 package com.xorker.xpr.support.jwt
 
+import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DatabindException
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -58,6 +59,8 @@ object JwtProvider {
             val decoded = String(decoder.decode(header))
             return objectMapper.readValue(decoded, typeReference)
         } catch (e: DatabindException) {
+            return null
+        } catch (e: JsonParseException) {
             return null
         } catch (e: IndexOutOfBoundsException) {
             return null

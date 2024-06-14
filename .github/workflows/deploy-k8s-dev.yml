@@ -9,88 +9,91 @@ on:
 env:
     REGISTRY_URL: ${{ secrets.REGISTRY_URL }}
     IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
-    IMAGE_TAG: ${{ github.sha }}
+    IMAGE_TAG: 3a28e3d2c4a4fb0202afd0b6b3dd21e85df0e40c1333c00b98a09146a97203d1
     ARGO_CD_REPO: ${{ secrets.ARGO_CD_REPO }}
     ARGO_CD_PATH: ${{ secrets.ARGO_CD_PATH }}
+    GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
 jobs:
-    test:
-        name: Test
-        runs-on: ubuntu-latest
-        environment: dev
-
-        steps:
-            -   name: Checkout
-                uses: actions/checkout@v3
-
-            -   name: Set up JDK 17
-                uses: actions/setup-java@v3
-                with:
-                    java-version: '17'
-                    distribution: 'adopt'
-
-            -   name: Grant execute permission for gradlew
-                run: chmod +x gradlew
-
-            -   name: Check ktlint format
-                run: ./gradlew clean ktlintCheck
-
-            -   name: Gradle Clean & Build
-                run: ./gradlew clean build
-
-            -   name: Test with Gradle
-                run: ./gradlew test
-    build:
-        name: Build
-        runs-on: ubuntu-latest
-        environment: dev
-        outputs:
-            image: echo ${{ steps.build-image.outputs.image }}
-        steps:
-            -   name: Checkout
-                uses: actions/checkout@v3
-
-            -   name: Docker Setup QEMU
-                uses: docker/setup-qemu-action@v1.2.0
-
-            -   name: Docker Setup Buildx
-                uses: docker/setup-buildx-action@v1.6.0
-
-            -   name: Login to Docker Hub
-                uses: docker/login-action@v3
-                with:
-                    username: ${{ secrets.DOCKERHUB_USERNAME }}
-                    password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-            -   name: Build Docker image
-                run: |
-                    docker build \
-                    --platform linux/arm64 \
-                    --build-arg PHASE=${{ vars.PHASE }} \
-                    -f app/api/Dockerfile \
-                    -t $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG .
-            -   name: Push Docker image
-                run: docker push $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG
-
+#    test:
+#        name: Test
+#        runs-on: ubuntu-latest
+#        environment: dev
+#
+#        steps:
+#            -   name: Checkout
+#                uses: actions/checkout@v3
+#
+#            -   name: Set up JDK 17
+#                uses: actions/setup-java@v3
+#                with:
+#                    java-version: '17'
+#                    distribution: 'adopt'
+#
+#            -   name: Grant execute permission for gradlew
+#                run: chmod +x gradlew
+#
+#            -   name: Check ktlint format
+#                run: ./gradlew clean ktlintCheck
+#
+#            -   name: Gradle Clean & Build
+#                run: ./gradlew clean build
+#
+#            -   name: Test with Gradle
+#                run: ./gradlew test
+#    build:
+#        name: Build
+#        runs-on: ubuntu-latest
+#        environment: dev
+#        outputs:
+#            image: echo ${{ steps.build-image.outputs.image }}
+#        steps:
+#            -   name: Checkout
+#                uses: actions/checkout@v3
+#
+#            -   name: Docker Setup QEMU
+#                uses: docker/setup-qemu-action@v1.2.0
+#
+#            -   name: Docker Setup Buildx
+#                uses: docker/setup-buildx-action@v1.6.0
+#
+#            -   name: Login to Docker Hub
+#                uses: docker/login-action@v3
+#                with:
+#                    username: ${{ secrets.DOCKERHUB_USERNAME }}
+#                    password: ${{ secrets.DOCKERHUB_TOKEN }}
+#
+#            -   name: Build Docker image
+#                run: |
+#                    docker build \
+#                    --platform linux/arm64 \
+#                    --build-arg PHASE=${{ vars.PHASE }} \
+#                    -f app/api/Dockerfile \
+#                    -t $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG .
+#            -   name: Push Docker image
+#                run: docker push $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG
     deploy:
         name: Deploy
         runs-on: ubuntu-latest
         environment: dev
-        needs:
-            - test
-            - build
+#        needs:
+#            - test
+#            - build
         steps:
+            -   name: Checkout
+                uses: actions/checkout@v3
+
             -   name: Checkout repository
                 uses: actions/checkout@v2
                 with:
-                    repository: $ARGO_CD_REPO
+                    repository: ${{ secrets.ARGO_CD_REPO }}
                     branch: dev
-                    token: ${{ secrets.TOKEN_GITHUB }}
+                    token: $GITHUB_TOKEN
 
             -   name: Update YAML file
                 run: |
                     # 변경할 YAML 파일 경로
-                    yaml_file="${ARGO_CD_PATH}/values.yaml"
+                    yaml_file="$ARGO_CD_PATH/values.yaml"
                     
                     # 변경할 키와 새 값
                     key="tag"

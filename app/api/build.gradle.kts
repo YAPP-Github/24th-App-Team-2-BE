@@ -12,6 +12,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation:$springBootVersion")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0") // TODO XPR-55 Merge 후 Versions로 리팩터링 할 예정입니다.
 }
 
 tasks {

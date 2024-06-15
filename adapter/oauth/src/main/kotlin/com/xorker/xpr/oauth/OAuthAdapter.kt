@@ -7,10 +7,12 @@ import org.springframework.stereotype.Component
 
 @Component
 internal class OAuthAdapter(
+    private val googleAuthService: AppleAuthService,
     private val appleAuthService: AppleAuthService,
 ) : AuthRepository {
     override fun getPlatformUserId(authType: AuthType, token: String): String {
         return when (authType) {
+            AuthType.GOOGLE_ID_TOKEN -> googleAuthService.getPlatformUserId(token)
             AuthType.APPLE_ID_TOKEN -> appleAuthService.getPlatformUserId(token)
         }
     }

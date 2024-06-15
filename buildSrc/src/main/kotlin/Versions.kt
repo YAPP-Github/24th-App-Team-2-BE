@@ -9,4 +9,5 @@ object Versions {
     const val OPEN_FEIGN_VERSION = "4.1.0"
     const val JDK_VERSION = 17
     const val FLYWAY_VERSION = "10.14.0"
+    const val GOOGLE_API_CLIENT = "1.32.1"
 }

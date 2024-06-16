@@ -9,8 +9,8 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":support:yaml"))
 
-    implementation("org.springframework.boot:spring-boot-starter-web:${Versions.SPRING_BOOT_VERSION}")
-    implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.SPRING_BOOT_VERSION}")
+    implementation("org.springframework.boot:spring-boot-starter-web:${Versions.SPRING_BOOT}")
+    implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.SPRING_BOOT}")
 }
 
 tasks {

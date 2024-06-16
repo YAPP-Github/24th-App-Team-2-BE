@@ -21,11 +21,11 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":support:jwt"))
 
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:${Versions.SPRING_BOOT_VERSION}")
-    runtimeOnly("mysql:mysql-connector-java:${Versions.MYSQL_VERSION}")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:${Versions.SPRING_BOOT}")
+    runtimeOnly("mysql:mysql-connector-java:${Versions.MYSQL}")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.flywaydb:flyway-core:${Versions.FLYWAY_VERSION}")
-    implementation("org.flywaydb:flyway-mysql:${Versions.FLYWAY_VERSION}")
+    implementation("org.flywaydb:flyway-core:${Versions.FLYWAY}")
+    implementation("org.flywaydb:flyway-mysql:${Versions.FLYWAY}")
 //    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
 //    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
 }

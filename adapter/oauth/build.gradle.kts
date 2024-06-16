@@ -8,8 +8,8 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":support:jwt"))
 
-    implementation("org.springframework.boot:spring-boot-starter:${Versions.SPRING_BOOT_VERSION}")
-    implementation("org.springframework.cloud:spring-cloud-starter-openfeign:${Versions.OPEN_FEIGN_VERSION}")
+    implementation("org.springframework.boot:spring-boot-starter:${Versions.SPRING_BOOT}")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign:${Versions.OPEN_FEIGN}")
 }
 
 tasks {

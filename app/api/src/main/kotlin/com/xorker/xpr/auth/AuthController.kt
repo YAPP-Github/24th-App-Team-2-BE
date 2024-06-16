@@ -22,21 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(
     private val authUserCase: AuthUseCase,
 ) {
-    @Operation(
-        summary = "소셜 로그인 API",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "요청이 성공했습니다.",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = AuthTokenResponse::class),
-                    ),
-                ],
-            ),
-        ],
-    )
+    @Operation(summary = "소셜 로그인 API",)
     @PostMapping("/api/v1/auth/signin")
     fun signIn(@RequestBody request: AuthSignInRequest): AuthTokenResponse {
         val token = authUserCase.signIn(request.authType, request.token)

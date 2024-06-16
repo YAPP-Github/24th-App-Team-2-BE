@@ -30,7 +30,7 @@ internal class TokenAuthenticationFilter(
 
     private fun getAccessToken(request: HttpServletRequest): String? {
         val accessToken = request.getHeader(HEADER_AUTHORIZATION)
-        if (!accessToken.isNullOrBlank() && accessToken.startsWith(HEADER_BEARER)) {
+        if (accessToken.isNullOrBlank().not() && accessToken.startsWith(HEADER_BEARER)) {
             return accessToken.substring(HEADER_BEARER.length)
         }
         return null

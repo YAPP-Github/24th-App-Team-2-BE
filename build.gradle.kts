@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 plugins {
     kotlin("jvm")
     id("org.springframework.boot")
@@ -10,6 +12,11 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+}
+
+tasks {
+    withType<Jar> { enabled = true }
+    withType<BootJar> { enabled = false }
 }
 
 subprojects {

@@ -11,9 +11,8 @@ import org.springframework.stereotype.Component
 @Component
 internal class ApplePublicKeyGenerator(
     private val httpClient: AppleFeignClient,
+    private val jwtProvider: JwtProvider,
 ) {
-    private val jwtProvider = JwtProvider
-
     internal fun generatePublicKey(token: String): SignatureKey {
         val applePublicKeys = getApplePublicKeys()
 

@@ -7,9 +7,10 @@ import java.time.LocalDateTime
 import org.springframework.stereotype.Component
 
 @Component
-internal class AccessTokenAdapter : AccessTokenQueryRepository, AccessTokenCommandRepository {
-    private val jwtProvider = JwtProvider
-
+internal class AccessTokenAdapter(
+    private val jwtProvider: JwtProvider,
+    private val jwtSecretKey: JwtSecretKey,
+) : AccessTokenQueryRepository, AccessTokenCommandRepository {
     override fun getUserIdOrThrow(accessToken: String): UserId {
         return UserId(0L) // TODO 추후 메서드 필요 시 변경
     }
@@ -19,7 +20,7 @@ internal class AccessTokenAdapter : AccessTokenQueryRepository, AccessTokenComma
         return jwtProvider.generate(
             id = userId.value.toString(),
             expiration = now.plusMinutes(10),
-            key = JwtSecretKey,
+            key = jwtSecretKey,
         )
     }
 }

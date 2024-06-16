@@ -11,11 +11,10 @@ import io.jsonwebtoken.Jwts
 import java.security.PublicKey
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now
-import java.time.ZoneId
 import java.util.*
 import javax.crypto.SecretKey
 
-object JwtProvider {
+class JwtProvider {
     private val objectMapper = ObjectMapper()
     private val typeReference = object : TypeReference<Map<String, String>>() {}
 
@@ -24,13 +23,13 @@ object JwtProvider {
             .issuedAt(now().toDate())
             .expiration(expiration.toDate())
             .subject(id)
-            .signWith(key.getKey())
+            .signWith(key.key)
             .compact()
     }
 
     fun validate(token: String, key: SignatureKey): Boolean {
         try {
-            val parser = when (val signatureKey = key.getKey()) {
+            val parser = when (val signatureKey = key.key) {
                 is SecretKey -> generateParser(signatureKey)
                 is PublicKey -> generateParser(signatureKey)
                 else -> return false
@@ -44,7 +43,7 @@ object JwtProvider {
 
     fun validateClaimsWith(iss: String, aud: String, token: String, key: SignatureKey): Boolean {
         val claims = getClaims(token, key) ?: return false
-        return !(claims.issuer != iss || !claims.audience.contains(aud))
+        return claims.issuer == iss && claims.audience.contains(aud)
     }
 
     fun getSubject(token: String, key: SignatureKey): String? {
@@ -68,7 +67,7 @@ object JwtProvider {
     }
 
     private fun getClaims(token: String, key: SignatureKey): Claims? {
-        val parser = when (val signatureKey = key.getKey()) {
+        val parser = when (val signatureKey = key.key) {
             is SecretKey -> generateParser(signatureKey)
             is PublicKey -> generateParser(signatureKey)
             else -> return null
@@ -87,9 +86,4 @@ object JwtProvider {
             .verifyWith(key)
             .build()
     }
-}
-
-fun LocalDateTime.toDate(): Date {
-    val instant = this.atZone(ZoneId.systemDefault()).toInstant()
-    return Date.from(instant)
 }

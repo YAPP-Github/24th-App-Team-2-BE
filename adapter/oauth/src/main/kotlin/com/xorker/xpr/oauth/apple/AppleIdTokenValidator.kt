@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-internal class AppleIdTokenValidator {
-    private val jwtProvider = JwtProvider
-
+internal class AppleIdTokenValidator(
+    private val jwtProvider: JwtProvider,
+) {
     @Value("\${oauth.apple.iss}")
     lateinit var iss: String
 

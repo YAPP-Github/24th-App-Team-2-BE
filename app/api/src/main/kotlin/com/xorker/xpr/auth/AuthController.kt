@@ -7,11 +7,7 @@ import com.xorker.xpr.auth.dto.toResponse
 import com.xorker.xpr.support.auth.NeedLogin
 import com.xorker.xpr.support.auth.PrincipalUser
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.media.Content
-import io.swagger.v3.oas.annotations.media.Schema
-import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -22,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(
     private val authUserCase: AuthUseCase,
 ) {
-    @Operation(summary = "소셜 로그인 API",)
+    @Operation(summary = "소셜 로그인 API")
     @PostMapping("/api/v1/auth/signin")
     fun signIn(@RequestBody request: AuthSignInRequest): AuthTokenResponse {
         val token = authUserCase.signIn(request.authType, request.token)

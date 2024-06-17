@@ -27,28 +27,30 @@ class JwtProvider {
             .compact()
     }
 
-    fun validate(token: String, key: SignatureKey): Boolean {
+    fun validateWith(iss: String, aud: String, payload: Claims): Boolean {
+        return payload.issuer == iss && payload.audience.contains(aud)
+    }
+
+    fun getPayload(token: String, key: SignatureKey): Claims? {
         try {
             val parser = when (val signatureKey = key.key) {
                 is SecretKey -> generateParser(signatureKey)
                 is PublicKey -> generateParser(signatureKey)
-                else -> return false
+                else -> return null
             }
-            parser.parseSignedClaims(token)
-            return true
+            return parser.parseSignedClaims(token).payload
         } catch (e: JwtException) {
-            return false
+            return null
         }
     }
 
-    fun validateClaimsWith(iss: String, aud: String, token: String, key: SignatureKey): Boolean {
-        val claims = getClaims(token, key) ?: return false
-        return claims.issuer == iss && claims.audience.contains(aud)
+    fun getSubject(token: String, key: SignatureKey): String? {
+        val payload = getPayload(token, key) ?: return null
+        return payload.subject
     }
 
-    fun getSubject(token: String, key: SignatureKey): String? {
-        val claims = getClaims(token, key) ?: return null
-        return claims.subject
+    fun getSubject(payload: Claims): String {
+        return payload.subject
     }
 
     fun parseHeader(token: String): Map<String, String>? {
@@ -64,15 +66,6 @@ class JwtProvider {
         } catch (e: IndexOutOfBoundsException) {
             return null
         }
-    }
-
-    private fun getClaims(token: String, key: SignatureKey): Claims? {
-        val parser = when (val signatureKey = key.key) {
-            is SecretKey -> generateParser(signatureKey)
-            is PublicKey -> generateParser(signatureKey)
-            else -> return null
-        }
-        return parser.parseSignedClaims(token).payload
     }
 
     private fun generateParser(key: SecretKey): JwtParser {

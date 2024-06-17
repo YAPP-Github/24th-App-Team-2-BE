@@ -27,30 +27,17 @@ class JwtProvider {
             .compact()
     }
 
-    fun validateWith(iss: String, aud: String, payload: Claims): Boolean {
-        return payload.issuer == iss && payload.audience.contains(aud)
+    fun validateAndGetSubject(token: String, key: SignatureKey): String? {
+        val payload = parsePayload(token, key) ?: return null
+        return payload.subject
     }
 
-    fun getPayload(token: String, key: SignatureKey): Claims? {
-        try {
-            val parser = when (val signatureKey = key.key) {
-                is SecretKey -> generateParser(signatureKey)
-                is PublicKey -> generateParser(signatureKey)
-                else -> return null
-            }
-            return parser.parseSignedClaims(token).payload
-        } catch (e: JwtException) {
-            return null
+    fun validateAndGetSubject(iss: String, aud: String, token: String, key: SignatureKey): String? {
+        val payload = parsePayload(token, key) ?: return null
+        if (payload.issuer == iss && payload.audience.contains(aud)) {
+            return payload.subject
         }
-    }
-
-    fun getSubject(token: String, key: SignatureKey): String? {
-        val payload = getPayload(token, key) ?: return null
-        return payload.subject
-    }
-
-    fun getSubject(payload: Claims): String {
-        return payload.subject
+        return null
     }
 
     fun parseHeader(token: String): Map<String, String>? {
@@ -64,6 +51,19 @@ class JwtProvider {
         } catch (e: JsonParseException) {
             return null
         } catch (e: IndexOutOfBoundsException) {
+            return null
+        }
+    }
+
+    private fun parsePayload(token: String, key: SignatureKey): Claims? {
+        try {
+            val parser = when (val signatureKey = key.key) {
+                is SecretKey -> generateParser(signatureKey)
+                is PublicKey -> generateParser(signatureKey)
+                else -> return null
+            }
+            return parser.parseSignedClaims(token).payload
+        } catch (e: JwtException) {
             return null
         }
     }

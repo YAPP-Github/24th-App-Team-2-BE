@@ -17,17 +17,11 @@ internal class AppleIdTokenValidator(
     lateinit var clientId: String
 
     internal fun validateAndGetSubject(token: String, key: SignatureKey): String {
-        val payload = jwtProvider.getPayload(token, key) ?: throw OAuthFailureException
-
-        val isValid = jwtProvider.validateWith(
+        return jwtProvider.validateAndGetSubject(
             iss = iss,
             aud = clientId,
-            payload = payload,
-        )
-        if (!isValid) {
-            throw OAuthFailureException
-        }
-
-        return jwtProvider.getSubject(payload)
+            token = token,
+            key = key,
+        ) ?: throw OAuthFailureException
     }
 }

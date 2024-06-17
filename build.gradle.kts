@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 plugins {
     id("org.springframework.boot") version Versions.SPRING_BOOT
     id("io.spring.dependency-management") version Versions.SPRING_DEPENDENCY_MANAGEMENT
@@ -12,6 +14,15 @@ plugins {
 
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    testImplementation(kotlin("test"))
+}
+
+tasks {
+    withType<Jar> { enabled = true }
+    withType<BootJar> { enabled = false }
 }
 
 subprojects {

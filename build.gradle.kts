@@ -1,9 +1,15 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    kotlin("jvm")
-    id("org.springframework.boot")
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
+    id("org.springframework.boot") version Versions.SPRING_BOOT
+    id("io.spring.dependency-management") version Versions.SPRING_DEPENDENCY_MANAGEMENT
+    kotlin("jvm") version Versions.KOTLIN
+    kotlin("kapt") version Versions.KOTLIN
+    kotlin("plugin.spring") version Versions.KOTLIN
+    kotlin("plugin.jpa") version Versions.KOTLIN
+    kotlin("plugin.allopen") version Versions.KOTLIN
+    kotlin("plugin.noarg") version Versions.KOTLIN
+    id("org.jlleitschuh.gradle.ktlint") version Versions.KTLINT
 }
 
 repositories {
@@ -29,12 +35,8 @@ subprojects {
     }
 
     dependencies {
-        val springBootVersion by properties
-
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
-
-        // test
-        testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.JACKSON}")
+        implementation("org.springframework.boot:spring-boot-starter-test:${Versions.SPRING_BOOT}")
     }
 
     tasks.test {
@@ -43,5 +45,5 @@ subprojects {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(Versions.JDK)
 }

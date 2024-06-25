@@ -1,36 +1,27 @@
 package com.xorker.xpr.oauth.apple
 
 import com.xorker.xpr.exception.OAuthFailureException
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.JwtException
-import io.jsonwebtoken.Jwts
-import java.security.PublicKey
+import com.xorker.xpr.support.jwt.JwtProvider
+import com.xorker.xpr.support.jwt.SignatureKey
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-internal class AppleIdTokenValidator {
-    internal fun validateAndGetSubject(token: String, key: PublicKey): String {
-        try {
-            val parser = Jwts.parser()
-                .verifyWith(key)
-                .build()
-            val claims = parser.parseSignedClaims(token).payload
-            validateClaims(claims)
-            return claims.subject
-        } catch (e: JwtException) {
-            throw OAuthFailureException
-        }
-    }
+internal class AppleIdTokenValidator(
+    private val jwtProvider: JwtProvider,
+) {
+    @Value("\${oauth.apple.iss}")
+    lateinit var iss: String
 
-    private fun validateClaims(claims: Claims) {
-        if (claims.issuer != ISS || !claims.audience.contains(CLIENT_ID)) {
-            throw OAuthFailureException
-        }
-    }
+    @Value("\${oauth.apple.client-id}")
+    lateinit var clientId: String
 
-    // TODO application.yml
-    internal companion object {
-        private const val ISS = "https://appleid.apple.com"
-        private const val CLIENT_ID = ""
+    internal fun validateAndGetSubject(token: String, key: SignatureKey): String {
+        return jwtProvider.validateAndGetSubject(
+            token = token,
+            key = key,
+            iss = iss,
+            aud = clientId,
+        ) ?: throw OAuthFailureException
     }
 }

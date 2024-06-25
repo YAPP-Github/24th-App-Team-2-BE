@@ -1,6 +1,6 @@
 package com.xorker.xpr.auth
 
-import com.xorker.xpr.auth.token.AccessTokenRepository
+import com.xorker.xpr.auth.token.AccessTokenCommandRepository
 import com.xorker.xpr.auth.token.RefreshTokenRepository
 import com.xorker.xpr.auth.token.Token
 import com.xorker.xpr.user.User
@@ -13,10 +13,9 @@ import org.springframework.transaction.annotation.Transactional
 internal class AuthService(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
-    private val accessTokenRepository: AccessTokenRepository,
+    private val accessTokenCommandRepository: AccessTokenCommandRepository,
     private val refreshTokenRepository: RefreshTokenRepository,
 ) : AuthUseCase {
-
     @Transactional
     override fun signIn(authType: AuthType, token: String): Token {
         val platformUserId = authRepository.getPlatformUserId(authType, token)
@@ -27,6 +26,7 @@ internal class AuthService(
 
     override fun reissue(refreshToken: String): Token {
         val userId = refreshTokenRepository.getUserIdOrThrow(refreshToken)
+
         return createToken(userId)
     }
 
@@ -38,12 +38,13 @@ internal class AuthService(
 
     private fun createUser(authType: AuthType, platformUserId: String): User {
         val userName = authRepository.getPlatformUserName(authType, platformUserId)
+
         return userRepository.createUser(authType.authPlatform, platformUserId, userName)
     }
 
     private fun createToken(userId: UserId): Token {
         return Token(
-            accessTokenRepository.createAccessToken(userId),
+            accessTokenCommandRepository.createAccessToken(userId),
             refreshTokenRepository.createRefreshToken(userId),
         )
     }

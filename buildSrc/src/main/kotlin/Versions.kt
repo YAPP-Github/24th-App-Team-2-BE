@@ -9,4 +9,5 @@ object Versions {
     const val OPEN_FEIGN = "4.1.0"
     const val JDK = 17
     const val FLYWAY = "10.14.0"
+    const val WEBMVC_UI = "2.5.0"
 }

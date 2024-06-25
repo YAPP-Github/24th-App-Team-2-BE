@@ -18,10 +18,10 @@ internal class AppleIdTokenValidator(
 
     internal fun validateAndGetSubject(token: String, key: SignatureKey): String {
         return jwtProvider.validateAndGetSubject(
-            iss = iss,
-            aud = clientId,
             token = token,
             key = key,
+            iss = iss,
+            aud = clientId,
         ) ?: throw OAuthFailureException
     }
 }

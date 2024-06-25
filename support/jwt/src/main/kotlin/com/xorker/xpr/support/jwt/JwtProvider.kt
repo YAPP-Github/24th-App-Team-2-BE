@@ -32,7 +32,7 @@ class JwtProvider {
         return payload.subject
     }
 
-    fun validateAndGetSubject(iss: String, aud: String, token: String, key: SignatureKey): String? {
+    fun validateAndGetSubject(token: String, key: SignatureKey, iss: String, aud: String): String? {
         val payload = parsePayload(token, key) ?: return null
         if (payload.issuer == iss && payload.audience.contains(aud)) {
             return payload.subject

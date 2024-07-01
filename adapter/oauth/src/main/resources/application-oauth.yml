@@ -1,0 +1,4 @@
+oauth:
+    apple:
+        iss: https://appleid.apple.com
+        client-id: ${APPLE_CLIENT_ID}

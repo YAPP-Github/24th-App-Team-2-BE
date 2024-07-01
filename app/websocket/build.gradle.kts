@@ -7,16 +7,14 @@ plugins {
 
 dependencies {
     implementation(project(":app:support:auth"))
-    implementation(project(":app:websocket"))
     implementation(project(":core"))
     implementation(project(":support:yaml"))
 
     implementation("org.springframework.boot:spring-boot-starter-web:${Versions.SPRING_BOOT}")
-    implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.SPRING_BOOT}")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${Versions.WEBMVC_UI}")
+    implementation("org.springframework.boot:spring-boot-starter-websocket:${Versions.SPRING_BOOT}")
 }
 
 tasks {
-    withType<Jar> { enabled = false }
-    withType<BootJar> { enabled = true }
+    withType<Jar> { enabled = true }
+    withType<BootJar> { enabled = false }
 }

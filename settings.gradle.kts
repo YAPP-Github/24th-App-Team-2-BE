@@ -3,6 +3,7 @@ include(
     "adapter:rdb",
     "app:api",
     "app:support:auth",
+    "app:websocket",
     "domain",
     "core",
     "support:yaml",

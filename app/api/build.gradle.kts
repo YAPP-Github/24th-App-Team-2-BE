@@ -8,6 +8,7 @@ plugins {
 dependencies {
     val springBootVersion by properties
     implementation(project(":app:support:auth"))
+    implementation(project(":app:websocket"))
     implementation(project(":core"))
     implementation(project(":support:yaml"))
 

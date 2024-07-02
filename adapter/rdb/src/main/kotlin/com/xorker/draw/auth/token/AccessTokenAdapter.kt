@@ -10,11 +10,7 @@ import org.springframework.stereotype.Component
 internal class AccessTokenAdapter(
     private val jwtProvider: JwtProvider,
     private val jwtSecretKey: JwtSecretKey,
-) : AccessTokenQueryRepository, AccessTokenCommandRepository {
-    override fun getUserIdOrThrow(accessToken: String): UserId {
-        return UserId(0L) // TODO 추후 메서드 필요 시 변경
-    }
-
+) : AccessTokenRepository {
     override fun createAccessToken(userId: UserId): String {
         val now = LocalDateTime.now()
         return jwtProvider.generate(

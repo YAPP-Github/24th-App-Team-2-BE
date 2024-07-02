@@ -1,5 +1,6 @@
 package com.xorker.draw.websocket.broadcaster
 
+import com.xorker.draw.room.RoomId
 import com.xorker.draw.websocket.WebSocketSessionManager
 import com.xorker.draw.websocket.dto.WebSocketResponse
 import com.xorker.draw.websocket.parser.WebSocketResponseParser
@@ -12,7 +13,7 @@ class SimpleWebSocketBroadcaster(
     private val parser: WebSocketResponseParser,
 ) : WebSocketBroadcaster {
 
-    override fun broadcast(roomId: String, response: WebSocketResponse) {
+    override fun broadcast(roomId: RoomId, response: WebSocketResponse) {
         val sessions = webSocketSessionManager.getSessions(roomId) ?: return // TODO: Null Handling
         val message = TextMessage(parser.parse(response))
 

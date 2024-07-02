@@ -1,4 +1,4 @@
-package com.xorker.draw.room
+package com.xorker.draw.websocket
 
 enum class Action(
     description: String,

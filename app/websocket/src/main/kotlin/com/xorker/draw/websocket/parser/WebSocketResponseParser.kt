@@ -1,7 +1,7 @@
 package com.xorker.draw.websocket.parser
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.xorker.draw.room.BroadcastEvent
+import com.xorker.draw.websocket.BroadcastEvent
 import org.springframework.stereotype.Component
 
 @Component

@@ -1,8 +1,8 @@
 package com.xorker.draw.test
 
-import com.xorker.draw.room.Action
-import com.xorker.draw.room.BroadcastEvent
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.websocket.Action
+import com.xorker.draw.websocket.BroadcastEvent
 import com.xorker.draw.websocket.broadcaster.SimpleWebSocketBroadcaster
 import org.springframework.stereotype.Component
 

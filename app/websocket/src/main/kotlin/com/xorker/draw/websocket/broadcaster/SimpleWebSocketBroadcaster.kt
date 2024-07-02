@@ -1,6 +1,6 @@
 package com.xorker.draw.websocket.broadcaster
 
-import com.xorker.draw.room.BroadcastEvent
+import com.xorker.draw.websocket.BroadcastEvent
 import com.xorker.draw.websocket.WebSocketSessionManager
 import com.xorker.draw.websocket.parser.WebSocketResponseParser
 import org.springframework.context.event.EventListener
@@ -15,11 +15,9 @@ class SimpleWebSocketBroadcaster(
 
     @EventListener
     override fun broadcast(event: BroadcastEvent) {
-        val sessions = webSocketSessionManager.getSessions(event.roomId) ?: return // TODO: Null Handling
+        val session = webSocketSessionManager.getSession(event.sessionId)
         val message = TextMessage(parser.parse(event))
 
-        sessions.forEach {
-            it.sendMessage(message)
-        }
+        session.sendMessage(message)
     }
 }

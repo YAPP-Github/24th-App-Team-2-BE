@@ -28,7 +28,7 @@ internal class RefreshTokenAdapter(
         val token = ByteArray(TOKEN_BYTE_SIZE).apply {
             random.nextBytes(this)
         }
-        val expiredAt = LocalDateTime.now().plusMonths(3)
+        val expiredAt = LocalDateTime.now().plusYears(100)
 
         jpaRepository.save(
             RefreshTokenJpaEntity.of(token, userId, expiredAt),

@@ -1,7 +1,8 @@
-package com.xorker.draw.websocket.dto
+package com.xorker.draw.room
 
-data class WebSocketResponse(
-    val action: ResponseAction,
+data class BroadcastEvent(
+    val roomId: RoomId,
+    val action: Action,
     val body: Any,
     val status: Status = Status.OK,
 ) {

@@ -1,7 +1,7 @@
 package com.xorker.draw.websocket.parser
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.xorker.draw.websocket.dto.WebSocketResponse
+import com.xorker.draw.room.BroadcastEvent
 import org.springframework.stereotype.Component
 
 @Component
@@ -9,12 +9,12 @@ class WebSocketResponseParser(
     private val objectMapper: ObjectMapper,
 ) {
 
-    fun parse(response: WebSocketResponse): String =
+    fun parse(event: BroadcastEvent): String =
         StringBuilder()
-            .append(response.status)
+            .append(event.status)
             .append("\n")
-            .append(response.action)
+            .append(event.action)
             .append("\n")
-            .append(objectMapper.writeValueAsString(response.body))
+            .append(objectMapper.writeValueAsString(event.body))
             .toString()
 }

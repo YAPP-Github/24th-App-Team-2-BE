@@ -1,6 +1,8 @@
 package com.xorker.draw.websocket
 
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.websocket.dto.RequestAction
+import com.xorker.draw.websocket.dto.WebSocketRequest
 import com.xorker.draw.websocket.dto.WebSocketSessionWrapper
 import com.xorker.draw.websocket.parser.WebSocketRequestParser
 import java.net.URLDecoder
@@ -23,6 +25,7 @@ class MainWebSocketHandler(
         val wrapper = WebSocketSessionWrapper(session, roomId)
 
         sessionManager.startSession(wrapper)
+        router.route(WebSocketRequest(RequestAction.SESSION_CONNECT))
     }
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
@@ -33,6 +36,7 @@ class MainWebSocketHandler(
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         sessionManager.endSession(session)
+        router.route(WebSocketRequest(RequestAction.SESSION_DISCONNECT))
     }
 
     private fun WebSocketSession.getQueries(): Map<String, String> {

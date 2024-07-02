@@ -14,6 +14,8 @@ class WebSocketRouter(
     fun route(request: WebSocketRequest) {
         when (request.action) {
             RequestAction.TEST -> testService.test(request.toGenerate())
+            RequestAction.SESSION_CONNECT -> TODO()
+            RequestAction.SESSION_DISCONNECT -> TODO()
         }
     }
 

@@ -25,6 +25,13 @@ class AuthController(
         return token.toResponse()
     }
 
+    @Operation(summary = "익명 로그인 API")
+    @PostMapping("/api/v1/auth/anonymous-signin")
+    fun anonymousSignin(): AuthTokenResponse {
+        val token = authUserCase.anonymousSignIn()
+        return token.toResponse()
+    }
+
     @PostMapping("/api/v1/auth/reissue")
     fun reissue(@RequestBody request: AuthReissueRequest): AuthTokenResponse {
         val token = authUserCase.reissue(request.refreshToken)

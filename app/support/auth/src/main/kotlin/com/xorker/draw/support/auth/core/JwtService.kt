@@ -10,8 +10,8 @@ internal class JwtService(
     private val jwtProvider: JwtProvider,
     private val jwtSecretKey: JwtSecretKey,
 ) : TokenUseCase {
-    override fun getUserId(token: String): UserId {
-        val subject = jwtProvider.validateAndGetSubject(token, jwtSecretKey) ?: throw JwtValidationFailException
+    override fun getUserId(token: String): UserId? {
+        val subject = jwtProvider.validateAndGetSubject(token, jwtSecretKey) ?: return null
 
         return UserId(subject.toLong())
     }

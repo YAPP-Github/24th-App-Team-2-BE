@@ -33,10 +33,11 @@ private val buttonOk = listOf(ExceptionButtonType.OK)
 private val buttonOkCancel = listOf(ExceptionButtonType.OK, ExceptionButtonType.CANCEL)
 private val buttonOkClose = listOf(ExceptionButtonType.OK, ExceptionButtonType.CLOSE)
 
-fun XprException.getButtons(): List<ExceptionButtonType> {
+fun XorkerException.getButtons(): List<ExceptionButtonType> {
     return when (this) {
         InvalidRequestValueException,
         UnAuthorizedException,
+        NotFoundRoomException,
         -> buttonOkClose
 
         UnAuthenticationException,
@@ -47,5 +48,6 @@ fun XprException.getButtons(): List<ExceptionButtonType> {
         OAuthFailureException,
         InvalidUserStatusException,
         -> buttonOk
+
     }
 }

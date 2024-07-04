@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component
 class ExceptionResponseFactory(
     private val messageSource: MessageSource,
 ) {
-    fun create(ex: XprException): ResponseEntity<ExceptionResponse> {
+    fun create(ex: XorkerException): ResponseEntity<ExceptionResponse> {
         return create(ex.getStatus(), ex)
     }
 
-    fun create(status: HttpStatus, ex: XprException): ResponseEntity<ExceptionResponse> {
+    fun create(status: HttpStatus, ex: XorkerException): ResponseEntity<ExceptionResponse> {
         val locale = LocaleContextHolder.getLocale()
 
         val title = messageSource.getMessage("exception.${ex.code}.title", null, locale)
@@ -28,7 +28,7 @@ class ExceptionResponseFactory(
             .body(responseBody)
     }
 
-    private fun XprException.getStatus(): HttpStatus {
+    private fun XorkerException.getStatus(): HttpStatus {
         return when (this) {
             is UnAuthenticationException -> HttpStatus.UNAUTHORIZED
             is UnAuthorizedException -> HttpStatus.FORBIDDEN

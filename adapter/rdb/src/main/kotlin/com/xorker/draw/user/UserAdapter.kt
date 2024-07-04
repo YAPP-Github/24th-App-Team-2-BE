@@ -26,7 +26,7 @@ internal class UserAdapter(
     }
 
     override fun createUser(userName: String): User {
-        val user = UserJpaEntity.from(userName)
+        val user = UserJpaEntity.of(userName)
         val savedUser = userJpaRepository.save(user)
         return savedUser.toDomain()
     }

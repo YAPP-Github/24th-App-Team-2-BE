@@ -32,10 +32,10 @@ internal class UserJpaEntity : BaseJpaEntity() {
     }
 
     companion object {
-        internal fun from(id: Long): UserJpaEntity =
+        internal fun of(id: Long): UserJpaEntity =
             UserJpaEntity().apply { this.id = id }
 
-        internal fun from(name: String): UserJpaEntity =
+        internal fun of(name: String): UserJpaEntity =
             UserJpaEntity().apply { this.name = name }
 
         internal fun from(user: User): UserJpaEntity =

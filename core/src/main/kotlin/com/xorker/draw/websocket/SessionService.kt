@@ -34,4 +34,11 @@ internal class SessionService(
             roomMap.remove(session.roomId)
         }
     }
+
+    override fun getSession(sessionId: SessionId): Session? {
+        return sessionMap[sessionId]
+    }
+    override fun getSessionsByRoomId(roomId: RoomId): Set<Session>? {
+        return roomMap[roomId]
+    }
 }

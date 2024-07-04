@@ -1,6 +1,6 @@
 package com.xorker.draw.auth
 
-import com.xorker.draw.auth.token.AccessTokenCommandRepository
+import com.xorker.draw.auth.token.AccessTokenRepository
 import com.xorker.draw.auth.token.RefreshTokenRepository
 import com.xorker.draw.auth.token.Token
 import com.xorker.draw.user.User
@@ -13,13 +13,19 @@ import org.springframework.transaction.annotation.Transactional
 internal class AuthService(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
-    private val accessTokenCommandRepository: AccessTokenCommandRepository,
+    private val accessTokenRepository: AccessTokenRepository,
     private val refreshTokenRepository: RefreshTokenRepository,
 ) : AuthUseCase {
     @Transactional
     override fun signIn(authType: AuthType, token: String): Token {
         val platformUserId = authRepository.getPlatformUserId(authType, token)
         val user = userRepository.getUser(authType.authPlatform, platformUserId) ?: createUser(authType, platformUserId)
+
+        return createToken(user.id)
+    }
+
+    override fun anonymousSignIn(): Token {
+        val user = userRepository.createUser(""); // TODO 이름 정책 정해지면 변경 예정
 
         return createToken(user.id)
     }
@@ -44,7 +50,7 @@ internal class AuthService(
 
     private fun createToken(userId: UserId): Token {
         return Token(
-            accessTokenCommandRepository.createAccessToken(userId),
+            accessTokenRepository.createAccessToken(userId),
             refreshTokenRepository.createRefreshToken(userId),
         )
     }

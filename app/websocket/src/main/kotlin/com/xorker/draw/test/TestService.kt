@@ -1,8 +1,6 @@
 package com.xorker.draw.test
 
 import com.xorker.draw.websocket.broadcaster.SimpleWebSocketBroadcaster
-import com.xorker.draw.websocket.dto.ResponseAction
-import com.xorker.draw.websocket.dto.WebSocketResponse
 import org.springframework.stereotype.Component
 
 @Component

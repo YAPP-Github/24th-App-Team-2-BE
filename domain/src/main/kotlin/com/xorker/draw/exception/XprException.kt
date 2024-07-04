@@ -10,6 +10,7 @@ data object UnAuthorizedException : ClientException("auth403", "인가 실패") 
 
 data object InvalidRequestValueException : ClientException("c001", "Request 값 잘못됨") { private fun readResolve(): Any = InvalidRequestValueException }
 data object OAuthFailureException : ClientException("c002", "OAuth 인증 실패") { private fun readResolve(): Any = OAuthFailureException }
+data object NotFoundRoomException : ClientException("c003", "존재하지 않는 Room Id") { private fun readResolve(): Any = InvalidUserStatusException }
 //endregion
 
 //region Server

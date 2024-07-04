@@ -9,21 +9,20 @@ import org.springframework.web.socket.handler.TextWebSocketHandler
 
 @Component
 class MainWebSocketHandler(
-    private val sessionManager: WebSocketSessionManager,
+    private val sessionUseCase: SessionUseCase,
     private val router: WebSocketRouter,
     private val requestParser: WebSocketRequestParser,
 ) : TextWebSocketHandler() {
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        sessionManager.startSession("", session)
     }
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val request = requestParser.parse(message.payload)
 
-        router.route(request)
+        router.route(session, request)
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-        sessionManager.endSession("", session)
+        sessionUseCase.unregisterSession(SessionId(session.id))
     }
 }

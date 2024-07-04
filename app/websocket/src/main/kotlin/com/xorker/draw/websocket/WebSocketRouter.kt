@@ -5,19 +5,22 @@ import com.xorker.draw.test.TestService
 import com.xorker.draw.websocket.dto.RequestAction
 import com.xorker.draw.websocket.dto.WebSocketRequest
 import org.springframework.stereotype.Component
+import org.springframework.web.socket.WebSocketSession
 
 @Component
 class WebSocketRouter(
     private val objectMapper: ObjectMapper,
+    private val webSocketController: WebSocketController,
     private val testService: TestService,
 ) {
-    fun route(request: WebSocketRequest) {
+    fun route(session: WebSocketSession, request: WebSocketRequest) {
         when (request.action) {
-            RequestAction.TEST -> testService.test(request.toGenerate())
+            RequestAction.TEST -> testService.test(request.extractBody())
+            RequestAction.INIT -> webSocketController.initializeSession(session, request.extractBody())
         }
     }
 
-    private inline fun <reified T : Any> WebSocketRequest.toGenerate(): T {
+    private inline fun <reified T : Any> WebSocketRequest.extractBody(): T {
         return objectMapper.readValue(this.body, T::class.java)
     }
 }

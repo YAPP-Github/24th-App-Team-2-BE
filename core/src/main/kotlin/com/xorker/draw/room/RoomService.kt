@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 
 @Service
 internal class RoomService(
-    private val roomRepository: RoomRepository,
+    private val roomRepository: RoomAdapter,
 ) : RoomUseCase {
     override fun getRoom(roomId: RoomId): Room? {
         return roomRepository.getRoom(roomId)

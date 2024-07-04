@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration
 )
 @OpenAPIDefinition(
     info = Info(
-        title = "XPR API Docs",
+        title = "Draw API Docs",
         version = "v1.0.0",
     ),
 )

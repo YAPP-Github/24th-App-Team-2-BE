@@ -1,5 +1,5 @@
 ### Related Jira ✔
-- [Jira Ticket](https://xorker.atlassian.net/browse/XPR-)
+- [Jira Ticket](https://xorker.atlassian.net/browse/DRAW-)
 
 ### Description ✔
 

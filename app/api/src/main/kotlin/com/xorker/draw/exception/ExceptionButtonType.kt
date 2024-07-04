@@ -48,6 +48,5 @@ fun XorkerException.getButtons(): List<ExceptionButtonType> {
         OAuthFailureException,
         InvalidUserStatusException,
         -> buttonOk
-
     }
 }

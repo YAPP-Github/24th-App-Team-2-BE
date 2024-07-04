@@ -7,17 +7,18 @@ value class RoomId(val value: String)
 
 data class Room(
     val id: RoomId,
-    private val sessions: MutableSet<Session> = mutableSetOf(),
+    private val _sessions: MutableSet<Session> = mutableSetOf(),
 ) {
+    val sessions: Set<Session> = _sessions
 
-    fun size(): Int = sessions.size
+    fun size(): Int = _sessions.size
     fun isEmpty(): Boolean = size() == 0
 
     fun put(session: Session) {
-        sessions.add(session)
+        _sessions.add(session)
     }
 
     fun remove(session: Session) {
-        sessions.remove(session)
+        _sessions.remove(session)
     }
 }

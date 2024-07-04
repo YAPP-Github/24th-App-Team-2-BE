@@ -5,21 +5,22 @@ import org.springframework.stereotype.Service
 
 @Service
 internal class RoomService(
-    private val roomPort: RoomPort,
+    private val roomRepository: RoomRepository,
 ) : RoomUseCase {
     override fun getRoom(roomId: RoomId): Room? {
-        return roomPort.getRoom(roomId)
+        return roomRepository.getRoom(roomId)
     }
 
     fun connect(roomId: RoomId, session: Session): Room {
         val room = getRoom(roomId) ?: Room(roomId)
         room.put(session)
-        roomPort.saveRoom(room)
+        roomRepository.saveRoom(room)
         return room
     }
 
     fun disconnect(roomId: RoomId, session: Session) {
         val room = getRoom(roomId) ?: return
         room.remove(session)
+        roomRepository.saveRoom(room)
     }
 }

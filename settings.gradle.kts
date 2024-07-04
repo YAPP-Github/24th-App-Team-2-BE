@@ -1,4 +1,5 @@
 include(
+    "adapter:memory",
     "adapter:oauth",
     "adapter:rdb",
     "app:api",

@@ -1,6 +1,6 @@
 package com.xorker.draw.room
 
-interface RoomPort {
-    fun saveRoom(room: Room)
+interface RoomRepository {
     fun getRoom(roomId: RoomId): Room?
+    fun saveRoom(room: Room)
 }

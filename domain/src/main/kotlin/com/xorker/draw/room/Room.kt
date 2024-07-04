@@ -7,8 +7,8 @@ value class RoomId(val value: String)
 
 data class Room(
     val id: RoomId,
+    private val sessions: MutableSet<Session> = mutableSetOf(),
 ) {
-    private val sessions: MutableSet<Session> = mutableSetOf()
 
     fun size(): Int = sessions.size
     fun isEmpty(): Boolean = size() == 0

@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap
 import org.springframework.stereotype.Component
 
 @Component
-class RoomAdapter : RoomRepository {
+internal class RoomAdapter : RoomRepository {
     val roomMap = ConcurrentHashMap<RoomId, Room>()
 
     override fun saveRoom(room: Room) {

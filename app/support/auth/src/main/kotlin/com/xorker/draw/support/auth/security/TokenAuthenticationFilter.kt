@@ -14,7 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter
 internal class TokenAuthenticationFilter(
     private val tokenUseCase: TokenUseCase,
 ) : OncePerRequestFilter() {
-
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -22,8 +21,9 @@ internal class TokenAuthenticationFilter(
     ) {
         val accessToken = getAccessToken(request)
         if (accessToken != null) {
-            val userId = tokenUseCase.getUserId(accessToken)
-            setAuthentication(request, accessToken, userId)
+            tokenUseCase.getUserId(accessToken)?.let {
+                setAuthentication(request, accessToken, it)
+            }
         }
         filterChain.doFilter(request, response)
     }

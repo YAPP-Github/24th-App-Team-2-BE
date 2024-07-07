@@ -22,10 +22,10 @@ class SimpleSessionMessageBroker(
     }
 
     override fun broadcast(roomId: RoomId, message: SessionMessage) {
-        val rooms = sessionUseCase.getSessionsByRoomId(roomId) ?: return // TODO warn Logging
+        val sessions = sessionUseCase.getSessionsByRoomId(roomId) ?: return // TODO warn Logging
         val rawMessage = parser.parse(message)
 
-        rooms.forEach {
+        sessions.forEach {
             it.send(rawMessage)
         }
     }

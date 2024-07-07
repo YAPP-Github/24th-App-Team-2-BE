@@ -38,6 +38,7 @@ internal class SessionService(
     override fun getSession(sessionId: SessionId): Session? {
         return sessionMap[sessionId]
     }
+
     override fun getSessionsByRoomId(roomId: RoomId): Set<Session>? {
         return roomMap[roomId]
     }

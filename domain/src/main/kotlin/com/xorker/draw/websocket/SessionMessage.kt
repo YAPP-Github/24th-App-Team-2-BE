@@ -1,7 +1,7 @@
-package com.xorker.draw.websocket.dto
+package com.xorker.draw.websocket
 
-data class WebSocketResponse(
-    val action: ResponseAction,
+data class SessionMessage(
+    val action: Action,
     val body: Any,
     val status: Status = Status.OK,
 ) {

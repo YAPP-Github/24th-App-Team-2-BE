@@ -37,8 +37,8 @@ class ApiExceptionHandler(
         return responseFactory.create(InvalidRequestValueException)
     }
 
-    @ExceptionHandler(XprException::class)
-    protected fun handleException(ex: XprException): ExceptionResponseEntity {
+    @ExceptionHandler(XorkerException::class)
+    protected fun handleException(ex: XorkerException): ExceptionResponseEntity {
         return responseFactory.create(ex)
     }
 

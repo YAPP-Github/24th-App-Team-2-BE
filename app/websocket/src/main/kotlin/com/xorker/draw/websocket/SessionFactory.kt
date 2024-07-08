@@ -14,7 +14,7 @@ class SessionFactory {
         return SessionWrapper(
             session,
             request.roomId ?: generateRoomId(),
-            User(UserId(0), ""), // TODO get User by AccessToken
+            User(UserId(0), request.nickname), // TODO get User by AccessToken
         )
     }
 

@@ -13,18 +13,18 @@ class SessionFactory {
     fun create(session: WebSocketSession, request: SessionInitializeRequest): Session {
         return SessionWrapper(
             session,
-            request.roomId ?: generateRoomId(),
-            User(UserId(0), ""), // TODO get User by AccessToken
+            RoomId(request.roomId?.toUpperCase() ?: generateRoomId()),
+            User(UserId(0), request.nickname), // TODO get User by AccessToken
         )
     }
 
-    private fun generateRoomId(): RoomId {
+    private fun generateRoomId(): String {
         // TODO: 중복 방지
         val charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         val value = (1..6)
             .map { charset.random() }
             .joinToString("")
 
-        return RoomId(value)
+        return value
     }
 }

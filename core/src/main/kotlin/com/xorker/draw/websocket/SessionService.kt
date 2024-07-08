@@ -13,6 +13,11 @@ internal class SessionService(
     private val sessionMap: ConcurrentHashMap<SessionId, Session> = ConcurrentHashMap()
 
     override fun registerSession(session: Session) {
+        if (sessionMap.contains(session.id)) {
+            // Init을 중복으로 호출 하면 기존 데이터를 Unregister 하고 Init 한다.
+            unregisterSession(session.id)
+        }
+
         roomService.connect(session.roomId, session)
 
         sessionMap[session.id] = session

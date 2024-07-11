@@ -1,4 +1,4 @@
-package com.xorker.draw.support.auth.config
+package com.xorker.draw.config
 
 import com.xorker.draw.support.jwt.JwtProvider
 import com.xorker.draw.support.jwt.JwtSecretKey

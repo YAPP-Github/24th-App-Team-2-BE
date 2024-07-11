@@ -1,6 +1,6 @@
 package com.xorker.draw.support.auth.security
 
-import com.xorker.draw.support.auth.core.TokenUseCase
+import com.xorker.draw.auth.token.TokenUseCase
 import com.xorker.draw.user.UserId
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

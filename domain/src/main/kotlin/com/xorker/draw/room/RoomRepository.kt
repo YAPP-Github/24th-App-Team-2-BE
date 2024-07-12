@@ -1,6 +1,6 @@
 package com.xorker.draw.room
 
 interface RoomRepository {
-    fun getRoom(roomId: RoomId): Room?
-    fun saveRoom(room: Room)
+    fun <P : Player> saveRoom(room: Room<P>)
+    fun getRoom(roomId: RoomId): Room<Player>?
 }

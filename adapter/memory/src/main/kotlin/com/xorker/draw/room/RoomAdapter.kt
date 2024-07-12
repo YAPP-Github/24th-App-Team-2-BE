@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component
 
 @Component
 internal class RoomAdapter : RoomRepository {
-    private val roomMap = ConcurrentHashMap<RoomId, Room>()
+    private val roomMap = ConcurrentHashMap<RoomId, Room<Player>>()
 
-    override fun saveRoom(room: Room) {
+    override fun saveRoom(room: Room<Player>) {
         if (room.isEmpty()) {
             roomMap.remove(room.id)
         } else {
@@ -15,7 +15,7 @@ internal class RoomAdapter : RoomRepository {
         }
     }
 
-    override fun getRoom(roomId: RoomId): Room? {
-        return roomMap[roomId]?.copy()
+    override fun getRoom(roomId: RoomId): Room<Player>? {
+        return roomMap[roomId]
     }
 }

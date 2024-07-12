@@ -35,6 +35,12 @@ internal class MafiaGameService(
 
     override fun disconnectSession(session: Session) {
         val gameInfo = mafiaGameRepository.getGameInfo(session.roomId) ?: return
+
+        if (gameInfo.phase == MafiaPhase.Wait) {
+            exitSession(session)
+            return
+        }
+
         val player = gameInfo.findPlayer(session.user.id) ?: return
 
         player.disconnect()
@@ -43,6 +49,12 @@ internal class MafiaGameService(
 
     override fun exitSession(session: Session) {
         val gameInfo = mafiaGameRepository.getGameInfo(session.roomId) ?: return
+
+        if (gameInfo.phase != MafiaPhase.Wait) {
+            disconnectSession(session)
+            return
+        }
+
         val player = gameInfo.findPlayer(session.user.id) ?: return
 
         gameInfo.room.remove(player)

@@ -30,6 +30,6 @@ class WebSocketController(
             room.players.map { it.toResponse() }.toList(),
         )
 
-        messageBroker.broadcast(sessionDto.roomId, SessionMessage(Action.WAIT_ROOM_REFRESH, response))
+        messageBroker.broadcast(sessionDto.roomId, SessionMessage(Action.PLAYER_LIST, response))
     }
 }

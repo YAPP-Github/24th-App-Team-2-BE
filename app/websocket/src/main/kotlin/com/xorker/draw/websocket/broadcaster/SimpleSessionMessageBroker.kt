@@ -1,6 +1,7 @@
 package com.xorker.draw.websocket.broadcaster
 
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.room.RoomRepository
 import com.xorker.draw.websocket.SessionId
 import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.SessionMessageBroker
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component
 @Component
 class SimpleSessionMessageBroker(
     private val sessionUseCase: SessionUseCase,
+    private val roomRepository: RoomRepository,
     private val parser: WebSocketResponseParser,
 ) : SessionMessageBroker {
 
@@ -22,11 +24,13 @@ class SimpleSessionMessageBroker(
     }
 
     override fun broadcast(roomId: RoomId, message: SessionMessage) {
-        val sessions = sessionUseCase.getSessionsByRoomId(roomId) ?: return // TODO warn Logging
+        val sessions = roomRepository.getRoom(roomId) ?: return // TODO warn Logging
         val rawMessage = parser.parse(message)
 
-        sessions.forEach {
-            it.send(rawMessage)
+        sessions.players.forEach {
+            val sessionId = it.sessionId ?: return
+            val session = sessionUseCase.getSession(sessionId)
+            session?.send(rawMessage)
         }
     }
 }

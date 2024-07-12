@@ -26,4 +26,5 @@ sealed class CriticalException(code: String, message: String, cause: Throwable? 
 
 class UnknownException(cause: Throwable) : CriticalException("crt001", "정의하지 못한 예외", cause)
 data object InvalidUserStatusException : CriticalException("crt002", "유효하지 않는 상태를 가진 유저를 조회함") { private fun readResolve(): Any = InvalidUserStatusException }
+data object UnSupportedException : CriticalException("crt003", "정의하지 않는 행위") { private fun readResolve(): Any = UnSupportedException }
 //endregion

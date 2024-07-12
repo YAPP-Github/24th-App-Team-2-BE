@@ -47,6 +47,9 @@ fun XorkerException.getButtons(): List<ExceptionButtonType> {
         NotFoundUserException,
         OAuthFailureException,
         InvalidUserStatusException,
+        AlreadyJoinRoomException,
+        MaxRoomException,
+        UnSupportedException,
         -> buttonOk
     }
 }

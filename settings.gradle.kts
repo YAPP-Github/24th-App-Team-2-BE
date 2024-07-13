@@ -8,6 +8,7 @@ include(
     "app:websocket",
     "domain",
     "core",
-    "support:yaml",
     "support:jwt",
+    "support:logging",
+    "support:yaml",
 )

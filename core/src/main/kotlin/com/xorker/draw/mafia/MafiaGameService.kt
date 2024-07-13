@@ -17,7 +17,7 @@ internal class MafiaGameService(
             val player = gameInfo.findPlayer(session.user.id)
 
             if (player != null) {
-                player.connect(session.id)
+                player.connect()
                 return
             }
         }

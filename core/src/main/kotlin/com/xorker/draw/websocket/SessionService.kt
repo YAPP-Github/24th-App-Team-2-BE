@@ -1,11 +1,13 @@
 package com.xorker.draw.websocket
 
+import com.xorker.draw.user.UserId
 import java.util.concurrent.ConcurrentHashMap
 import org.springframework.stereotype.Service
 
 @Service
 internal class SessionService : SessionUseCase, SessionEventListener {
     private val sessionMap: ConcurrentHashMap<SessionId, Session> = ConcurrentHashMap()
+    private val userIdMap: ConcurrentHashMap<UserId, Session> = ConcurrentHashMap()
 
     override fun registerSession(session: Session) {
         if (sessionMap.contains(session.id)) {
@@ -14,14 +16,20 @@ internal class SessionService : SessionUseCase, SessionEventListener {
         }
 
         sessionMap[session.id] = session
+        userIdMap[session.user.id] = session
     }
 
     override fun unregisterSession(sessionId: SessionId) {
-        sessionMap.remove(sessionId)
+        val session = sessionMap.remove(sessionId)
+        userIdMap.remove(session?.user?.id)
     }
 
     override fun getSession(sessionId: SessionId): Session? {
         return sessionMap[sessionId]
+    }
+
+    override fun getSession(userId: UserId): Session? {
+        return userIdMap[userId]
     }
 
     override fun connectSession(session: Session, nickname: String) {

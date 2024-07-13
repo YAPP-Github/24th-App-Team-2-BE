@@ -2,6 +2,7 @@ package com.xorker.draw.websocket.broadcaster
 
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.room.RoomRepository
+import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.SessionId
 import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.SessionMessageBroker
@@ -16,8 +17,8 @@ class SimpleSessionMessageBroker(
     private val parser: WebSocketResponseParser,
 ) : SessionMessageBroker {
 
-    override fun unicast(sessionId: SessionId, message: SessionMessage) {
-        val session = sessionUseCase.getSession(sessionId) ?: return // TODO warn Logging
+    override fun unicast(userId: UserId, message: SessionMessage) {
+        val session = sessionUseCase.getSession(userId) ?: return // TODO warn Logging
         val rawMessage = parser.parse(message)
 
         session.send(rawMessage)
@@ -28,8 +29,7 @@ class SimpleSessionMessageBroker(
         val rawMessage = parser.parse(message)
 
         sessions.players.forEach {
-            val sessionId = it.sessionId ?: return
-            val session = sessionUseCase.getSession(sessionId)
+            val session = sessionUseCase.getSession(it.userId)
             session?.send(rawMessage)
         }
     }

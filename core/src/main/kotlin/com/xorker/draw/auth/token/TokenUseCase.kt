@@ -1,7 +1,7 @@
-package com.xorker.draw.support.auth.core
+package com.xorker.draw.auth.token
 
 import com.xorker.draw.user.UserId
 
-internal interface TokenUseCase {
+interface TokenUseCase {
     fun getUserId(token: String): UserId?
 }

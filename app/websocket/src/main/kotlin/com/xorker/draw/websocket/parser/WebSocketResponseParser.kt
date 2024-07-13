@@ -1,7 +1,8 @@
 package com.xorker.draw.websocket.parser
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.xorker.draw.websocket.SessionMessage
+import com.xorker.draw.websocket.message.SessionMessage
+import com.xorker.draw.websocket.message.dto.ExceptionMessage
 import org.springframework.stereotype.Component
 
 @Component
@@ -16,5 +17,14 @@ class WebSocketResponseParser(
             .append(response.action)
             .append("\n")
             .append(objectMapper.writeValueAsString(response.body))
+            .toString()
+
+    fun parse(exceptionMessage: ExceptionMessage): String =
+        StringBuilder()
+            .append(exceptionMessage.status)
+            .append("\n")
+            .append(exceptionMessage.action)
+            .append("\n")
+            .append(objectMapper.writeValueAsString(exceptionMessage.body))
             .toString()
 }

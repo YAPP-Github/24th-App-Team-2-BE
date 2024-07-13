@@ -10,6 +10,7 @@ abstract class Player(
         private set
     private var connectStatus: ConnectStatus = ConnectStatus.CONNECTED
 
+    fun isConnect(): Boolean = connectStatus == ConnectStatus.CONNECTED
     fun connect() {
         this.connectStatus = ConnectStatus.CONNECTED
     }

@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket.dto
+package com.xorker.draw.websocket.message.request.dto
 
 data class SessionInitializeRequest(
     val accessToken: String,

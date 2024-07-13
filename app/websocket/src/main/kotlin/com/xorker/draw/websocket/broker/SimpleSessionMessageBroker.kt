@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket.broadcaster
+package com.xorker.draw.websocket.broker
 
 import com.xorker.draw.room.RoomRepository
 import com.xorker.draw.websocket.BroadcastEvent

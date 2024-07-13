@@ -1,7 +1,6 @@
 package com.xorker.draw.room
 
 import com.xorker.draw.user.UserId
-import com.xorker.draw.websocket.SessionId
 
 abstract class Player(
     val userId: UserId,

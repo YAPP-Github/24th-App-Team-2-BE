@@ -22,7 +22,7 @@ internal class MafiaGameService(
             }
         }
 
-        val player = MafiaPlayer(session.user.id, nickname, session.id, generateColor(gameInfo))
+        val player = MafiaPlayer(session.user.id, nickname, generateColor(gameInfo))
 
         if (gameInfo == null) {
             gameInfo = createGameInfo(session, player)

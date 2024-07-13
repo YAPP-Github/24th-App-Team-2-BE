@@ -4,6 +4,7 @@ include(
     "adapter:rdb",
     "app:api",
     "app:support:auth",
+    "app:support:exception",
     "app:websocket",
     "domain",
     "core",

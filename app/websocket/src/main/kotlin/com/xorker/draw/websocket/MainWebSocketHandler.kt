@@ -1,5 +1,8 @@
 package com.xorker.draw.websocket
 
+import com.xorker.draw.exception.XorkerException
+import com.xorker.draw.room.RoomRepository
+import com.xorker.draw.websocket.exception.WebSocketExceptionHandler
 import com.xorker.draw.websocket.parser.WebSocketRequestParser
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
@@ -13,6 +16,9 @@ class MainWebSocketHandler(
     private val router: WebSocketRouter,
     private val requestParser: WebSocketRequestParser,
     private val sessionEventListener: List<SessionEventListener>,
+    private val messageBroker: SessionMessageBroker,
+    private val roomRepository: RoomRepository,
+    private val webSocketExceptionHandler: WebSocketExceptionHandler,
 ) : TextWebSocketHandler() {
     override fun afterConnectionEstablished(session: WebSocketSession) {
     }
@@ -20,7 +26,11 @@ class MainWebSocketHandler(
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val request = requestParser.parse(message.payload)
 
-        router.route(session, request)
+        try {
+            router.route(session, request)
+        } catch (ex: XorkerException) {
+            webSocketExceptionHandler.handleXorkerException(session, request.action, ex)
+        }
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {

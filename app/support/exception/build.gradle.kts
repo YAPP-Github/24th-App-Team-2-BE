@@ -6,13 +6,9 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":app:support:auth"))
-    implementation(project(":app:support:exception"))
-    implementation(project(":core"))
-    implementation(project(":support:yaml"))
+    implementation(project(":domain"))
 
     implementation("org.springframework.boot:spring-boot-starter-web:${Versions.SPRING_BOOT}")
-    implementation("org.springframework.boot:spring-boot-starter-websocket:${Versions.SPRING_BOOT}")
 }
 
 tasks {

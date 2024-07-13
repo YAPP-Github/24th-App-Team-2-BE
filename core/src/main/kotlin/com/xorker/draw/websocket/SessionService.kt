@@ -2,8 +2,11 @@ package com.xorker.draw.websocket
 
 import com.xorker.draw.user.UserId
 import java.util.concurrent.ConcurrentHashMap
+import org.springframework.core.Ordered
+import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Service
 
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Service
 internal class SessionService : SessionUseCase, SessionEventListener {
     private val sessionMap: ConcurrentHashMap<SessionId, Session> = ConcurrentHashMap()

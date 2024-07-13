@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket.dto
+package com.xorker.draw.websocket.message.request
 
 enum class RequestAction(
     description: String,

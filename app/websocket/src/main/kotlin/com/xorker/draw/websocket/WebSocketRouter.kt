@@ -1,8 +1,8 @@
 package com.xorker.draw.websocket
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.xorker.draw.websocket.dto.RequestAction
-import com.xorker.draw.websocket.dto.WebSocketRequest
+import com.xorker.draw.websocket.message.request.RequestAction
+import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
 

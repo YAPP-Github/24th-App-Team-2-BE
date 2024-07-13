@@ -1,8 +1,8 @@
-package com.xorker.draw.websocket.message.dto
+package com.xorker.draw.websocket.message.request.dto
 
 import com.xorker.draw.exception.ExceptionResponse
-import com.xorker.draw.websocket.dto.RequestAction
-import com.xorker.draw.websocket.message.SessionMessage
+import com.xorker.draw.websocket.SessionMessage
+import com.xorker.draw.websocket.message.request.RequestAction
 
 class ExceptionMessage(
     val action: RequestAction,

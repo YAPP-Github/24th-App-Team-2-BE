@@ -34,7 +34,7 @@ class MainWebSocketHandler(
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-        val sessionDto = sessionUseCase.getSession(SessionId(session.id)) ?: return
+        val sessionDto = sessionUseCase.getSession(SessionId(session.id)) ?: return // TODO error logging
 
         when (status) {
             CloseStatus.NORMAL ->

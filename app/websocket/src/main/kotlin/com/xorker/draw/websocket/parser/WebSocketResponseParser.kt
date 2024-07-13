@@ -1,8 +1,8 @@
 package com.xorker.draw.websocket.parser
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.xorker.draw.websocket.message.SessionMessage
-import com.xorker.draw.websocket.message.dto.ExceptionMessage
+import com.xorker.draw.websocket.SessionMessage
+import com.xorker.draw.websocket.message.request.dto.ExceptionMessage
 import org.springframework.stereotype.Component
 
 @Component

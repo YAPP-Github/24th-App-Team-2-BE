@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket.message
+package com.xorker.draw.websocket
 
 enum class ResponseAction(
     description: String,

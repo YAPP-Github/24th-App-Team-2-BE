@@ -7,7 +7,6 @@ import com.xorker.draw.websocket.message.dto.MafiaPlayerListBody
 import com.xorker.draw.websocket.message.dto.MafiaPlayerListMessage
 import com.xorker.draw.websocket.message.dto.toResponse
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Service
 
 @Component
 class MafiaGameMessengerImpl : MafiaGameMessenger {

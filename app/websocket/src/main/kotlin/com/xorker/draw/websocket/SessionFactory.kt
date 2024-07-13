@@ -32,7 +32,7 @@ class SessionFactory(
             value = (1..6)
                 .map { charset.random() }
                 .joinToString("")
-        }while(roomRepository.getRoom(RoomId(value)) != null)
+        } while (roomRepository.getRoom(RoomId(value)) != null)
 
         return value
     }

@@ -1,8 +1,8 @@
 package com.xorker.draw.websocket
 
 import com.xorker.draw.room.RoomRepository
-import com.xorker.draw.websocket.dto.SessionInitializeResponse
 import com.xorker.draw.websocket.dto.toResponse
+import com.xorker.draw.websocket.message.dto.MafiaPlayerListMessage
 import com.xorker.draw.websocket.parser.WebSocketRequestParser
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
@@ -45,7 +45,7 @@ class MainWebSocketHandler(
         val roomId = sessionDto.roomId
         val room = roomRepository.getRoom(roomId) ?: return
 
-        val response = SessionInitializeResponse(
+        val response = MafiaPlayerListMessage(
             roomId,
             room.players.map { it.toResponse() }.toList(),
         )

@@ -2,8 +2,6 @@ package com.xorker.draw.websocket
 
 import com.xorker.draw.room.RoomRepository
 import com.xorker.draw.websocket.dto.SessionInitializeRequest
-import com.xorker.draw.websocket.dto.SessionInitializeResponse
-import com.xorker.draw.websocket.dto.toResponse
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
 
@@ -21,15 +19,5 @@ class WebSocketController(
         sessionEventListener.forEach {
             it.connectSession(sessionDto, request.nickname)
         }
-
-        val roomId = sessionDto.roomId
-        val room = roomRepository.getRoom(roomId) ?: return
-
-        val response = SessionInitializeResponse(
-            roomId,
-            room.players.map { it.toResponse() }.toList(),
-        )
-
-        messageBroker.broadcast(sessionDto.roomId, SessionMessage(Action.PLAYER_LIST, response))
     }
 }

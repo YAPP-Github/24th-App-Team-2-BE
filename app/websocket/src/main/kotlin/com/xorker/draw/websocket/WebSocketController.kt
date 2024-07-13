@@ -1,7 +1,7 @@
 package com.xorker.draw.websocket
 
 import com.xorker.draw.room.RoomRepository
-import com.xorker.draw.websocket.dto.SessionInitializeRequest
+import com.xorker.draw.websocket.message.request.dto.SessionInitializeRequest
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
 

@@ -6,8 +6,8 @@ import com.xorker.draw.room.RoomId
 import com.xorker.draw.room.RoomRepository
 import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
-import com.xorker.draw.websocket.dto.SessionInitializeRequest
-import com.xorker.draw.websocket.dto.SessionWrapper
+import com.xorker.draw.websocket.message.request.SessionWrapper
+import com.xorker.draw.websocket.message.request.dto.SessionInitializeRequest
 import org.springframework.stereotype.Service
 import org.springframework.web.socket.WebSocketSession
 

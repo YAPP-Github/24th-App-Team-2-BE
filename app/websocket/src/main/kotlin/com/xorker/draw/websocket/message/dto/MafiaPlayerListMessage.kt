@@ -8,9 +8,10 @@ import com.xorker.draw.websocket.message.SessionMessage
 
 data class MafiaPlayerListMessage(
     override val body: MafiaPlayerListBody,
-    override val action: ResponseAction = ResponseAction.PLAYER_LIST,
-    override val status: SessionMessage.Status = SessionMessage.Status.OK,
-) : SessionMessage
+) : SessionMessage {
+    override val action: ResponseAction = ResponseAction.PLAYER_LIST
+    override val status: SessionMessage.Status = SessionMessage.Status.OK
+}
 
 data class MafiaPlayerListBody(
     val roomId: RoomId,

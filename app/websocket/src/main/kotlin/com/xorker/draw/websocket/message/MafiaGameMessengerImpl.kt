@@ -6,9 +6,10 @@ import com.xorker.draw.room.Room
 import com.xorker.draw.websocket.message.dto.MafiaPlayerListBody
 import com.xorker.draw.websocket.message.dto.MafiaPlayerListMessage
 import com.xorker.draw.websocket.message.dto.toResponse
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 
-@Service
+@Component
 class MafiaGameMessengerImpl : MafiaGameMessenger {
     override fun broadcastPlayerList(room: Room<MafiaPlayer>) {
         val roomId = room.id

@@ -47,6 +47,7 @@ internal class MafiaGameService(
 
         player.disconnect()
         mafiaGameRepository.saveGameInfo(gameInfo)
+        mafiaGameMessenger.broadcastPlayerList(gameInfo.room)
     }
 
     override fun exitSession(session: Session) {
@@ -61,6 +62,7 @@ internal class MafiaGameService(
 
         gameInfo.room.remove(player)
         mafiaGameRepository.saveGameInfo(gameInfo)
+        mafiaGameMessenger.broadcastPlayerList(gameInfo.room)
     }
 
     private fun generateColor(gameInfo: MafiaGameInfo?): String {

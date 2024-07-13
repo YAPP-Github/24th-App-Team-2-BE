@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
     implementation(project(":app:support:auth"))
+    implementation(project(":app:support:exception"))
     implementation(project(":app:websocket"))
     implementation(project(":core"))
     implementation(project(":support:yaml"))

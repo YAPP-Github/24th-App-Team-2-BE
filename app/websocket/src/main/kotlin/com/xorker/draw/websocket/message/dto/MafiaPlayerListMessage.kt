@@ -19,10 +19,11 @@ data class MafiaPlayerListBody(
 )
 
 fun MafiaPlayer.toResponse(): MafiaPlayerResponse =
-    MafiaPlayerResponse(this.userId, this.nickname, this.color)
+    MafiaPlayerResponse(this.userId, this.nickname, this.color, this.isConnect())
 
 data class MafiaPlayerResponse(
     val id: UserId,
     val nickname: String,
     val colorCode: String,
+    val isConnect: Boolean,
 )

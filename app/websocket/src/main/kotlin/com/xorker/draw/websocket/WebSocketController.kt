@@ -1,39 +1,35 @@
 package com.xorker.draw.websocket
 
-import com.xorker.draw.room.RoomUseCase
-import com.xorker.draw.user.User
-import com.xorker.draw.websocket.dto.PlayerResponse
+import com.xorker.draw.room.RoomRepository
 import com.xorker.draw.websocket.dto.SessionInitializeRequest
 import com.xorker.draw.websocket.dto.SessionInitializeResponse
+import com.xorker.draw.websocket.dto.toResponse
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
 
 @Component
 class WebSocketController(
     private val sessionFactory: SessionFactory,
-    private val sessionUseCase: SessionUseCase,
-    private val roomUseCase: RoomUseCase,
     private val messageBroker: SessionMessageBroker,
+    private val sessionEventListener: List<SessionEventListener>,
+    private val roomRepository: RoomRepository,
 ) {
 
     fun initializeSession(session: WebSocketSession, request: SessionInitializeRequest) {
         val sessionDto = sessionFactory.create(session, request)
-        sessionUseCase.registerSession(sessionDto)
+
+        sessionEventListener.forEach {
+            it.connectSession(sessionDto, request.nickname)
+        }
 
         val roomId = sessionDto.roomId
-
-        val room = roomUseCase.getRoom(roomId) ?: return
+        val room = roomRepository.getRoom(roomId) ?: return
 
         val response = SessionInitializeResponse(
             roomId,
-            room.sessions.map { it.user.toResponse() }.toList(),
+            room.players.map { it.toResponse() }.toList(),
         )
 
-        messageBroker.broadcast(sessionDto.roomId, SessionMessage(Action.WAIT_ROOM_REFRESH, response))
+        messageBroker.broadcast(sessionDto.roomId, SessionMessage(Action.PLAYER_LIST, response))
     }
-
-    private fun User.toResponse(): PlayerResponse = PlayerResponse(
-        id = this.id,
-        nickname = this.name,
-    )
 }

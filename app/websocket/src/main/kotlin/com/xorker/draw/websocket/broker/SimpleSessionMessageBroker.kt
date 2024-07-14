@@ -1,6 +1,7 @@
 package com.xorker.draw.websocket.broker
 
 import com.xorker.draw.room.RoomRepository
+import com.xorker.draw.websocket.BranchedBroadcastEvent
 import com.xorker.draw.websocket.BroadcastEvent
 import com.xorker.draw.websocket.SessionMessageBroker
 import com.xorker.draw.websocket.SessionUseCase
@@ -28,6 +29,33 @@ class SimpleSessionMessageBroker(
                 val userId = player.userId
 
                 sessionUseCase.getSession(userId)?.send(response)
+            }
+        }
+    }
+
+    @EventListener
+    override fun broadcast(event: BranchedBroadcastEvent) {
+        val roomId = event.roomId
+
+        val branched = event.branched
+
+        val message = event.message
+        val branchedMessage = event.branchedMessage
+
+        val response = parser.parse(message)
+        val branchedResponse = parser.parse(branchedMessage)
+
+        roomRepository.getRoom(roomId)?.let { room ->
+            room.players.forEach { player ->
+                val userId = player.userId
+
+                sessionUseCase.getSession(userId)?.let {
+                    if (userId in branched) {
+                        it.send(branchedResponse)
+                    } else {
+                        it.send(response)
+                    }
+                }
             }
         }
     }

@@ -14,6 +14,7 @@ class WebSocketRouter(
     fun route(session: WebSocketSession, request: WebSocketRequest) {
         when (request.action) {
             RequestAction.INIT -> webSocketController.initializeSession(session, request.extractBody())
+            RequestAction.START_GAME -> webSocketController.startMafiaGame(request.extractBody())
         }
     }
 

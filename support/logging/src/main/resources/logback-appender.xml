@@ -4,6 +4,10 @@
             name="LOG_PATTERN"
             value="[%d{yyyy-MM-dd HH:mm:ss.SSS}][%-5level][%thread][%logger{1}] %msg%n"
     />
+    <property
+            name="LOG_PATH"
+            value="/log"
+    />
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -24,7 +28,7 @@
     </appender>
 
     <appender name="CONSOLE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>log/console.txt</file>
+        <file>${LOG_PATH}/console.txt</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>log/console-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
@@ -37,7 +41,7 @@
     </appender>
 
     <appender name="API_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>log/api.txt</file>
+        <file>${LOG_PATH}/api.txt</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>log/api-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
@@ -50,7 +54,7 @@
     </appender>
 
     <appender name="WS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>log/ws.txt</file>
+        <file>${LOG_PATH}/ws.txt</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>log/ws-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
             <maxFileSize>100MB</maxFileSize>

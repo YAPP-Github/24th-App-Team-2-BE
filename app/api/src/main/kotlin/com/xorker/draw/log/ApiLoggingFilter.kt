@@ -24,7 +24,6 @@ class ApiLoggingFilter : Filter {
         try {
             chain.doFilter(request, response)
         } finally {
-
             logger.info("${generateRequestLog(request)}\n${generateResponseLog(response)}")
             response.copyBodyToResponse()
         }

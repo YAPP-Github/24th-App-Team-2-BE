@@ -1,6 +1,6 @@
 package com.xorker.draw.mafia
 
-import org.springframework.context.i18n.LocaleContextHolder
+import java.util.Locale
 import org.springframework.stereotype.Component
 
 @Component
@@ -8,9 +8,9 @@ internal class MafiaKeywordAdapter(
     private val wordJpaRepository: WordJpaRepository,
 ) : MafiaKeywordRepository {
 
-    override fun getRandomKeyword(): MafiaKeyword? {
-        val locale = LocaleContextHolder.getLocale()
+    override fun getRandomKeyword(locale: Locale): MafiaKeyword {
+        val word = wordJpaRepository.findRandomWord(locale.language)
 
-        return wordJpaRepository.findRandomWord()?.toDomain(locale)
+        return word.toDomain()
     }
 }

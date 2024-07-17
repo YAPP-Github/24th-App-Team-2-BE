@@ -5,7 +5,7 @@ import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
 
 data class MafiaGameInfoMessage(
-    override val body: Any,
+    override val body: MafiaGameInfoBody,
 ) : SessionMessage {
     override val action: ResponseAction = ResponseAction.GAME_INFO
     override val status: SessionMessage.Status = SessionMessage.Status.OK
@@ -15,7 +15,6 @@ data class MafiaGameInfoBody(
     val isMafia: Boolean = false,
     val category: String,
     val answer: String,
-    val turnList: List<MafiaPlayerResponse>,
     val gameOption: MafiaGameOptionResponse,
 )
 

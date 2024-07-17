@@ -6,7 +6,7 @@ import com.xorker.draw.user.UserId
 class MafiaGameInfo(
     val room: Room<MafiaPlayer>,
     var phase: MafiaPhase,
-    var gameOption: MafiaGameOption,
+    val gameOption: MafiaGameOption,
 ) {
     fun findPlayer(userId: UserId): MafiaPlayer? = room.findPlayer(userId)
 }

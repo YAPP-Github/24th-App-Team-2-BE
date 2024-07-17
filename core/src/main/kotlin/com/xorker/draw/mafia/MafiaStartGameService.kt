@@ -1,8 +1,8 @@
 package com.xorker.draw.mafia
 
-import com.xorker.draw.exception.InvalidGameStatusException
-import com.xorker.draw.exception.NotFoundWordException
+import com.xorker.draw.exception.InvalidMafiaGamePlayingPhaseStatusException
 import com.xorker.draw.room.RoomId
+import java.util.Locale
 import org.springframework.stereotype.Service
 import kotlin.random.Random
 
@@ -14,7 +14,7 @@ internal class MafiaStartGameService(
 ) : MafiaStartGameUseCase {
 
     override fun startMafiaGame(roomId: RoomId) {
-        val gameInfo = mafiaGameRepository.getGameInfo(roomId) ?: throw InvalidGameStatusException
+        val gameInfo = mafiaGameRepository.getGameInfo(roomId) ?: throw InvalidMafiaGamePlayingPhaseStatusException
 
         val room = gameInfo.room
         val players = room.players
@@ -24,16 +24,20 @@ internal class MafiaStartGameService(
             turnList.add(it)
         }
 
-        val mafia = Random.nextInt(0, players.size)
-        val keyword = mafiaKeywordRepository.getRandomKeyword() ?: throw NotFoundWordException
+        room.clear()
+        room.addAll(turnList)
+
+        val mafiaIndex = Random.nextInt(0, players.size)
+        val keyword = mafiaKeywordRepository.getRandomKeyword(Locale.KOREAN) // TODO extract room locale
 
         gameInfo.phase = MafiaPhase.Playing(
             turnList = turnList,
-            mafiaPlayer = players[mafia],
+            mafiaPlayer = players[mafiaIndex],
             keyword = keyword,
         )
-        gameInfo.gameOption = MafiaGameOption()
 
         mafiaGameMessenger.broadcastGameInfo(gameInfo)
+
+        mafiaGameMessenger.broadcastPlayerList(room)
     }
 }

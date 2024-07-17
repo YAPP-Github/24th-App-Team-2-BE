@@ -1,6 +1,6 @@
 package com.xorker.draw.websocket.message.response
 
-import com.xorker.draw.exception.InvalidGameStatusException
+import com.xorker.draw.exception.InvalidMafiaGamePlayingPhaseStatusException
 import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameMessenger
 import com.xorker.draw.mafia.MafiaPhase
@@ -39,11 +39,10 @@ class MafiaGameMessengerImpl(
     override fun broadcastGameInfo(mafiaGameInfo: MafiaGameInfo) {
         val roomId = mafiaGameInfo.room.id
 
-        val phase = mafiaGameInfo.phase as? MafiaPhase.Playing ?: throw InvalidGameStatusException
+        val phase = mafiaGameInfo.phase as? MafiaPhase.Playing ?: throw InvalidMafiaGamePlayingPhaseStatusException
 
         val mafia = phase.mafiaPlayer
         val keyword = phase.keyword
-        val turnList = phase.turnList
 
         val gameOption = mafiaGameInfo.gameOption
 
@@ -51,7 +50,6 @@ class MafiaGameMessengerImpl(
             MafiaGameInfoBody(
                 category = keyword.category,
                 answer = keyword.answer,
-                turnList = turnList.map { it.toResponse() }.toList(),
                 gameOption = gameOption.toResponse(),
             ),
         )
@@ -61,7 +59,6 @@ class MafiaGameMessengerImpl(
                 isMafia = true,
                 category = keyword.category,
                 answer = keyword.answer,
-                turnList = turnList.map { it.toResponse() }.toList(),
                 gameOption = gameOption.toResponse(),
             ),
         )

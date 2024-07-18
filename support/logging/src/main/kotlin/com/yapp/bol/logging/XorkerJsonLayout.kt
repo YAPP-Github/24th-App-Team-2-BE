@@ -3,7 +3,6 @@ package com.yapp.bol.logging
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.contrib.jackson.JacksonJsonFormatter
 import ch.qos.logback.contrib.json.classic.JsonLayout
-import org.slf4j.MDC
 
 class XorkerJsonLayout : JsonLayout() {
 
@@ -17,11 +16,7 @@ class XorkerJsonLayout : JsonLayout() {
         }
     }
 
-    override fun addCustomDataToJsonMap(map: MutableMap<String, Any>, p1: ILoggingEvent?) {
-        super.addCustomDataToJsonMap(map, p1)
-
-        MDC.get("test")?.let {
-            map["test"] = it
-        }
+    override fun addCustomDataToJsonMap(map: MutableMap<String, Any>, event: ILoggingEvent) {
+        super.addCustomDataToJsonMap(map, event)
     }
 }

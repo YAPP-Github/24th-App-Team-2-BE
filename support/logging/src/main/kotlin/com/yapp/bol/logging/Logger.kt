@@ -1,4 +1,4 @@
-package com.yapp.bol.logging.utils
+package com.yapp.bol.logging
 
 import org.slf4j.LoggerFactory
 

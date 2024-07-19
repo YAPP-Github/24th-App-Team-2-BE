@@ -19,6 +19,8 @@ interface Room<P : Player> {
     fun findPlayer(userId: UserId): P? = players.firstOrNull { it.userId == userId }
     fun add(player: P)
     fun remove(player: P)
+    fun addAll(players: List<P>)
+    fun clear()
     fun copy(): Room<P>
 }
 
@@ -47,8 +49,16 @@ class RoomImpl<P : Player>(
         _players.add(player)
     }
 
+    override fun addAll(players: List<P>) {
+        players.forEach { add(it) }
+    }
+
     override fun remove(player: P) {
         _players.remove(player)
+    }
+
+    override fun clear() {
+        _players.clear()
     }
 
     override fun copy(): Room<P> = RoomImpl(id, owner, maxMemberNum, _players)

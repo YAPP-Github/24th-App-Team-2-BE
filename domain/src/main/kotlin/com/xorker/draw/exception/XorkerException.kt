@@ -18,7 +18,8 @@ data object AlreadyJoinRoomException : ClientException("c005", "이미 참여한
 //region Server
 sealed class ServerException(code: String, message: String, cause: Throwable? = null) : XorkerException(code, message, cause)
 
-data object NotFoundUserException : ClientException("s001", "유저가 존재하지 않음") { private fun readResolve(): Any = NotFoundUserException }
+data object NotFoundUserException : ServerException("s001", "유저가 존재하지 않음") { private fun readResolve(): Any = NotFoundUserException }
+data object NotFoundWordException : ServerException("s002", "단어가 존재하지 않음") { private fun readResolve(): Any = NotFoundWordException }
 //endregion
 
 //region Critical
@@ -27,4 +28,5 @@ sealed class CriticalException(code: String, message: String, cause: Throwable? 
 class UnknownException(cause: Throwable) : CriticalException("crt001", "정의하지 못한 예외", cause)
 data object InvalidUserStatusException : CriticalException("crt002", "유효하지 않는 상태를 가진 유저를 조회함") { private fun readResolve(): Any = InvalidUserStatusException }
 data object UnSupportedException : CriticalException("crt003", "정의하지 않는 행위") { private fun readResolve(): Any = UnSupportedException }
+data object InvalidMafiaGamePlayingPhaseStatusException : CriticalException("crt004", "마피아 게임 Playing 단계에서 유효하지 않은 상태") { private fun readResolve(): Any = InvalidMafiaGamePlayingPhaseStatusException }
 //endregion

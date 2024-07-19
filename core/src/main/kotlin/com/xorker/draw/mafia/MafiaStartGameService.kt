@@ -37,7 +37,7 @@ internal class MafiaStartGameService(
 
         mafiaGameMessenger.broadcastGameReady(gameInfo)
 
-        mafiaGameMessenger.broadcastPlayerList(room) // TODO 턴 순서 응답으로 변경
+        mafiaGameMessenger.broadcastPlayerTurnList(gameInfo)
     }
 
     private fun generateTurnList(players: List<MafiaPlayer>): MutableList<MafiaPlayer> {

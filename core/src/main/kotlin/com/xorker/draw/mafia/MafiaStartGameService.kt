@@ -19,10 +19,7 @@ internal class MafiaStartGameService(
         val room = gameInfo.room
         val players = room.players
 
-        val turnList = mutableListOf<MafiaPlayer>()
-        players.forEach {
-            turnList.add(it)
-        }
+        val turnList = generateTurnList(players)
 
         room.clear()
         room.addAll(turnList)
@@ -38,6 +35,16 @@ internal class MafiaStartGameService(
 
         mafiaGameMessenger.broadcastGameInfo(gameInfo)
 
-        mafiaGameMessenger.broadcastPlayerList(room)
+        mafiaGameMessenger.broadcastGameReady(gameInfo)
+
+        mafiaGameMessenger.broadcastPlayerList(room) // TODO 턴 순서 응답으로 변경
+    }
+
+    private fun generateTurnList(players: List<MafiaPlayer>): MutableList<MafiaPlayer> {
+        val turnList = mutableListOf<MafiaPlayer>()
+        players.forEach {
+            turnList.add(it)
+        }
+        return turnList
     }
 }

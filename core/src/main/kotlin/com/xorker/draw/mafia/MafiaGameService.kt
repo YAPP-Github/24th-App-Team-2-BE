@@ -1,85 +1,28 @@
 package com.xorker.draw.mafia
 
-import com.xorker.draw.room.Room
+import com.xorker.draw.exception.InvalidRequestValueException
+import com.xorker.draw.mafia.dto.DrawRequest
 import com.xorker.draw.websocket.Session
-import com.xorker.draw.websocket.SessionEventListener
 import org.springframework.stereotype.Component
 
 @Component
 internal class MafiaGameService(
     private val mafiaGameRepository: MafiaGameRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
-) : SessionEventListener {
+) : MafiaGameUseCase {
 
-    override fun connectSession(session: Session, nickname: String) {
-        var gameInfo = mafiaGameRepository.getGameInfo(session.roomId)
+    override fun draw(session: Session, request: DrawRequest) {
+        val gameInfo = mafiaGameRepository.getGameInfo(session.roomId) ?: throw InvalidRequestValueException
+        val phase = gameInfo.phase
+        if (phase !is MafiaPhase.Playing) throw InvalidRequestValueException
 
-        if (gameInfo != null) {
-            val player = gameInfo.findPlayer(session.user.id)
-
-            if (player != null) {
-                player.connect()
-                return
-            }
+        val drawData = phase.drawData.lastOrNull()
+        if (drawData != null && drawData.first == session.user.id) {
+            phase.drawData.removeLast()
         }
-
-        val player = MafiaPlayer(session.user.id, nickname, generateColor(gameInfo))
-
-        if (gameInfo == null) {
-            gameInfo = createGameInfo(session, player)
-        } else {
-            gameInfo.room.add(player)
-        }
+        phase.drawData.add(Pair(session.user.id, request.drawData))
 
         mafiaGameRepository.saveGameInfo(gameInfo)
-        mafiaGameMessenger.broadcastPlayerList(gameInfo.room)
-    }
-
-    override fun disconnectSession(session: Session) {
-        val gameInfo = mafiaGameRepository.getGameInfo(session.roomId) ?: return
-
-        if (gameInfo.phase == MafiaPhase.Wait) {
-            exitSession(session)
-            return
-        }
-
-        val player = gameInfo.findPlayer(session.user.id) ?: return
-
-        player.disconnect()
-        mafiaGameRepository.saveGameInfo(gameInfo)
-        mafiaGameMessenger.broadcastPlayerList(gameInfo.room)
-    }
-
-    override fun exitSession(session: Session) {
-        val gameInfo = mafiaGameRepository.getGameInfo(session.roomId) ?: return
-
-        if (gameInfo.phase != MafiaPhase.Wait) {
-            disconnectSession(session)
-            return
-        }
-
-        val player = gameInfo.findPlayer(session.user.id) ?: return
-
-        gameInfo.room.remove(player)
-        mafiaGameRepository.saveGameInfo(gameInfo)
-        mafiaGameMessenger.broadcastPlayerList(gameInfo.room)
-    }
-
-    private fun generateColor(gameInfo: MafiaGameInfo?): String {
-        return "ffffff"
-    }
-
-    private fun createGameInfo(session: Session, player: MafiaPlayer): MafiaGameInfo {
-        val room = createRoom(session, player)
-        return MafiaGameInfo(
-            room,
-            MafiaPhase.Wait,
-            MafiaGameOption(),
-        )
-    }
-
-    private fun createRoom(session: Session, player: MafiaPlayer): Room<MafiaPlayer> {
-        val room = Room(session.roomId, player, 10)
-        return room
+        mafiaGameMessenger.broadcastDraw(gameInfo)
     }
 }

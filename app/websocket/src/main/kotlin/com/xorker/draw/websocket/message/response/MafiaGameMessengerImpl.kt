@@ -12,6 +12,8 @@ import com.xorker.draw.websocket.BroadcastEvent
 import com.xorker.draw.websocket.RespectiveBroadcastEvent
 import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
+import com.xorker.draw.websocket.message.response.dto.MafiaGameDrawBody
+import com.xorker.draw.websocket.message.response.dto.MafiaGameDrawMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoBody
 import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaGameReadyBody
@@ -149,5 +151,21 @@ class MafiaGameMessengerImpl(
         )
 
         broadcaster.publishBranchedBroadcastEvent(event)
+    }
+
+    override fun broadcastDraw(gameInfo: MafiaGameInfo) {
+        val phase = gameInfo.phase
+        if (phase !is MafiaPhase.Playing) throw InvalidMafiaGamePlayingPhaseStatusException
+
+        val event = BroadcastEvent(
+            gameInfo.room.id,
+            MafiaGameDrawMessage(
+                MafiaGameDrawBody(
+                    phase.drawData.last().second,
+                ),
+            ),
+        )
+
+        broadcaster.publishBroadcastEvent(event)
     }
 }

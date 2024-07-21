@@ -7,4 +7,5 @@ interface MafiaGameMessenger {
     fun broadcastGameInfo(mafiaGameInfo: MafiaGameInfo)
     fun broadcastGameReady(mafiaGameInfo: MafiaGameInfo)
     fun broadcastPlayerTurnList(mafiaGameInfo: MafiaGameInfo)
+    fun broadcastDraw(mafiaGameInfo: MafiaGameInfo)
 }

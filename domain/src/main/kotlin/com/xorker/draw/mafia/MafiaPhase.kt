@@ -1,5 +1,7 @@
 package com.xorker.draw.mafia
 
+import com.xorker.draw.user.UserId
+
 sealed class MafiaPhase {
     data object Wait : MafiaPhase()
 
@@ -9,6 +11,7 @@ sealed class MafiaPhase {
         val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
+        val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
     ) : MafiaPhase()
 
     class Vote() : MafiaPhase()

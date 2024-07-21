@@ -62,6 +62,16 @@ internal class MafiaGameService(
 
         gameInfo.room.remove(player)
         mafiaGameRepository.saveGameInfo(gameInfo)
+
+        if (gameInfo.room.players.isEmpty()) {
+            mafiaGameRepository.removeGameInfo(gameInfo)
+            return
+        }
+
+        if (gameInfo.room.owner == player) {
+            gameInfo.room.owner = gameInfo.room.players.first()
+        }
+        mafiaGameRepository.saveGameInfo(gameInfo)
         mafiaGameMessenger.broadcastPlayerList(gameInfo.room)
     }
 

@@ -66,7 +66,13 @@ internal class MafiaGameRoomService(
     }
 
     private fun generateColor(gameInfo: MafiaGameInfo?): String {
-        return "ffffff"
+        if (gameInfo == null) return COLOR_LIST.first()
+
+        val alreadyUsedColors =
+            gameInfo.room.players.map { it.color }.toList()
+
+        return COLOR_LIST.filterNot { alreadyUsedColors.contains(it) }
+            .first()
     }
 
     private fun createGameInfo(session: Session, player: MafiaPlayer): MafiaGameInfo {
@@ -81,5 +87,20 @@ internal class MafiaGameRoomService(
     private fun createRoom(session: Session, player: MafiaPlayer): Room<MafiaPlayer> {
         val room = Room(session.roomId, player, 10)
         return room
+    }
+
+    companion object {
+        private val COLOR_LIST = mutableListOf(
+            "FF5D47",
+            "FF9736",
+            "FFD536",
+            "ADE639",
+            "3CB371",
+            "6AB0F1",
+            "4B78EC",
+            "A162F1",
+            "FD66C1",
+            "7E91A6",
+        )
     }
 }

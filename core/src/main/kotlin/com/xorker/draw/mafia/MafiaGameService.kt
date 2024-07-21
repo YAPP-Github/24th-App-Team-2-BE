@@ -23,6 +23,6 @@ internal class MafiaGameService(
         phase.drawData.add(Pair(session.user.id, request.drawData))
 
         mafiaGameRepository.saveGameInfo(gameInfo)
-        mafiaGameMessenger.broadcastDraw(gameInfo)
+        mafiaGameMessenger.broadcastDraw(gameInfo.room.id, phase)
     }
 }

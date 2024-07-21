@@ -29,8 +29,8 @@ class WebSocketRouter(
                 mafiaStartGameUseCase.startMafiaGame(roomId)
             }
             RequestAction.DRAW -> {
-                val roomId = sessionUseCase.getSession(SessionId(session.id))?.roomId ?: throw InvalidRequestValueException
-                mafiaGameUseCase.draw(roomId, request.extractBody())
+                val sessionDto = sessionUseCase.getSession(SessionId(session.id)) ?: throw InvalidRequestValueException
+                mafiaGameUseCase.draw(sessionDto, request.extractBody())
             }
         }
     }

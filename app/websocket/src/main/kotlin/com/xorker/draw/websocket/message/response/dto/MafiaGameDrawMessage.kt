@@ -2,6 +2,7 @@ package com.xorker.draw.websocket.message.response.dto
 
 import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
+import java.time.LocalDateTime
 
 data class MafiaGameDrawMessage(
     override val body: MafiaGameDrawBody,
@@ -11,5 +12,9 @@ data class MafiaGameDrawMessage(
 }
 
 class MafiaGameDrawBody(
-    val posDraw: Map<String, Any>,
+    val round: Int,
+    val turn: Int,
+    val startTurnTime: LocalDateTime,
+    val draw: List<Map<String, Any>>,
+    val currentDraw: Map<String, Any>,
 )

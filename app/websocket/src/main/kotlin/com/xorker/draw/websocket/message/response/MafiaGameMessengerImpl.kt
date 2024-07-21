@@ -117,7 +117,7 @@ class MafiaGameMessengerImpl(
         val turn = phase.turn
         val turnList = phase.turnList
 
-        val currentTurnPlayer = turnList[turn - 1]
+        val currentTurnPlayer = turnList[turn]
 
         val mafiaPlayerResponses = turnList
             .map {

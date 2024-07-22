@@ -27,7 +27,7 @@ class MafiaGameMessengerImpl(
         val message = MafiaPlayerListMessage(
             MafiaPlayerListBody(
                 roomId,
-                room.players.map { it.toResponse() }.toList(),
+                room.players.map { it.toResponse(room.owner) }.toList(),
             ),
         )
 

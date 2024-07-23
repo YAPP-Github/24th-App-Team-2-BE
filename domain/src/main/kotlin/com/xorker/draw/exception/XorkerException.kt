@@ -29,4 +29,5 @@ class UnknownException(cause: Throwable) : CriticalException("crt001", "정의�
 data object InvalidUserStatusException : CriticalException("crt002", "유효하지 않는 상태를 가진 유저를 조회함") { private fun readResolve(): Any = InvalidUserStatusException }
 data object UnSupportedException : CriticalException("crt003", "정의하지 않는 행위") { private fun readResolve(): Any = UnSupportedException }
 data object InvalidMafiaGamePlayingPhaseStatusException : CriticalException("crt004", "마피아 게임 Playing 단계에서 유효하지 않은 상태") { private fun readResolve(): Any = InvalidMafiaGamePlayingPhaseStatusException }
+data object InvalidBroadcastException : CriticalException("crt005", "유효하지 않은 브로드캐스트 상태") { private fun readResolve(): Any = InvalidBroadcastException }
 //endregion

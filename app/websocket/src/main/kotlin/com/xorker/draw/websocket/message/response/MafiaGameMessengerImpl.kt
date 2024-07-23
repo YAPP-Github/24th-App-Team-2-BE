@@ -6,11 +6,16 @@ import com.xorker.draw.mafia.MafiaGameMessenger
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.MafiaPlayer
 import com.xorker.draw.room.Room
+import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.BranchedBroadcastEvent
 import com.xorker.draw.websocket.BroadcastEvent
+import com.xorker.draw.websocket.RespectiveBroadcastEvent
+import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
 import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoBody
 import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaGameReadyBody
+import com.xorker.draw.websocket.message.response.dto.MafiaGameReadyMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListMessage
 import com.xorker.draw.websocket.message.response.dto.toResponse
@@ -73,5 +78,32 @@ class MafiaGameMessengerImpl(
         )
 
         broadcaster.publishBranchedBroadcastEvent(event)
+    }
+
+    override fun broadcastGameReady(mafiaGameInfo: MafiaGameInfo) {
+        val roomId = mafiaGameInfo.room.id
+
+        val phase = mafiaGameInfo.phase as? MafiaPhase.Playing ?: throw InvalidMafiaGamePlayingPhaseStatusException
+
+        val turnList = phase.turnList
+
+        val messages = mutableMapOf<UserId, SessionMessage>()
+
+        turnList.forEachIndexed { i, player ->
+            val message = MafiaGameReadyMessage(
+                MafiaGameReadyBody(
+                    turn = i + 1,
+                    player = player.toResponse(),
+                ),
+            )
+            messages[player.userId] = message
+        }
+
+        val event = RespectiveBroadcastEvent(
+            roomId = roomId,
+            messages = messages,
+        )
+
+        broadcaster.publishRespectiveBroadcastEvent(event)
     }
 }

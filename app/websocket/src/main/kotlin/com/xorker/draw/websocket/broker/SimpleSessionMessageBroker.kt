@@ -1,8 +1,10 @@
 package com.xorker.draw.websocket.broker
 
+import com.xorker.draw.exception.InvalidBroadcastException
 import com.xorker.draw.room.RoomRepository
 import com.xorker.draw.websocket.BranchedBroadcastEvent
 import com.xorker.draw.websocket.BroadcastEvent
+import com.xorker.draw.websocket.RespectiveBroadcastEvent
 import com.xorker.draw.websocket.SessionMessageBroker
 import com.xorker.draw.websocket.SessionUseCase
 import com.xorker.draw.websocket.parser.WebSocketResponseParser
@@ -55,6 +57,25 @@ class SimpleSessionMessageBroker(
                     } else {
                         it.send(response)
                     }
+                }
+            }
+        }
+    }
+
+    @EventListener
+    override fun broadcast(event: RespectiveBroadcastEvent) {
+        val roomId = event.roomId
+
+        val messages = event.messages
+
+        roomRepository.getRoom(roomId)?.let { room ->
+            room.players.forEach { player ->
+                val userId = player.userId
+
+                sessionUseCase.getSession(userId)?.let {
+                    val response = parser.parse(messages[userId] ?: throw InvalidBroadcastException)
+
+                    it.send(response)
                 }
             }
         }

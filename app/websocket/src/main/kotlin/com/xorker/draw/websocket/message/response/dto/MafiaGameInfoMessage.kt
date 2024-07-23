@@ -19,11 +19,13 @@ data class MafiaGameInfoBody(
 )
 
 data class MafiaGameOptionResponse(
-    var turnTime: Long,
-    var numTurn: Int,
+    val turnTime: Long,
+    val numTurn: Int,
+    val roundTime: Int,
 )
 
 fun MafiaGameOption.toResponse(): MafiaGameOptionResponse = MafiaGameOptionResponse(
     turnTime = this.turnTime.toSeconds(),
     numTurn = this.numTurn,
+    roundTime = this.roundTime,
 )

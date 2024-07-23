@@ -5,4 +5,5 @@ enum class RequestAction(
 ) {
     INIT("세션 초기화"),
     START_GAME("마피아 게임 시작"),
+    DRAW("그림 그리기"),
 }

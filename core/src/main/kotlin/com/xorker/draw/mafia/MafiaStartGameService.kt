@@ -34,6 +34,7 @@ internal class MafiaStartGameService(
             turnList = turnList,
             mafiaPlayer = players[mafiaIndex],
             keyword = keyword,
+            drawData = mutableListOf(),
         )
 
         timerRepository.startTimer(gameInfo.gameOption.readyShowingTime, MafiaReadyExpiredEvent(gameInfo))

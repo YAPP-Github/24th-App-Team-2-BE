@@ -12,7 +12,7 @@ internal class TimerAdapter(
     private val eventPublisher: ApplicationEventPublisher,
 ) : TimerRepository {
 
-    override fun <T: Any> startTimer(interval: Duration, event: T) {
+    override fun <T : Any> startTimer(interval: Duration, event: T) {
         GlobalScope.launch {
             delay(interval.toMillis())
             eventPublisher.publishEvent(event)

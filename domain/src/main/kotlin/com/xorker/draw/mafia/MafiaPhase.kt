@@ -4,7 +4,8 @@ sealed class MafiaPhase {
     data object Wait : MafiaPhase()
 
     class Playing(
-        var turn: Int = 1,
+        var turn: Int = 0,
+        var round: Int = 1,
         val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,

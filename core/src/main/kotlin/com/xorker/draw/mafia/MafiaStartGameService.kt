@@ -1,7 +1,9 @@
 package com.xorker.draw.mafia
 
 import com.xorker.draw.exception.InvalidMafiaGamePlayingPhaseStatusException
+import com.xorker.draw.mafia.event.MafiaReadyExpiredEvent
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.timer.TimerRepository
 import java.util.Locale
 import org.springframework.stereotype.Service
 import kotlin.random.Random
@@ -11,6 +13,7 @@ internal class MafiaStartGameService(
     private val mafiaGameRepository: MafiaGameRepository,
     private val mafiaKeywordRepository: MafiaKeywordRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
+    private val timerRepository: TimerRepository,
 ) : MafiaStartGameUseCase {
 
     override fun startMafiaGame(roomId: RoomId) {
@@ -32,6 +35,8 @@ internal class MafiaStartGameService(
             mafiaPlayer = players[mafiaIndex],
             keyword = keyword,
         )
+
+        timerRepository.startTimer(gameInfo.gameOption.readyShowingTime, MafiaReadyExpiredEvent(gameInfo))
 
         mafiaGameMessenger.broadcastGameInfo(gameInfo)
 

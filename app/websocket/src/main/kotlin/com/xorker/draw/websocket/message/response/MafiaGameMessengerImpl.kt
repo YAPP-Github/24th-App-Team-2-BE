@@ -99,7 +99,7 @@ class MafiaGameMessengerImpl(
             val message = MafiaGameReadyMessage(
                 MafiaGameReadyBody(
                     turn = i + 1,
-                    player = player.toResponse(),
+                    player = player.toResponse(mafiaGameInfo.room.owner),
                 ),
             )
             messages[player.userId] = message
@@ -125,7 +125,7 @@ class MafiaGameMessengerImpl(
 
         val mafiaPlayerResponses = turnList
             .map {
-                it.toResponse()
+                it.toResponse(mafiaGameInfo.room.owner)
             }.toList()
 
         val message = MafiaPlayerTurnListMessage(

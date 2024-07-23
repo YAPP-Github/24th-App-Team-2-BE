@@ -61,6 +61,15 @@ internal class MafiaGameRoomService(
         val player = gameInfo.findPlayer(session.user.id) ?: return
 
         gameInfo.room.remove(player)
+
+        if (gameInfo.room.players.isEmpty()) {
+            mafiaGameRepository.removeGameInfo(gameInfo)
+            return
+        }
+
+        if (gameInfo.room.owner == player) {
+            gameInfo.room.owner = gameInfo.room.players.first()
+        }
         mafiaGameRepository.saveGameInfo(gameInfo)
         mafiaGameMessenger.broadcastPlayerList(gameInfo.room)
     }

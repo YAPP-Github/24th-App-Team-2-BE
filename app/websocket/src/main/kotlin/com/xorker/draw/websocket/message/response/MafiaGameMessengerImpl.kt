@@ -18,6 +18,8 @@ import com.xorker.draw.websocket.message.response.dto.MafiaGameReadyBody
 import com.xorker.draw.websocket.message.response.dto.MafiaGameReadyMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListBody
+import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListMessage
 import com.xorker.draw.websocket.message.response.dto.toResponse
 import org.springframework.stereotype.Component
 
@@ -105,5 +107,47 @@ class MafiaGameMessengerImpl(
         )
 
         broadcaster.publishRespectiveBroadcastEvent(event)
+    }
+
+    override fun broadcastPlayerTurnList(mafiaGameInfo: MafiaGameInfo) {
+        val room = mafiaGameInfo.room
+        val roomId = room.id
+
+        val phase = mafiaGameInfo.phase as? MafiaPhase.Playing ?: throw InvalidMafiaGamePlayingPhaseStatusException
+        val turn = phase.turn
+        val turnList = phase.turnList
+
+        val currentTurnPlayer = turnList[turn - 1]
+
+        val mafiaPlayerResponses = turnList
+            .map {
+                it.toResponse()
+            }.toList()
+
+        val message = MafiaPlayerTurnListMessage(
+            MafiaPlayerTurnListBody(
+                turn = turn,
+                players = mafiaPlayerResponses,
+            ),
+        )
+
+        val branchedMessage = MafiaPlayerTurnListMessage(
+            MafiaPlayerTurnListBody(
+                turn = turn,
+                isMyTurn = true,
+                players = mafiaPlayerResponses,
+            ),
+        )
+
+        val branched = setOf(currentTurnPlayer.userId)
+
+        val event = BranchedBroadcastEvent(
+            roomId = roomId,
+            branched = branched,
+            message = message,
+            branchedMessage = branchedMessage,
+        )
+
+        broadcaster.publishBranchedBroadcastEvent(event)
     }
 }

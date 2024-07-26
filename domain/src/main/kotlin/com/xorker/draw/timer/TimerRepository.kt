@@ -1,8 +1,10 @@
 package com.xorker.draw.timer
 
+import com.xorker.draw.mafia.event.JobWithStartTime
 import java.time.Duration
-import kotlinx.coroutines.Job
 
 interface TimerRepository {
-    fun <T : Any> startTimer(interval: Duration, event: T): Job
+    fun <T : Any> startTimer(interval: Duration, event: T): JobWithStartTime
+
+    fun startTimer(interval: Duration, callback: () -> Unit): JobWithStartTime
 }

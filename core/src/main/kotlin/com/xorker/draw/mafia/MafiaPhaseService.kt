@@ -2,6 +2,7 @@ package com.xorker.draw.mafia
 
 import com.xorker.draw.exception.NotFoundRoomException
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.timer.TimerRepository
 import org.springframework.stereotype.Service
 
 @Service
@@ -9,7 +10,9 @@ internal class MafiaPhaseService(
     private val mafiaGameMessenger: MafiaGameMessenger,
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
     private val startGameService: MafiaStartGameService,
+    private val mafiaGameService: MafiaGameService,
     private val mafiaGameRepository: MafiaGameRepository,
+    private val timerRepository: TimerRepository,
 ) : MafiaPhaseUseCase {
 
     override fun startGame(roomId: RoomId): MafiaPhase.Ready {
@@ -33,7 +36,10 @@ internal class MafiaPhaseService(
         val phase = synchronized(gameInfo) {
             val readyPhase = gameInfo.phase
             assertIs<MafiaPhase.Ready>(readyPhase)
-            val playingPhase = readyPhase.toPlaying()
+            val job = timerRepository.startTimer(gameInfo.gameOption.turnTime) {
+                mafiaGameService.processNextTurn(gameInfo)
+            }
+            val playingPhase = readyPhase.toPlaying(job)
             gameInfo.phase = playingPhase
             playingPhase
         }

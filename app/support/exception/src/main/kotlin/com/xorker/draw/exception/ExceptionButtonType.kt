@@ -56,6 +56,5 @@ fun XorkerException.getButtons(): List<ExceptionButtonType> {
         is InvalidMafiaPhaseException,
         InvalidRequestOnlyMyTurnException,
         -> buttonOk
-
     }
 }

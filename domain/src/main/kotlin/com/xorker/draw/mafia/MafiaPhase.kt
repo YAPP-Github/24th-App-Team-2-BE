@@ -1,6 +1,8 @@
 package com.xorker.draw.mafia
 
 import com.xorker.draw.exception.InvalidMafiaPhaseException
+import com.xorker.draw.mafia.event.JobWithStartTime
+import com.xorker.draw.mafia.turn.TurnInfo
 import com.xorker.draw.user.UserId
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -14,24 +16,25 @@ sealed class MafiaPhase {
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
     ) : MafiaPhase(), MafiaPhaseWithTurnList {
-        fun toPlaying(): Playing {
+        fun toPlaying(job: JobWithStartTime): Playing {
             return Playing(
                 turnList = turnList,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
                 drawData = mutableListOf(),
+                timerJob = job,
             )
         }
     }
 
     class Playing(
-        var turn: Int = 0,
-        var round: Int = 1,
         override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
+        var turnInfo: TurnInfo = TurnInfo(),
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
-    ) : MafiaPhase(), MafiaPhaseWithTurnList
+        var timerJob: JobWithStartTime,
+    ) : MafiaPhase(), MafiaPhaseWithTurnList, TurnInfo by turnInfo
 
     class Vote() : MafiaPhase()
 
@@ -45,7 +48,7 @@ interface MafiaPhaseWithTurnList {
 
     fun getPlayerTurn(userId: UserId): Int? {
         turnList.forEachIndexed { index, player ->
-            if(player.userId == userId) return index
+            if (player.userId == userId) return index
         }
         return null
     }

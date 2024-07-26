@@ -9,4 +9,5 @@ interface MafiaGameMessenger {
     fun broadcastGameReady(mafiaGameInfo: MafiaGameInfo)
     fun broadcastPlayerTurnList(mafiaGameInfo: MafiaGameInfo)
     fun broadcastDraw(roomId: RoomId, phase: MafiaPhase.Playing)
+    fun broadcastVoteStatus(mafiaGameInfo: MafiaGameInfo)
 }

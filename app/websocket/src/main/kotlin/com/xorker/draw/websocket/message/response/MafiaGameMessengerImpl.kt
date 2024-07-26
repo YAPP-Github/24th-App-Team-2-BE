@@ -1,6 +1,7 @@
 package com.xorker.draw.websocket.message.response
 
 import com.xorker.draw.exception.InvalidMafiaGamePlayingPhaseStatusException
+import com.xorker.draw.exception.InvalidMafiaGameVotePhaseStatusException
 import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameMessenger
 import com.xorker.draw.mafia.MafiaPhase
@@ -23,6 +24,8 @@ import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaVoteStatusBody
+import com.xorker.draw.websocket.message.response.dto.MafiaVoteStatusMessage
 import com.xorker.draw.websocket.message.response.dto.toResponse
 import java.time.LocalDateTime
 import org.springframework.stereotype.Component
@@ -170,6 +173,20 @@ class MafiaGameMessengerImpl(
                 ),
             ),
         )
+
+        broadcaster.publishBroadcastEvent(event)
+    }
+
+    override fun broadcastVoteStatus(mafiaGameInfo: MafiaGameInfo) {
+        val roomId = mafiaGameInfo.room.id
+
+        val phase = mafiaGameInfo.phase as? MafiaPhase.Vote ?: throw InvalidMafiaGameVotePhaseStatusException
+
+        val message = MafiaVoteStatusMessage(
+            MafiaVoteStatusBody(phase.players),
+        )
+
+        val event = BroadcastEvent(roomId, message)
 
         broadcaster.publishBroadcastEvent(event)
     }

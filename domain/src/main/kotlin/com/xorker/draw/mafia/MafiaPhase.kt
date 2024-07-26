@@ -12,6 +12,7 @@ sealed class MafiaPhase {
     data object Wait : MafiaPhase()
 
     data class Ready(
+        val startTime: String,
         override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,

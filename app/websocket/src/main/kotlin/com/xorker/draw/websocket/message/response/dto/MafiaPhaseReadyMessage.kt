@@ -3,14 +3,14 @@ package com.xorker.draw.websocket.message.response.dto
 import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
 
-class MafiaGameReadyMessage(
-    override val body: MafiaGameReadyBody,
+class MafiaPhaseReadyMessage(
+    override val body: MafiaPhaseReadyBody,
 ) : SessionMessage {
     override val action = ResponseAction.GAME_READY
     override val status = SessionMessage.Status.OK
 }
 
-data class MafiaGameReadyBody(
-    val turn: Int,
-    val player: MafiaPlayerResponse,
+data class MafiaPhaseReadyBody(
+    val startTime: String,
+    val gameInfo: MafiaGameInfoMessage?,
 )

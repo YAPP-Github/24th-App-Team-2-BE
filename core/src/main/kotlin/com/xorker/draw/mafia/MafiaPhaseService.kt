@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service
 
 @Service
 internal class MafiaPhaseService(
-    private val mafiaGameMessenger: MafiaGameMessenger,
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
     private val startGameService: MafiaStartGameService,
     private val mafiaGameService: MafiaGameService,
@@ -23,9 +22,7 @@ internal class MafiaPhaseService(
             startGameService.startMafiaGame(gameInfo)
         }
 
-        mafiaGameMessenger.broadcastGameInfo(gameInfo)
-        mafiaGameMessenger.broadcastGameReady(gameInfo)
-        mafiaGameMessenger.broadcastPlayerTurnList(gameInfo)
+        mafiaPhaseMessenger.broadcastPhase(gameInfo)
 
         return phase
     }

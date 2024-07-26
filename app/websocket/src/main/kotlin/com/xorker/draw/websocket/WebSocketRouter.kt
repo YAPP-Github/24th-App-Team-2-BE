@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.xorker.draw.exception.InvalidRequestValueException
 import com.xorker.draw.mafia.MafiaGameUseCase
 import com.xorker.draw.mafia.MafiaStartGameUseCase
+import com.xorker.draw.mafia.MafiaVoteUseCase
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.message.request.RequestAction
 import com.xorker.draw.websocket.message.request.dto.StartMafiaGameRequest
+import com.xorker.draw.websocket.message.request.dto.VoteMafiaRequest
 import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
@@ -18,6 +21,7 @@ class WebSocketRouter(
     private val sessionUseCase: SessionUseCase,
     private val mafiaStartGameUseCase: MafiaStartGameUseCase,
     private val mafiaGameUseCase: MafiaGameUseCase,
+    private val mafiaVoteUseCase: MafiaVoteUseCase,
 ) {
     fun route(session: WebSocketSession, request: WebSocketRequest) {
         when (request.action) {
@@ -28,9 +32,18 @@ class WebSocketRouter(
 
                 mafiaStartGameUseCase.startMafiaGame(roomId)
             }
+
             RequestAction.DRAW -> {
                 val sessionDto = sessionUseCase.getSession(SessionId(session.id)) ?: throw InvalidRequestValueException
                 mafiaGameUseCase.draw(sessionDto, request.extractBody())
+            }
+
+            RequestAction.VOTE -> {
+                val requestDto = request.extractBody<VoteMafiaRequest>()
+                val userId = UserId(requestDto.userId)
+                val sessionDto = sessionUseCase.getSession(SessionId(session.id)) ?: throw InvalidRequestValueException
+
+                mafiaVoteUseCase.voteMafia(sessionDto, userId)
             }
         }
     }

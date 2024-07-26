@@ -7,5 +7,5 @@ interface MafiaGameMessenger {
     fun broadcastGameInfo(mafiaGameInfo: MafiaGameInfo)
     fun broadcastGameReady(mafiaGameInfo: MafiaGameInfo)
     fun broadcastPlayerTurnList(mafiaGameInfo: MafiaGameInfo)
-    fun broadcastDraw(roomId: RoomId, phase: MafiaPhase.Playing)
+    fun broadcastDraw(roomId: RoomId, data: Map<String, Any>)
 }

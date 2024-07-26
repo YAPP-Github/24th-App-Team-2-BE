@@ -9,12 +9,10 @@ data class MafiaGameDrawMessage(
 ) : SessionMessage {
     override val action: ResponseAction = ResponseAction.DRAW
     override val status: SessionMessage.Status = SessionMessage.Status.OK
+
+    constructor(draw: Map<String, Any>) : this(MafiaGameDrawBody(draw))
 }
 
 class MafiaGameDrawBody(
-    val round: Int,
-    val turn: Int,
-    val startTurnTime: LocalDateTime,
-    val draw: List<Map<String, Any>>,
-    val currentDraw: Map<String, Any>,
+    val draw: Map<String, Any>,
 )

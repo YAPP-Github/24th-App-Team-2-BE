@@ -161,22 +161,8 @@ class MafiaGameMessengerImpl(
         broadcaster.publishBranchedBroadcastEvent(event)
     }
 
-    override fun broadcastDraw(roomId: RoomId, phase: MafiaPhase.Playing) {
-        if (phase !is MafiaPhase.Playing) throw InvalidMafiaGamePlayingPhaseStatusException
-
-        val event = BroadcastEvent(
-            roomId,
-            MafiaGameDrawMessage(
-                MafiaGameDrawBody(
-                    round = phase.round,
-                    turn = phase.turn,
-                    startTurnTime = LocalDateTime.now(), // TOOD: 턴 시스템 도입 시 수정
-                    draw = phase.drawData.take(phase.drawData.size - 1).map { it.second },
-                    currentDraw = phase.drawData.last().second,
-                ),
-            ),
-        )
-
-        broadcaster.publishBroadcastEvent(event)
+    override fun broadcastDraw(roomId: RoomId, data: Map<String, Any>) {
+        val message = MafiaGameDrawMessage(data)
+        broadcaster.broadcast(roomId, message)
     }
 }

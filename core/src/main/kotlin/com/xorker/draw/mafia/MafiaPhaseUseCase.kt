@@ -7,4 +7,9 @@ interface MafiaPhaseUseCase {
      * MafiaPhase.Wait -> MafiaPhase.Ready
      */
     fun startGame(roomId: RoomId): MafiaPhase.Ready
+
+    /**
+     * MafiaPhase.Ready -> MafiaPhase.Playing
+     */
+    fun playGame(roomId: RoomId): MafiaPhase.Playing
 }

@@ -13,7 +13,16 @@ sealed class MafiaPhase {
         val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
-    ): MafiaPhase()
+    ) : MafiaPhase() {
+        fun toPlaying(): Playing {
+            return Playing(
+                turnList = turnList,
+                mafiaPlayer = mafiaPlayer,
+                keyword = keyword,
+                drawData = mutableListOf(),
+            )
+        }
+    }
 
     class Playing(
         var turn: Int = 0,
@@ -32,7 +41,7 @@ sealed class MafiaPhase {
 }
 
 @OptIn(ExperimentalContracts::class)
-inline fun <reified T: MafiaPhase> assertIs(phase: MafiaPhase) {
+inline fun <reified T : MafiaPhase> assertIs(phase: MafiaPhase) {
     contract {
         returns() implies (phase is T)
     }
@@ -40,5 +49,4 @@ inline fun <reified T: MafiaPhase> assertIs(phase: MafiaPhase) {
     if (phase is T) {
         throw InvalidMafiaPhaseException("유효하지 않는 Phase 입니다. 기대값: ${T::class}, 요청값: $phase")
     }
-
 }

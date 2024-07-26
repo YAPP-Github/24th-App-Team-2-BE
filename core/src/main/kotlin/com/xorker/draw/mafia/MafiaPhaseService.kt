@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 @Service
 internal class MafiaPhaseService(
     private val mafiaGameMessenger: MafiaGameMessenger,
+    private val mafiaPhaseMessenger: MafiaPhaseMessenger,
     private val startGameService: MafiaStartGameService,
     private val mafiaGameRepository: MafiaGameRepository,
 ) : MafiaPhaseUseCase {
@@ -26,8 +27,23 @@ internal class MafiaPhaseService(
         return phase
     }
 
+    override fun playGame(roomId: RoomId): MafiaPhase.Playing {
+        val gameInfo = getGameInfo(roomId)
+
+        val phase = synchronized(gameInfo) {
+            val readyPhase = gameInfo.phase
+            assertIs<MafiaPhase.Ready>(readyPhase)
+            val playingPhase = readyPhase.toPlaying()
+            gameInfo.phase = playingPhase
+            playingPhase
+        }
+
+        mafiaPhaseMessenger.broadcastPlaying(gameInfo)
+
+        return phase
+    }
+
     private fun getGameInfo(roomId: RoomId): MafiaGameInfo {
         return mafiaGameRepository.getGameInfo(roomId) ?: throw NotFoundRoomException
     }
-
 }

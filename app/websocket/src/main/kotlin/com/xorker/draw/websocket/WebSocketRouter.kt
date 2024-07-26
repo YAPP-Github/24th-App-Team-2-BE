@@ -30,7 +30,7 @@ class WebSocketRouter(
             }
 
             RequestAction.DRAW -> mafiaGameUseCase.draw(session.getDto(), request.extractBody())
-            RequestAction.END_TURN -> mafiaGameUseCase.nextTurn(session.getDto())
+            RequestAction.END_TURN -> mafiaGameUseCase.nextTurnByUser(session.getDto())
         }
     }
 

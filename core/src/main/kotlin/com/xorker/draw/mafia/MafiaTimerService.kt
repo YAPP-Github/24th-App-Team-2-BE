@@ -68,21 +68,21 @@ internal class MafiaTimerService(
 
         println("현재 라운드 = $currentRound, 현재 턴 = $currentTurn")
 
-        if (currentTurn == room.size() - 1) {
-            if (currentRound == gameOption.numTurn) {
-                // TODO broadcast turn expired event
-                // TODO 투표 expired timer start
-                println("투표 화면으로 이동")
-            } else {
-                phase.turn = nextTurn
-                phase.round = currentRound + 1
-                // TODO broadcast turn expired event
-                timerRepository.startTimer(gameOption.roundShowingTime, MafiaRoundExpiredEvent(gameInfo))
-            }
-        } else {
-            phase.turn = nextTurn
-            // TODO broadcast turn expired event
-            timerRepository.startTimer(gameOption.turnTime, MafiaTurnExpiredEvent(gameInfo))
-        }
+//        if (currentTurn == room.size() - 1) {
+//            if (currentRound == gameOption.numTurn) {
+//                // TODO broadcast turn expired event
+//                // TODO 투표 expired timer start
+//                println("투표 화면으로 이동")
+//            } else {
+//                phase.turn = nextTurn
+//                phase.round = currentRound + 1
+//                // TODO broadcast turn expired event
+//                timerRepository.startTimer(gameOption.roundShowingTime, MafiaRoundExpiredEvent(gameInfo))
+//            }
+//        } else {
+//            phase.turn = nextTurn
+//            // TODO broadcast turn expired event
+//            timerRepository.startTimer(gameOption.turnTime, MafiaTurnExpiredEvent(gameInfo))
+//        }
     }
 }

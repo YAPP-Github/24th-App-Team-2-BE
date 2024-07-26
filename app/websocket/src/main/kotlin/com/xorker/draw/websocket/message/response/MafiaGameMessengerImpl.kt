@@ -25,7 +25,6 @@ import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListMessage
 import com.xorker.draw.websocket.message.response.dto.toResponse
-import java.time.LocalDateTime
 import org.springframework.stereotype.Component
 
 @Component
@@ -174,7 +173,7 @@ class MafiaGameMessengerImpl(
         val body = MafiaGameTurnInfoBody(
             phase.round,
             phase.turn,
-            LocalDateTime.now(),
+            phase.timerJob.startTime,
             phase.turnList[phase.turn].userId,
         )
         broadcaster.broadcast(gameInfo.room.id, MafiaGameTurnInfoMessage(body))

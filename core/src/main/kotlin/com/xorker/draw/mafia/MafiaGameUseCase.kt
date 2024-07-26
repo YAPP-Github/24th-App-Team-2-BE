@@ -5,4 +5,5 @@ import com.xorker.draw.websocket.Session
 
 interface MafiaGameUseCase {
     fun draw(session: Session, request: DrawRequest)
+    fun nextTurn(session: Session, callByUser: Boolean = true)
 }

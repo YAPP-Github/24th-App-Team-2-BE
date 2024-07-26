@@ -1,6 +1,7 @@
 package com.xorker.draw.mafia
 
 import com.xorker.draw.user.UserId
+import java.util.concurrent.ConcurrentHashMap
 
 sealed class MafiaPhase {
     data object Wait : MafiaPhase()
@@ -14,7 +15,9 @@ sealed class MafiaPhase {
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
     ) : MafiaPhase()
 
-    class Vote() : MafiaPhase()
+    class Vote(
+        val players: ConcurrentHashMap<UserId, MutableSet<UserId>>,
+    ) : MafiaPhase()
 
     class InferAnswer() : MafiaPhase()
 

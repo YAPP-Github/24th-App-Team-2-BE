@@ -12,7 +12,6 @@ import com.xorker.draw.websocket.BroadcastEvent
 import com.xorker.draw.websocket.RespectiveBroadcastEvent
 import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
-import com.xorker.draw.websocket.message.response.dto.MafiaGameDrawBody
 import com.xorker.draw.websocket.message.response.dto.MafiaGameDrawMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoBody
 import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoMessage
@@ -23,7 +22,6 @@ import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListMessage
 import com.xorker.draw.websocket.message.response.dto.toResponse
-import java.time.LocalDateTime
 import org.springframework.stereotype.Component
 
 @Component

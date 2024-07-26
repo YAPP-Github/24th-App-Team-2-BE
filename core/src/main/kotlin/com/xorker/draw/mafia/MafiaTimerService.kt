@@ -26,7 +26,7 @@ internal class MafiaTimerService(
         val gameOption = gameInfo.gameOption
 
         // TODO broadcast ready expired event
-        timerRepository.startTimer(gameOption.roleShowingTime, MafiaRoleExpiredEvent(gameInfo))
+        timerRepository.startTimer(gameOption.animationTime, MafiaRoleExpiredEvent(gameInfo))
     }
 
     @EventListener
@@ -37,7 +37,7 @@ internal class MafiaTimerService(
         val gameOption = gameInfo.gameOption
 
         // TODO broadcast role expired event
-        timerRepository.startTimer(gameOption.roundShowingTime, MafiaRoundExpiredEvent(gameInfo))
+        timerRepository.startTimer(gameOption.animationTime, MafiaRoundExpiredEvent(gameInfo))
     }
 
     @EventListener
@@ -69,7 +69,7 @@ internal class MafiaTimerService(
         println("현재 라운드 = $currentRound, 현재 턴 = $currentTurn")
 
         if (currentTurn == room.size() - 1) {
-            if (currentRound == gameOption.numTurn) {
+            if (currentRound == gameOption.turnCount) {
                 // TODO broadcast turn expired event
                 // TODO 투표 expired timer start
                 println("투표 화면으로 이동")
@@ -77,7 +77,7 @@ internal class MafiaTimerService(
                 phase.turn = nextTurn
                 phase.round = currentRound + 1
                 // TODO broadcast turn expired event
-                timerRepository.startTimer(gameOption.roundShowingTime, MafiaRoundExpiredEvent(gameInfo))
+                timerRepository.startTimer(gameOption.animationTime, MafiaRoundExpiredEvent(gameInfo))
             }
         } else {
             phase.turn = nextTurn

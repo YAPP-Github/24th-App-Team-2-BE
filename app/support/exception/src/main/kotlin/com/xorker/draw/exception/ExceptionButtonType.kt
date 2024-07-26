@@ -53,6 +53,7 @@ fun XorkerException.getButtons(): List<ExceptionButtonType> {
         InvalidMafiaGamePlayingPhaseStatusException,
         NotFoundWordException,
         InvalidBroadcastException,
+        InvalidMafiaGameVotePhaseStatusException,
         -> buttonOk
     }
 }

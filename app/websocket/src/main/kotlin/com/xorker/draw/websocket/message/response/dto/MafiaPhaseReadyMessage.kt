@@ -2,6 +2,7 @@ package com.xorker.draw.websocket.message.response.dto
 
 import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
+import java.time.LocalDateTime
 
 class MafiaPhaseReadyMessage(
     override val body: MafiaPhaseReadyBody,
@@ -11,6 +12,6 @@ class MafiaPhaseReadyMessage(
 }
 
 data class MafiaPhaseReadyBody(
-    val startTime: String,
+    val startTime: LocalDateTime,
     val gameInfo: MafiaGameInfoMessage?,
 )

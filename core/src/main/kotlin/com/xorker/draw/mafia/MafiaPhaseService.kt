@@ -19,7 +19,9 @@ internal class MafiaPhaseService(
 
         val phase = synchronized(gameInfo) {
             assertIs<MafiaPhase.Wait>(gameInfo.phase)
-            startGameService.startMafiaGame(gameInfo)
+            startGameService.startMafiaGame(gameInfo) {
+                playGame(roomId)
+            }
         }
 
         mafiaPhaseMessenger.broadcastPhase(gameInfo)

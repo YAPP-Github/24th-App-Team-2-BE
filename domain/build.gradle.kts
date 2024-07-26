@@ -1,7 +1,7 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.COROUTINES}")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.COROUTINES}")
 }
 
 tasks {

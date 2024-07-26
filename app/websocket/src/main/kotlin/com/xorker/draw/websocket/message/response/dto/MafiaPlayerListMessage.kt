@@ -14,7 +14,6 @@ data class MafiaPlayerListMessage(
 }
 
 data class MafiaPlayerListBody(
-    val roomId: RoomId,
     val players: List<MafiaPlayerResponse>,
 )
 

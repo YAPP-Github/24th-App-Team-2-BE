@@ -4,7 +4,7 @@ import com.xorker.draw.exception.InvalidMafiaGamePlayingPhaseStatusException
 import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameMessenger
 import com.xorker.draw.mafia.MafiaPhase
-import com.xorker.draw.mafia.MafiaPhaseWithTurn
+import com.xorker.draw.mafia.MafiaPhaseWithTurnList
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.BranchedBroadcastEvent
@@ -34,7 +34,7 @@ class MafiaGameMessengerImpl(
         val phase = gameInfo.phase
 
         val list =
-            if (phase is MafiaPhaseWithTurn) {
+            if (phase is MafiaPhaseWithTurnList) {
                 phase.turnList
             } else {
                 gameInfo.room.players

@@ -13,7 +13,7 @@ sealed class MafiaPhase {
         override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
-    ) : MafiaPhase(), MafiaPhaseWithTurn {
+    ) : MafiaPhase(), MafiaPhaseWithTurnList {
         fun toPlaying(): Playing {
             return Playing(
                 turnList = turnList,
@@ -31,7 +31,7 @@ sealed class MafiaPhase {
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
-    ) : MafiaPhase(), MafiaPhaseWithTurn
+    ) : MafiaPhase(), MafiaPhaseWithTurnList
 
     class Vote() : MafiaPhase()
 
@@ -40,8 +40,15 @@ sealed class MafiaPhase {
     class End() : MafiaPhase()
 }
 
-interface MafiaPhaseWithTurn {
+interface MafiaPhaseWithTurnList {
     val turnList: List<MafiaPlayer>
+
+    fun getPlayerTurn(userId: UserId): Int? {
+        turnList.forEachIndexed { index, player ->
+            if(player.userId == userId) return index
+        }
+        return null
+    }
 }
 
 @OptIn(ExperimentalContracts::class)

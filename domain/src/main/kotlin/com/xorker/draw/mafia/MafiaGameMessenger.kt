@@ -1,6 +1,5 @@
 package com.xorker.draw.mafia
 
-import com.xorker.draw.room.Room
 import com.xorker.draw.room.RoomId
 
 interface MafiaGameMessenger {

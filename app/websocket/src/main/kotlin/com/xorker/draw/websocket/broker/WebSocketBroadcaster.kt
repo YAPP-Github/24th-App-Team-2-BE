@@ -10,27 +10,35 @@ import com.xorker.draw.websocket.UnicastEvent
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 
+interface WebSocketBroadcaster {
+    fun unicast(userId: UserId, message: SessionMessage)
+    fun broadcast(roomId: RoomId, sessionMessage: SessionMessage)
+    fun publishBroadcastEvent(event: BroadcastEvent)
+    fun publishBranchedBroadcastEvent(event: BranchedBroadcastEvent)
+    fun publishRespectiveBroadcastEvent(event: RespectiveBroadcastEvent)
+}
+
 @Component
-class WebSocketBroadcaster(
+internal class WebSocketBroadcasterSingleInstance(
     private val publisher: ApplicationEventPublisher,
-) {
-    fun unicast(userId: UserId, message: SessionMessage) {
+): WebSocketBroadcaster {
+    override fun unicast(userId: UserId, message: SessionMessage) {
         publisher.publishEvent(UnicastEvent(userId, message))
     }
 
-    fun publishBroadcastEvent(roomId: RoomId, sessionMessage: SessionMessage) {
+    override fun broadcast(roomId: RoomId, sessionMessage: SessionMessage) {
         publisher.publishEvent(BroadcastEvent(roomId, sessionMessage))
     }
 
-    fun publishBroadcastEvent(event: BroadcastEvent) {
+    override fun publishBroadcastEvent(event: BroadcastEvent) {
         publisher.publishEvent(event)
     }
 
-    fun publishBranchedBroadcastEvent(event: BranchedBroadcastEvent) {
+    override fun publishBranchedBroadcastEvent(event: BranchedBroadcastEvent) {
         publisher.publishEvent(event)
     }
 
-    fun publishRespectiveBroadcastEvent(event: RespectiveBroadcastEvent) {
+    override fun publishRespectiveBroadcastEvent(event: RespectiveBroadcastEvent) {
         publisher.publishEvent(event)
     }
 }

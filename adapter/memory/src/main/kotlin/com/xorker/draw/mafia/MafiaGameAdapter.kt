@@ -19,6 +19,10 @@ internal class MafiaGameAdapter : MafiaGameRepository, RoomRepository {
         }
     }
 
+    override fun removeGameInfo(gameInfo: MafiaGameInfo) {
+        data.remove(gameInfo.room.id)
+    }
+
     override fun getGameInfo(roomId: RoomId): MafiaGameInfo? {
         return data[roomId]
     }

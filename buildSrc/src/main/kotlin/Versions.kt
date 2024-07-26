@@ -10,4 +10,5 @@ object Versions {
     const val JDK = 17
     const val FLYWAY = "10.14.0"
     const val WEBMVC_UI = "2.5.0"
+    const val COROUTINES = "1.6.4"
 }

@@ -10,10 +10,10 @@ sealed class MafiaPhase {
     data object Wait : MafiaPhase()
 
     data class Ready(
-        val turnList: List<MafiaPlayer>,
+        override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
-    ) : MafiaPhase() {
+    ) : MafiaPhase(), MafiaPhaseWithTurn {
         fun toPlaying(): Playing {
             return Playing(
                 turnList = turnList,
@@ -27,17 +27,21 @@ sealed class MafiaPhase {
     class Playing(
         var turn: Int = 0,
         var round: Int = 1,
-        val turnList: List<MafiaPlayer>,
+        override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
-    ) : MafiaPhase()
+    ) : MafiaPhase(), MafiaPhaseWithTurn
 
     class Vote() : MafiaPhase()
 
     class InferAnswer() : MafiaPhase()
 
     class End() : MafiaPhase()
+}
+
+interface MafiaPhaseWithTurn {
+    val turnList: List<MafiaPlayer>
 }
 
 @OptIn(ExperimentalContracts::class)

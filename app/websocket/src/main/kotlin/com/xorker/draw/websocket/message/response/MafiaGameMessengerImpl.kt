@@ -4,6 +4,7 @@ import com.xorker.draw.exception.InvalidMafiaGamePlayingPhaseStatusException
 import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameMessenger
 import com.xorker.draw.mafia.MafiaPhase
+import com.xorker.draw.mafia.MafiaPhaseWithTurn
 import com.xorker.draw.mafia.MafiaPlayer
 import com.xorker.draw.room.Room
 import com.xorker.draw.room.RoomId
@@ -32,12 +33,17 @@ class MafiaGameMessengerImpl(
     private val broadcaster: WebSocketBroadcaster,
 ) : MafiaGameMessenger {
 
-    override fun broadcastPlayerList(room: Room<MafiaPlayer>) {
-        val roomId = room.id
+    override fun broadcastPlayerList(gameInfo: MafiaGameInfo) {
+        val roomId = gameInfo.room.id
+        val phase = gameInfo.phase
+
+        val list =
+            if (phase is MafiaPhaseWithTurn) phase.turnList
+            else gameInfo.room.players
 
         val message = MafiaPlayerListMessage(
             MafiaPlayerListBody(
-                room.players.map { it.toResponse(room.owner) }.toList(),
+                list.map { it.toResponse(gameInfo.room.owner) }.toList(),
             ),
         )
 

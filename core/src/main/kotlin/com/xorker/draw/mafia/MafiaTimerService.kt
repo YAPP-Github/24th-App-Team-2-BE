@@ -6,7 +6,9 @@ import com.xorker.draw.mafia.event.MafiaRoleExpiredEvent
 import com.xorker.draw.mafia.event.MafiaRoundExpiredEvent
 import com.xorker.draw.mafia.event.MafiaTurnExpiredEvent
 import com.xorker.draw.timer.TimerRepository
+import com.xorker.draw.user.UserId
 import java.text.SimpleDateFormat
+import java.util.concurrent.ConcurrentHashMap
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
@@ -71,6 +73,12 @@ internal class MafiaTimerService(
         if (currentTurn == room.size() - 1) {
             if (currentRound == gameOption.numTurn) {
                 // TODO broadcast turn expired event
+                val players = ConcurrentHashMap<UserId, MutableSet<UserId>>()
+                phase.turnList.forEach {
+                    players[it.userId] = mutableSetOf()
+                }
+
+                gameInfo.phase = MafiaPhase.Vote(players)
                 // TODO 투표 expired timer start
                 println("투표 화면으로 이동")
             } else {

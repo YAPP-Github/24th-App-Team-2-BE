@@ -10,5 +10,6 @@ include(
     "core",
     "support:jwt",
     "support:logging",
+    "support:time",
     "support:yaml",
 )

@@ -38,7 +38,7 @@ internal class MafiaPhaseService(
             playingPhase
         }
 
-        mafiaPhaseMessenger.broadcastPlaying(gameInfo)
+        mafiaPhaseMessenger.broadcastPhase(gameInfo)
 
         return phase
     }

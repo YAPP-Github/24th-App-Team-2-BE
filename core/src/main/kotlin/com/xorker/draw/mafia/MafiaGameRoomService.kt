@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component
 internal class MafiaGameRoomService(
     private val mafiaGameRepository: MafiaGameRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
+    private val mafiaPhaseMessenger: MafiaPhaseMessenger,
 ) : SessionEventListener {
 
     override fun connectSession(session: Session, nickname: String) {
@@ -32,6 +33,7 @@ internal class MafiaGameRoomService(
         }
 
         mafiaGameRepository.saveGameInfo(gameInfo)
+        mafiaPhaseMessenger.unicastPhase(session.user.id, gameInfo)
         mafiaGameMessenger.broadcastPlayerList(gameInfo.room)
     }
 

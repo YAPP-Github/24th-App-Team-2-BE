@@ -21,7 +21,7 @@ interface WebSocketBroadcaster {
 @Component
 internal class WebSocketBroadcasterSingleInstance(
     private val publisher: ApplicationEventPublisher,
-): WebSocketBroadcaster {
+) : WebSocketBroadcaster {
     override fun unicast(userId: UserId, message: SessionMessage) {
         publisher.publishEvent(UnicastEvent(userId, message))
     }

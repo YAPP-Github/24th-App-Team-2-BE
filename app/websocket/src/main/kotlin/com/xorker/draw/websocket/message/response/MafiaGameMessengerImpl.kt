@@ -11,15 +11,8 @@ import com.xorker.draw.websocket.BranchedBroadcastEvent
 import com.xorker.draw.websocket.BroadcastEvent
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
 import com.xorker.draw.websocket.message.response.dto.MafiaGameDrawMessage
-<<<<<<< HEAD
-import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoBody
-import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoMessage
-import com.xorker.draw.websocket.message.response.dto.MafiaGameReadyBody
-import com.xorker.draw.websocket.message.response.dto.MafiaGameReadyMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaGameTurnInfoBody
 import com.xorker.draw.websocket.message.response.dto.MafiaGameTurnInfoMessage
-=======
->>>>>>> origin/feature/DRAW-169
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListBody

@@ -14,4 +14,5 @@ enum class ResponseAction(
     PHASE_READY("Ready Phase 시작/초기화"),
     PHASE_PLAYING("Player Phase 시작/초기화"),
     VOTE_STATUS("마피아 투표 현황"),
+    ANSWER("마피아 입력 키워드"),
 }

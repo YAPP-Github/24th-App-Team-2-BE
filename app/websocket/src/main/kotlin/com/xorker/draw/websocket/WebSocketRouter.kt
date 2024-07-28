@@ -3,11 +3,13 @@ package com.xorker.draw.websocket
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.xorker.draw.exception.InvalidRequestValueException
 import com.xorker.draw.mafia.MafiaGameUseCase
+import com.xorker.draw.mafia.MafiaKeywordUseCase
 import com.xorker.draw.mafia.MafiaPhaseUseCase
 import com.xorker.draw.mafia.MafiaVoteUseCase
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.message.request.RequestAction
+import com.xorker.draw.websocket.message.request.dto.MafiaAnswerRequest
 import com.xorker.draw.websocket.message.request.dto.StartMafiaGameRequest
 import com.xorker.draw.websocket.message.request.dto.VoteMafiaRequest
 import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
@@ -22,6 +24,7 @@ class WebSocketRouter(
     private val mafiaPhaseUseCase: MafiaPhaseUseCase,
     private val mafiaGameUseCase: MafiaGameUseCase,
     private val mafiaVoteUseCase: MafiaVoteUseCase,
+    private val mafiaKeywordUseCase: MafiaKeywordUseCase,
 ) {
     fun route(session: WebSocketSession, request: WebSocketRequest) {
         when (request.action) {
@@ -48,6 +51,13 @@ class WebSocketRouter(
                 val sessionDto = sessionUseCase.getSession(SessionId(session.id)) ?: throw InvalidRequestValueException
 
                 mafiaVoteUseCase.voteMafia(sessionDto, userId)
+            }
+
+            RequestAction.ANSWER -> {
+                val requestDto = request.extractBody<MafiaAnswerRequest>()
+                val sessionDto = session.getDto()
+
+                mafiaKeywordUseCase.inferAnswer(sessionDto, requestDto.answer)
             }
         }
     }

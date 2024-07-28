@@ -59,6 +59,15 @@ class WebSocketRouter(
 
                 mafiaKeywordUseCase.inferAnswer(sessionDto, requestDto.answer)
             }
+
+            RequestAction.DECIDE_ANSWER -> {
+                val requestDto = request.extractBody<MafiaAnswerRequest>()
+                val sessionDto = session.getDto()
+
+                mafiaKeywordUseCase.decideAnswer(sessionDto, requestDto.answer) {
+                    mafiaPhaseUseCase.endGame(sessionDto.roomId)
+                }
+            }
         }
     }
 

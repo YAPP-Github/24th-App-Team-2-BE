@@ -9,4 +9,5 @@ enum class RequestAction(
     END_TURN("턴 넘기기"),
     VOTE("마피아 투표"),
     ANSWER("마피아 정답 입력"),
+    DECIDE_ANSWER("마피아 정답 확정"),
 }

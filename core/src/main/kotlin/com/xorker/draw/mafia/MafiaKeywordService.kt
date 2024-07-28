@@ -16,6 +16,8 @@ internal class MafiaKeywordService(
         val phase = gameInfo.phase
         assertIs<MafiaPhase.InferAnswer>(phase)
 
+        phase.answer = answer
+
         mafiaGameMessenger.broadcastAnswer(gameInfo, answer)
     }
 

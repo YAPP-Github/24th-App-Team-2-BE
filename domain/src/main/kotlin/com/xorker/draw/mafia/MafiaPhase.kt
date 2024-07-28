@@ -74,6 +74,7 @@ sealed class MafiaPhase {
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
+        var answer: String? = null,
     ) : MafiaPhase()
 
     class End() : MafiaPhase()

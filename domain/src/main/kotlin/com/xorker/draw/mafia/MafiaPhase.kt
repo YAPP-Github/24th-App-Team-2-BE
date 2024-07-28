@@ -53,14 +53,28 @@ sealed class MafiaPhase {
     }
 
     class Vote(
-        var job: JobWithStartTime,
+        val job: JobWithStartTime,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
         val players: ConcurrentHashMap<UserId, MutableList<UserId>>,
-    ) : MafiaPhase()
+    ) : MafiaPhase() {
+        fun toInferAnswer(job: JobWithStartTime): InferAnswer {
+            return InferAnswer(
+                job = job,
+                mafiaPlayer = mafiaPlayer,
+                keyword = keyword,
+                drawData = drawData,
+            )
+        }
+    }
 
-    class InferAnswer() : MafiaPhase()
+    class InferAnswer(
+        val job: JobWithStartTime,
+        val mafiaPlayer: MafiaPlayer,
+        val keyword: MafiaKeyword,
+        val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
+    ) : MafiaPhase()
 
     class End() : MafiaPhase()
 }

@@ -12,4 +12,19 @@ interface MafiaPhaseUseCase {
      * MafiaPhase.Ready -> MafiaPhase.Playing
      */
     fun playGame(roomId: RoomId): MafiaPhase.Playing
+
+    /**
+     * MafiaPhase.Playing -> MafiaPhase.Vote
+     */
+    fun vote(roomId: RoomId): MafiaPhase.Vote
+
+    /**
+     * MafiaPhase.Vote -> MafiaPhase.InferAnswer
+     */
+    fun interAnswer(roomId: RoomId): MafiaPhase.InferAnswer
+
+    /**
+     * MafiaPhase.InferAnswer -> MafiaPhase.End
+     */
+    fun endGame(roomId: RoomId): MafiaPhase.End
 }

@@ -67,6 +67,15 @@ sealed class MafiaPhase {
                 drawData = drawData,
             )
         }
+
+        fun toEnd(): End {
+            return End(
+                mafiaPlayer = mafiaPlayer,
+                keyword = keyword,
+                drawData = drawData,
+                showAnswer = false,
+            )
+        }
     }
 
     class InferAnswer(
@@ -75,9 +84,24 @@ sealed class MafiaPhase {
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
         var answer: String? = null,
-    ) : MafiaPhase()
+    ) : MafiaPhase() {
+        fun toEnd(): End {
+            return End(
+                mafiaPlayer = mafiaPlayer,
+                keyword = keyword,
+                drawData = drawData,
+                answer = answer,
+            )
+        }
+    }
 
-    class End() : MafiaPhase()
+    class End(
+        val mafiaPlayer: MafiaPlayer,
+        val keyword: MafiaKeyword,
+        val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
+        val showAnswer: Boolean = true,
+        var answer: String? = null,
+    ) : MafiaPhase()
 }
 
 interface MafiaPhaseWithTurnList {

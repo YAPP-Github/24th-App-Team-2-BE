@@ -11,6 +11,7 @@ internal class MafiaPhaseService(
     private val mafiaGameService: MafiaGameService,
     private val mafiaVoteService: MafiaVoteService,
     private val mafiaKeywordService: MafiaKeywordService,
+    private val mafiaEndService: MafiaEndService,
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
 ) : MafiaPhaseUseCase {
 
@@ -84,8 +85,17 @@ internal class MafiaPhaseService(
     }
 
     override fun endGame(roomId: RoomId): MafiaPhase.End {
-        // TODO
-        return MafiaPhase.End()
+        val gameInfo = getGameInfo(roomId)
+
+        val phase = synchronized(gameInfo) {
+            val votePhase = gameInfo.phase
+            assertIs<MafiaPhase.Vote>(votePhase)
+            mafiaEndService.endGame(gameInfo)
+        }
+
+        mafiaPhaseMessenger.broadcastPhase(gameInfo)
+
+        return phase
     }
 
     private fun getGameInfo(roomId: RoomId): MafiaGameInfo {

@@ -13,8 +13,8 @@ import kotlin.contracts.contract
 @Component
 internal class MafiaGameService(
     private val mafiaGameRepository: MafiaGameRepository,
-    private val mafiaGameMessenger: MafiaGameMessenger,
     private val timerRepository: TimerRepository,
+    private val mafiaGameMessenger: MafiaGameMessenger,
 ) : MafiaGameUseCase {
 
     override fun draw(session: Session, request: DrawRequest) {
@@ -32,25 +32,42 @@ internal class MafiaGameService(
         mafiaGameMessenger.broadcastDraw(gameInfo.room.id, request.drawData)
     }
 
-    override fun nextTurnByUser(session: Session) {
+    override fun nextTurnByUser(session: Session, nextStep: () -> Unit) {
         val gameInfo = session.getGameInfo()
         val phase = gameInfo.phase
         assertTurn(phase, session.user.id)
 
         phase.timerJob.cancel()
 
-        processNextTurn(gameInfo)
+        processNextTurn(gameInfo, nextStep)
     }
 
-    fun processNextTurn(gameInfo: MafiaGameInfo) {
+    internal fun playMafiaGame(gameInfo: MafiaGameInfo, nextStep: () -> Unit): MafiaPhase.Playing {
         val phase = gameInfo.phase
-        assertIs<MafiaPhase.Playing>(phase)
+        assertIs<MafiaPhase.Ready>(phase)
+
         val gameOption = gameInfo.gameOption
 
-        val nextTurn = phase.nextTurn(2, gameOption.turnCount)
+        val job = timerRepository.startTimer(gameOption.turnTime) {
+            processNextTurn(gameInfo, nextStep)
+        }
+
+        val playingPhase = phase.toPlaying(job)
+        gameInfo.phase = playingPhase
+
+        return playingPhase
+    }
+
+    private fun processNextTurn(gameInfo: MafiaGameInfo, nextStep: () -> Unit) {
+        val phase = gameInfo.phase
+        assertIs<MafiaPhase.Playing>(phase)
+
+        val gameOption = gameInfo.gameOption
+
+        val nextTurn = phase.nextTurn(gameOption.round, gameOption.turnCount)
 
         if (nextTurn == null) {
-            // TODO 투표로 넘기기
+            nextStep.invoke()
             return
         }
 
@@ -58,7 +75,7 @@ internal class MafiaGameService(
 
         mafiaGameMessenger.broadcastNextTurn(gameInfo)
         phase.timerJob = timerRepository.startTimer(gameInfo.gameOption.turnTime) {
-            processNextTurn(gameInfo)
+            processNextTurn(gameInfo, nextStep)
         }
     }
 

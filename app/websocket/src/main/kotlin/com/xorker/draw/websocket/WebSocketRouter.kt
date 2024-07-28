@@ -34,7 +34,13 @@ class WebSocketRouter(
             }
 
             RequestAction.DRAW -> mafiaGameUseCase.draw(session.getDto(), request.extractBody())
-            RequestAction.END_TURN -> mafiaGameUseCase.nextTurnByUser(session.getDto())
+            RequestAction.END_TURN -> {
+                val sessionDto = session.getDto()
+
+                mafiaGameUseCase.nextTurnByUser(sessionDto) {
+                    mafiaPhaseUseCase.vote(sessionDto.roomId)
+                }
+            }
 
             RequestAction.VOTE -> {
                 val requestDto = request.extractBody<VoteMafiaRequest>()

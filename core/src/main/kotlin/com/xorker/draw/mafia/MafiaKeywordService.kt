@@ -23,6 +23,20 @@ internal class MafiaKeywordService(
         mafiaGameMessenger.broadcastAnswer(gameInfo, answer)
     }
 
+    override fun decideAnswer(session: Session, answer: String, nextStep: () -> Unit) {
+        val gameInfo = session.getGameInfo()
+
+        val phase = gameInfo.phase
+        assertIs<MafiaPhase.InferAnswer>(phase)
+
+        phase.answer = answer
+
+        val job = phase.job
+        job.cancel()
+
+        processInferAnswer(gameInfo, nextStep)
+    }
+
     internal fun playInferAnswer(gameInfo: MafiaGameInfo, nextStep: () -> Unit): MafiaPhase.InferAnswer {
         val phase = gameInfo.phase
         assertIs<MafiaPhase.Vote>(phase)

@@ -1,6 +1,7 @@
 package com.xorker.draw.websocket.message.response
 
 import com.xorker.draw.exception.InvalidMafiaGamePlayingPhaseStatusException
+import com.xorker.draw.exception.InvalidMafiaGameVotePhaseStatusException
 import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameMessenger
 import com.xorker.draw.mafia.MafiaPhase
@@ -11,19 +12,14 @@ import com.xorker.draw.websocket.BranchedBroadcastEvent
 import com.xorker.draw.websocket.BroadcastEvent
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
 import com.xorker.draw.websocket.message.response.dto.MafiaGameDrawMessage
-<<<<<<< HEAD
-import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoBody
-import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoMessage
-import com.xorker.draw.websocket.message.response.dto.MafiaGameReadyBody
-import com.xorker.draw.websocket.message.response.dto.MafiaGameReadyMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaGameTurnInfoBody
 import com.xorker.draw.websocket.message.response.dto.MafiaGameTurnInfoMessage
-=======
->>>>>>> origin/feature/DRAW-169
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaVoteStatusBody
+import com.xorker.draw.websocket.message.response.dto.MafiaVoteStatusMessage
 import com.xorker.draw.websocket.message.response.dto.toResponse
 import org.springframework.stereotype.Component
 
@@ -111,5 +107,19 @@ class MafiaGameMessengerImpl(
             phase.turnList[phase.turn].userId,
         )
         broadcaster.broadcast(gameInfo.room.id, MafiaGameTurnInfoMessage(body))
+    }
+
+    override fun broadcastVoteStatus(mafiaGameInfo: MafiaGameInfo) {
+        val roomId = mafiaGameInfo.room.id
+
+        val phase = mafiaGameInfo.phase as? MafiaPhase.Vote ?: throw InvalidMafiaGameVotePhaseStatusException
+
+        val message = MafiaVoteStatusMessage(
+            MafiaVoteStatusBody(phase.players),
+        )
+
+        val event = BroadcastEvent(roomId, message)
+
+        broadcaster.publishBroadcastEvent(event)
     }
 }

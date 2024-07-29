@@ -48,6 +48,7 @@ sealed class MafiaPhase {
                 keyword = keyword,
                 drawData = drawData,
                 players = players,
+                turnList = turnList,
             )
         }
     }
@@ -58,13 +59,15 @@ sealed class MafiaPhase {
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
         val players: ConcurrentHashMap<UserId, MutableList<UserId>>,
-    ) : MafiaPhase() {
+        override val turnList: List<MafiaPlayer>,
+    ) : MafiaPhase(), MafiaPhaseWithTurnList {
         fun toInferAnswer(job: JobWithStartTime): InferAnswer {
             return InferAnswer(
                 job = job,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
                 drawData = drawData,
+                turnList = turnList,
             )
         }
 
@@ -74,6 +77,7 @@ sealed class MafiaPhase {
                 keyword = keyword,
                 drawData = drawData,
                 showAnswer = false,
+                turnList = turnList,
             )
         }
     }
@@ -84,13 +88,15 @@ sealed class MafiaPhase {
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
         var answer: String? = null,
-    ) : MafiaPhase() {
+        override val turnList: List<MafiaPlayer>,
+    ) : MafiaPhase(), MafiaPhaseWithTurnList {
         fun toEnd(): End {
             return End(
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
                 drawData = drawData,
                 answer = answer,
+                turnList = turnList,
             )
         }
     }
@@ -101,7 +107,9 @@ sealed class MafiaPhase {
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
         val showAnswer: Boolean = true,
         var answer: String? = null,
-    ) : MafiaPhase()
+        var isMafiaWin: Boolean = false,
+        override val turnList: List<MafiaPlayer>,
+    ) : MafiaPhase(), MafiaPhaseWithTurnList
 }
 
 interface MafiaPhaseWithTurnList {

@@ -71,13 +71,19 @@ internal class MafiaTimerService(
 //        if (currentTurn == room.size() - 1) {
 //            if (currentRound == gameOption.turnCount) {
 //                // TODO broadcast turn expired event
+//                val players = ConcurrentHashMap<UserId, MutableSet<UserId>>()
+//                phase.turnList.forEach {
+//                    players[it.userId] = mutableSetOf()
+//                }
+//
+//                gameInfo.phase = MafiaPhase.Vote(players)
 //                // TODO 투표 expired timer start
 //                println("투표 화면으로 이동")
 //            } else {
 //                phase.turn = nextTurn
 //                phase.round = currentRound + 1
 //                // TODO broadcast turn expired event
-//                timerRepository.startTimer(gameOption.animationTime, MafiaRoundExpiredEvent(gameInfo))
+//                timerRepository.startTimer(gameOption.roundShowingTime, MafiaRoundExpiredEvent(gameInfo))
 //            }
 //        } else {
 //            phase.turn = nextTurn

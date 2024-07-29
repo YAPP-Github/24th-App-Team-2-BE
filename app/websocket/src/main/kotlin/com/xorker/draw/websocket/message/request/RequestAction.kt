@@ -7,4 +7,5 @@ enum class RequestAction(
     START_GAME("마피아 게임 시작"),
     DRAW("그림 그리기"),
     END_TURN("턴 넘기기"),
+    VOTE("마피아 투표"),
 }

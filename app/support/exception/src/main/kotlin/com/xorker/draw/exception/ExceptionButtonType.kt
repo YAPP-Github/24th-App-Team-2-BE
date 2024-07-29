@@ -55,6 +55,7 @@ fun XorkerException.getButtons(): List<ExceptionButtonType> {
         InvalidBroadcastException,
         is InvalidMafiaPhaseException,
         InvalidRequestOnlyMyTurnException,
+        InvalidMafiaGameVotePhaseStatusException,
         -> buttonOk
     }
 }

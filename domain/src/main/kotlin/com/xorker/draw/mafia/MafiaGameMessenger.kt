@@ -9,4 +9,5 @@ interface MafiaGameMessenger {
     fun broadcastPlayerTurnList(mafiaGameInfo: MafiaGameInfo)
     fun broadcastDraw(roomId: RoomId, data: Map<String, Any>)
     fun broadcastNextTurn(gameInfo: MafiaGameInfo)
+    fun broadcastVoteStatus(mafiaGameInfo: MafiaGameInfo)
 }

@@ -1,7 +1,6 @@
 package com.xorker.draw.websocket.message.response.dto
 
 import com.xorker.draw.mafia.MafiaPlayer
-import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
@@ -14,7 +13,6 @@ data class MafiaPlayerListMessage(
 }
 
 data class MafiaPlayerListBody(
-    val roomId: RoomId,
     val players: List<MafiaPlayerResponse>,
 )
 

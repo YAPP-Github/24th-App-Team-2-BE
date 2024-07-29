@@ -6,7 +6,6 @@ import com.xorker.draw.mafia.MafiaGameUseCase
 import com.xorker.draw.mafia.MafiaPhaseUseCase
 import com.xorker.draw.mafia.MafiaVoteUseCase
 import com.xorker.draw.room.RoomId
-import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.message.request.RequestAction
 import com.xorker.draw.websocket.message.request.dto.StartMafiaGameRequest
 import com.xorker.draw.websocket.message.request.dto.VoteMafiaRequest
@@ -38,10 +37,9 @@ class WebSocketRouter(
 
             RequestAction.VOTE -> {
                 val requestDto = request.extractBody<VoteMafiaRequest>()
-                val userId = UserId(requestDto.userId)
-                val sessionDto = sessionUseCase.getSession(SessionId(session.id)) ?: throw InvalidRequestValueException
+                val sessionDto = session.getDto()
 
-                mafiaVoteUseCase.voteMafia(sessionDto, userId)
+                mafiaVoteUseCase.voteMafia(sessionDto, requestDto.userId)
             }
         }
     }

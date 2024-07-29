@@ -47,7 +47,7 @@ internal class MafiaGameService(
         assertIs<MafiaPhase.Playing>(phase)
         val gameOption = gameInfo.gameOption
 
-        val nextTurn = phase.nextTurn(2, gameOption.numTurn)
+        val nextTurn = phase.nextTurn(gameOption.turnCount, gameInfo.room.size())
 
         if (nextTurn == null) {
             // TODO 투표로 넘기기

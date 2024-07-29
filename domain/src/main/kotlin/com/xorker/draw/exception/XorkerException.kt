@@ -13,7 +13,7 @@ data object OAuthFailureException : ClientException("c002", "OAuth 인증 실패
 data object NotFoundRoomException : ClientException("c003", "존재하지 않는 Room Id") { private fun readResolve(): Any = NotFoundRoomException }
 data object MaxRoomException : ClientException("c004", "인원 수가 가득 찬 Room Id") { private fun readResolve(): Any = MaxRoomException }
 data object AlreadyJoinRoomException : ClientException("c005", "이미 참여한 방") { private fun readResolve(): Any = AlreadyJoinRoomException }
-data object InvalidRequestOnlyMyTurnException : ClientException("c006", "요청자의 차례가 아니라서 처리 불가능") { private fun readResolve(): Any = InvalidRequestValueException }
+data object InvalidRequestOnlyMyTurnException : ClientException("c006", "요청자의 차례가 아니라서 처리 불가능") { private fun readResolve(): Any = InvalidRequestOnlyMyTurnException }
 
 //endregion
 
@@ -32,5 +32,5 @@ data object InvalidUserStatusException : CriticalException("crt002", "유효하�
 data object UnSupportedException : CriticalException("crt003", "정의하지 않는 행위") { private fun readResolve(): Any = UnSupportedException }
 data object InvalidMafiaGamePlayingPhaseStatusException : CriticalException("crt004", "마피아 게임 Playing 단계에서 유효하지 않은 상태") { private fun readResolve(): Any = InvalidMafiaGamePlayingPhaseStatusException }
 data object InvalidBroadcastException : CriticalException("crt005", "유효하지 않은 브로드캐스트 상태") { private fun readResolve(): Any = InvalidBroadcastException }
-class InvalidMafiaPhaseException(message: String) : CriticalException("crt004", message) { private fun readResolve(): Any = InvalidMafiaGamePlayingPhaseStatusException }
+class InvalidMafiaPhaseException(message: String) : CriticalException("crt004", message)
 //endregion

@@ -4,20 +4,17 @@ import com.xorker.draw.exception.InvalidMafiaGamePlayingPhaseStatusException
 import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameMessenger
 import com.xorker.draw.mafia.MafiaPhase
-import com.xorker.draw.mafia.MafiaPlayer
-import com.xorker.draw.room.Room
+import com.xorker.draw.mafia.MafiaPhaseWithTurn
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.websocket.BranchedBroadcastEvent
 import com.xorker.draw.websocket.BroadcastEvent
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
-import com.xorker.draw.websocket.message.response.dto.MafiaGameDrawBody
 import com.xorker.draw.websocket.message.response.dto.MafiaGameDrawMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListMessage
 import com.xorker.draw.websocket.message.response.dto.toResponse
-import java.time.LocalDateTime
 import org.springframework.stereotype.Component
 
 @Component
@@ -25,12 +22,20 @@ class MafiaGameMessengerImpl(
     private val broadcaster: WebSocketBroadcaster,
 ) : MafiaGameMessenger {
 
-    override fun broadcastPlayerList(room: Room<MafiaPlayer>) {
-        val roomId = room.id
+    override fun broadcastPlayerList(gameInfo: MafiaGameInfo) {
+        val roomId = gameInfo.room.id
+        val phase = gameInfo.phase
+
+        val list =
+            if (phase is MafiaPhaseWithTurn) {
+                phase.turnList
+            } else {
+                gameInfo.room.players
+            }
 
         val message = MafiaPlayerListMessage(
             MafiaPlayerListBody(
-                room.players.map { it.toResponse(room.owner) }.toList(),
+                list.map { it.toResponse(gameInfo.room.owner) }.toList(),
             ),
         )
 
@@ -81,22 +86,8 @@ class MafiaGameMessengerImpl(
         broadcaster.publishBranchedBroadcastEvent(event)
     }
 
-    override fun broadcastDraw(roomId: RoomId, phase: MafiaPhase.Playing) {
-        if (phase !is MafiaPhase.Playing) throw InvalidMafiaGamePlayingPhaseStatusException
-
-        val event = BroadcastEvent(
-            roomId,
-            MafiaGameDrawMessage(
-                MafiaGameDrawBody(
-                    round = phase.round,
-                    turn = phase.turn,
-                    startTurnTime = LocalDateTime.now(), // TOOD: 턴 시스템 도입 시 수정
-                    draw = phase.drawData.take(phase.drawData.size - 1).map { it.second },
-                    currentDraw = phase.drawData.last().second,
-                ),
-            ),
-        )
-
-        broadcaster.publishBroadcastEvent(event)
+    override fun broadcastDraw(roomId: RoomId, data: Map<String, Any>) {
+        val message = MafiaGameDrawMessage(data)
+        broadcaster.broadcast(roomId, message)
     }
 }

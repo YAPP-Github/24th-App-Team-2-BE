@@ -34,7 +34,7 @@ internal class MafiaGameRoomService(
 
         mafiaGameRepository.saveGameInfo(gameInfo)
         mafiaPhaseMessenger.unicastPhase(session.user.id, gameInfo)
-        mafiaGameMessenger.broadcastPlayerList(gameInfo.room)
+        mafiaGameMessenger.broadcastPlayerList(gameInfo)
     }
 
     override fun disconnectSession(session: Session) {
@@ -49,7 +49,7 @@ internal class MafiaGameRoomService(
 
         player.disconnect()
         mafiaGameRepository.saveGameInfo(gameInfo)
-        mafiaGameMessenger.broadcastPlayerList(gameInfo.room)
+        mafiaGameMessenger.broadcastPlayerList(gameInfo)
     }
 
     override fun exitSession(session: Session) {
@@ -73,7 +73,7 @@ internal class MafiaGameRoomService(
             gameInfo.room.owner = gameInfo.room.players.first()
         }
         mafiaGameRepository.saveGameInfo(gameInfo)
-        mafiaGameMessenger.broadcastPlayerList(gameInfo.room)
+        mafiaGameMessenger.broadcastPlayerList(gameInfo)
     }
 
     private fun generateColor(gameInfo: MafiaGameInfo?): String {

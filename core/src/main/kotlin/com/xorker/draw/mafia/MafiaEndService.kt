@@ -9,7 +9,7 @@ internal class MafiaEndService {
     internal fun endGame(gameInfo: MafiaGameInfo): MafiaPhase.End {
         val phase = gameInfo.phase
 
-        val endPhase = assertAndGetEndPhase(phase, gameInfo)
+        val endPhase = assertAndGetEndPhase(phase)
 
         judgeGameResult(endPhase)
 
@@ -18,7 +18,7 @@ internal class MafiaEndService {
         return endPhase
     }
 
-    private fun assertAndGetEndPhase(phase: MafiaPhase, gameInfo: MafiaGameInfo): MafiaPhase.End {
+    private fun assertAndGetEndPhase(phase: MafiaPhase): MafiaPhase.End {
         return when (phase) {
             is MafiaPhase.Vote -> {
                 phase.toEnd()

@@ -1,17 +1,19 @@
 package com.xorker.draw.websocket.message.response.dto
 
+import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
 import java.time.LocalDateTime
 
-class MafiaPhaseReadyMessage(
-    override val body: MafiaPhaseReadyBody,
+class MafiaPhaseVoteMessage(
+    override val body: MafiaPhaseVoteBody,
 ) : SessionMessage {
-    override val action = ResponseAction.GAME_READY
+    override val action = ResponseAction.PHASE_VOTE
     override val status = SessionMessage.Status.OK
 }
 
-data class MafiaPhaseReadyBody(
+data class MafiaPhaseVoteBody(
     val startTime: LocalDateTime,
-    val mafiaGameInfo: MafiaGameInfoMessage,
+    val mafiaGameInfo: MafiaGameInfoMessage? = null,
+    val players: Map<UserId, List<UserId>>,
 )

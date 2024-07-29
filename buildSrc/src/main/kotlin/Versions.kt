@@ -11,4 +11,5 @@ object Versions {
     const val FLYWAY = "10.14.0"
     const val WEBMVC_UI = "2.5.0"
     const val COROUTINES = "1.6.4"
+    const val LOGBACK = "0.1.5"
 }

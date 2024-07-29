@@ -1,70 +1,126 @@
 package com.xorker.draw.websocket.message.response
 
 import com.xorker.draw.mafia.MafiaGameInfo
+import com.xorker.draw.mafia.MafiaGameOption
+import com.xorker.draw.mafia.MafiaKeyword
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.MafiaPhaseMessenger
+import com.xorker.draw.mafia.MafiaPlayer
 import com.xorker.draw.user.UserId
-import com.xorker.draw.websocket.RespectiveBroadcastEvent
 import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
 import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoBody
 import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaPhaseEndBody
+import com.xorker.draw.websocket.message.response.dto.MafiaPhaseEndMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaPhaseInferAnswerBody
+import com.xorker.draw.websocket.message.response.dto.MafiaPhaseInferAnswerMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaPhasePlayingBody
+import com.xorker.draw.websocket.message.response.dto.MafiaPhasePlayingMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPhaseReadyBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPhaseReadyMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaPhaseVoteBody
+import com.xorker.draw.websocket.message.response.dto.MafiaPhaseVoteMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaPhaseWaitBody
+import com.xorker.draw.websocket.message.response.dto.MafiaPhaseWaitMessage
 import com.xorker.draw.websocket.message.response.dto.toResponse
+import java.time.LocalDateTime
 import org.springframework.stereotype.Component
 
 @Component
-class MafiaPhaseMessengerImpl(
+internal class MafiaPhaseMessengerImpl(
     private val broadcaster: WebSocketBroadcaster,
 ) : MafiaPhaseMessenger {
+
     override fun unicastPhase(userId: UserId, gameInfo: MafiaGameInfo) {
-        // broadcaster.unicast(userId, gameInfo.generateMessage())
+        broadcaster.unicast(userId, gameInfo.generateMessage(false))
     }
 
     override fun broadcastPhase(gameInfo: MafiaGameInfo) {
-        val event = RespectiveBroadcastEvent(gameInfo.room.id, gameInfo.generateMessage())
+        val room = gameInfo.room
 
-        broadcaster.publishRespectiveBroadcastEvent(event)
+        broadcaster.broadcast(room.id, gameInfo.generateMessage())
     }
 
-    private fun MafiaGameInfo.generateMessage(): Map<UserId, SessionMessage> {
+    private fun MafiaGameInfo.generateMessage(isOrigin: Boolean = true): SessionMessage {
         return when (val phase = this.phase) {
-            MafiaPhase.Wait -> TODO()
-            is MafiaPhase.Ready -> {
-                val messages = mutableMapOf<UserId, SessionMessage>()
-                val startTime = phase.job.startTime
-                val turnList = phase.turnList
-                val mafiaPlayer = phase.mafiaPlayer
-                val keyword = phase.keyword
+            is MafiaPhase.Wait -> MafiaPhaseWaitMessage(
+                MafiaPhaseWaitBody(
+                    room.id,
+                    room.players.map { it.toResponse(room.owner) }.toList(),
+                ),
+            )
 
-                turnList.forEachIndexed { i, player ->
-                    val message = MafiaPhaseReadyMessage(
-                        MafiaPhaseReadyBody(
-                            startTime = startTime,
-                            gameInfo = MafiaGameInfoMessage(
-                                MafiaGameInfoBody(
-                                    userId = player.userId,
-                                    turn = i,
-                                    isMafia = mafiaPlayer.userId == player.userId,
-                                    turnList = turnList,
-                                    category = keyword.category,
-                                    answer = keyword.answer,
-                                    gameOption = gameOption.toResponse(),
-                                ),
-                            ),
-                        ),
-                    )
-                    messages[player.userId] = message
-                }
+            is MafiaPhase.Ready -> MafiaPhaseReadyMessage(
+                MafiaPhaseReadyBody(
+                    startTime = phase.job.startTime,
+                    mafiaGameInfo = generateMafiaGameInfoMessage(phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption),
+                ),
+            )
 
-                return messages
-            }
+            is MafiaPhase.Playing -> MafiaPhasePlayingMessage(
+                MafiaPhasePlayingBody(
+                    round = phase.round,
+                    turn = phase.turn,
+                    startTurnTime = LocalDateTime.now(), // TOOD: 턴 시스템 도입 시 수정
+                    draw = phase.drawData.take(phase.drawData.size - 1).map { it.second },
+                ),
+            )
 
-            is MafiaPhase.Playing -> TODO()
-            is MafiaPhase.Vote -> TODO()
-            is MafiaPhase.InferAnswer -> TODO()
-            is MafiaPhase.End -> TODO()
+            is MafiaPhase.Vote -> MafiaPhaseVoteMessage(
+                MafiaPhaseVoteBody(
+                    startTime = phase.job.startTime,
+                    mafiaGameInfo = if (isOrigin.not()) {
+                        generateMafiaGameInfoMessage(phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
+                    } else {
+                        null
+                    },
+                    players = phase.players,
+                ),
+            )
+
+            is MafiaPhase.InferAnswer -> MafiaPhaseInferAnswerMessage(
+                MafiaPhaseInferAnswerBody(
+                    startTime = phase.job.startTime,
+                    mafiaGameInfo = if (isOrigin.not()) {
+                        generateMafiaGameInfoMessage(phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
+                    } else {
+                        null
+                    },
+                    mafiaAnswer = phase.answer,
+                    draw = phase.drawData.take(phase.drawData.size).map { it.second },
+                ),
+            )
+
+            is MafiaPhase.End -> MafiaPhaseEndMessage(
+                MafiaPhaseEndBody(
+                    mafiaGameInfo = if (isOrigin.not()) {
+                        generateMafiaGameInfoMessage(phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
+                    } else {
+                        null
+                    },
+                    showAnswer = phase.showAnswer,
+                    mafiaAnswer = phase.answer,
+                    isMafiaWin = phase.isMafiaWin,
+                    draw = phase.drawData.take(phase.drawData.size).map { it.second },
+                ),
+            )
         }
     }
+
+    private fun generateMafiaGameInfoMessage(
+        mafiaPlayer: MafiaPlayer,
+        turnList: List<MafiaPlayer>,
+        keyword: MafiaKeyword,
+        gameOption: MafiaGameOption,
+    ): MafiaGameInfoMessage =
+        MafiaGameInfoMessage(
+            MafiaGameInfoBody(
+                mafiaUserId = mafiaPlayer.userId,
+                turnList = turnList,
+                category = keyword.category,
+                answer = keyword.answer,
+                gameOption = gameOption.toResponse(),
+            ),
+        )
 }

@@ -12,8 +12,8 @@ class XorkerExceptionHandler(
     fun convert(ex: XorkerException): ExceptionResponse {
         val locale = LocaleContextHolder.getLocale()
 
-        val title = messageSource.getMessage("exception.${ex.code}.title", null, locale)
-        val description = messageSource.getMessage("exception.${ex.code}.description", null, locale)
+        val title = messageSource.getMessage("exception.${ex.code}.title", null, "ERROR", locale) // TODO 기본 에러 처리 하기
+        val description = messageSource.getMessage("exception.${ex.code}.description", null, null, locale)
             ?: messageSource.getMessage("exception.default.description", null, locale)
         val buttons = ex.getButtons().map { it.toResponse(messageSource, locale) }
         return ExceptionResponse(ex.code, title, description, buttons)

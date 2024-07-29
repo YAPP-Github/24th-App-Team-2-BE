@@ -4,12 +4,15 @@ import com.xorker.draw.exception.InvalidMafiaGamePlayingPhaseStatusException
 import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameMessenger
 import com.xorker.draw.mafia.MafiaPhase
-import com.xorker.draw.mafia.MafiaPhaseWithTurn
+import com.xorker.draw.mafia.MafiaPhaseWithTurnList
+import com.xorker.draw.mafia.assertIs
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.websocket.BranchedBroadcastEvent
 import com.xorker.draw.websocket.BroadcastEvent
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
 import com.xorker.draw.websocket.message.response.dto.MafiaGameDrawMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaGameTurnInfoBody
+import com.xorker.draw.websocket.message.response.dto.MafiaGameTurnInfoMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerListMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPlayerTurnListBody
@@ -27,7 +30,7 @@ class MafiaGameMessengerImpl(
         val phase = gameInfo.phase
 
         val list =
-            if (phase is MafiaPhaseWithTurn) {
+            if (phase is MafiaPhaseWithTurnList) {
                 phase.turnList
             } else {
                 gameInfo.room.players
@@ -97,5 +100,17 @@ class MafiaGameMessengerImpl(
     override fun broadcastDraw(roomId: RoomId, data: Map<String, Any>) {
         val message = MafiaGameDrawMessage(data)
         broadcaster.broadcast(roomId, message)
+    }
+
+    override fun broadcastNextTurn(gameInfo: MafiaGameInfo) {
+        val phase = gameInfo.phase
+        assertIs<MafiaPhase.Playing>(phase)
+        val body = MafiaGameTurnInfoBody(
+            phase.round,
+            phase.turn,
+            phase.timerJob.startTime,
+            phase.turnList[phase.turn].userId,
+        )
+        broadcaster.broadcast(gameInfo.room.id, MafiaGameTurnInfoMessage(body))
     }
 }

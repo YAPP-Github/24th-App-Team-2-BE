@@ -8,6 +8,7 @@ enum class ResponseAction(
     GAME_READY("마피아 게임 준비"),
     PLAYER_TURN_LIST("플레이어 턴 순서"),
     DRAW("그림 데이터"),
+    TURN_INFO("새로운 턴 시작"),
 
     PHASE_WAIT("Wait Phase 시작/초기화"),
     PHASE_READY("Ready Phase 시작/초기화"),

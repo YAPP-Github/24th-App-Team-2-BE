@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(description = "Auth 공통 응답 DTO 입니다.")
 data class AuthTokenResponse(
+    @Schema(description = "할당된 유저 ID")
+    val userId: UserId,
     @Schema(description = "Access Token 입니다.")
     val accessToken: String,
     @Schema(description = "Refresh Token 입니다.")

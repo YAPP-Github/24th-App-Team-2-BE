@@ -31,10 +31,10 @@ class MafiaPhaseMessengerImpl(
 
     private fun MafiaGameInfo.generateMessage(): Map<UserId, SessionMessage> {
         return when (val phase = this.phase) {
-            is MafiaPhase.Wait -> TODO()
+            MafiaPhase.Wait -> TODO()
             is MafiaPhase.Ready -> {
                 val messages = mutableMapOf<UserId, SessionMessage>()
-                // val startTime = phase.startTime
+                val startTime = phase.job.startTime
                 val turnList = phase.turnList
                 val mafiaPlayer = phase.mafiaPlayer
                 val keyword = phase.keyword

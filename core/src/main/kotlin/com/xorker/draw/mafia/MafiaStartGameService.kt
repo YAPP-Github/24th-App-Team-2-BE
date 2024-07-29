@@ -1,7 +1,6 @@
 package com.xorker.draw.mafia
 
 import com.xorker.draw.mafia.event.MafiaReadyExpiredEvent
-import com.xorker.draw.support.time.generateUtc
 import com.xorker.draw.timer.TimerRepository
 import java.util.*
 import org.springframework.stereotype.Service
@@ -24,7 +23,6 @@ internal class MafiaStartGameService(
         val keyword = mafiaKeywordRepository.getRandomKeyword(Locale.KOREAN) // TODO extract room locale
 
         val phase = MafiaPhase.Ready(
-            startTime = generateUtc(),
             turnList = turnList,
             mafiaPlayer = players[mafiaIndex],
             keyword = keyword,

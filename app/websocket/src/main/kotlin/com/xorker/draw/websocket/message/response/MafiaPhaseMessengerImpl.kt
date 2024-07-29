@@ -12,6 +12,7 @@ import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaPhaseReadyBody
 import com.xorker.draw.websocket.message.response.dto.MafiaPhaseReadyMessage
 import com.xorker.draw.websocket.message.response.dto.toResponse
+import java.time.LocalDateTime
 import org.springframework.stereotype.Component
 
 @Component
@@ -33,7 +34,7 @@ class MafiaPhaseMessengerImpl(
             is MafiaPhase.Wait -> TODO()
             is MafiaPhase.Ready -> {
                 val messages = mutableMapOf<UserId, SessionMessage>()
-                val startTime = phase.startTime
+                // val startTime = phase.startTime
                 val turnList = phase.turnList
                 val mafiaPlayer = phase.mafiaPlayer
                 val keyword = phase.keyword
@@ -41,7 +42,7 @@ class MafiaPhaseMessengerImpl(
                 turnList.forEachIndexed { i, player ->
                     val message = MafiaPhaseReadyMessage(
                         MafiaPhaseReadyBody(
-                            startTime = startTime,
+                            startTime = LocalDateTime.now(),
                             gameInfo = MafiaGameInfoMessage(
                                 MafiaGameInfoBody(
                                     userId = player.userId,

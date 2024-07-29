@@ -54,5 +54,7 @@ fun XorkerException.getButtons(): List<ExceptionButtonType> {
         NotFoundWordException,
         InvalidBroadcastException,
         -> buttonOk
+
+        is InvalidMafiaPhaseException -> TODO()
     }
 }

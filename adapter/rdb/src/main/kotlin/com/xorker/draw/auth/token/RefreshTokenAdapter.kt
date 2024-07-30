@@ -5,7 +5,7 @@ import com.xorker.draw.user.UserId
 import java.nio.ByteBuffer
 import java.security.SecureRandom
 import java.time.LocalDateTime
-import java.util.Base64
+import java.util.*
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
@@ -20,8 +20,16 @@ internal class RefreshTokenAdapter(
     }
 
     override fun getUserIdOrThrow(refreshToken: String): UserId {
-        val entity = jpaRepository.findByIdOrNull(refreshToken.toBinary()) ?: throw InvalidRequestValueException
-        return UserId(entity.userId)
+        val refreshTokenEntity = jpaRepository.findByIdOrNull(refreshToken.toBinary()) ?: throw InvalidRequestValueException
+
+        val now = LocalDateTime.now()
+        val expiredAt = refreshTokenEntity.expiredAt
+
+        if (expiredAt.isBefore(now)) {
+            throw InvalidRequestValueException
+        }
+
+        return UserId(refreshTokenEntity.userId)
     }
 
     override fun createRefreshToken(userId: UserId): String {

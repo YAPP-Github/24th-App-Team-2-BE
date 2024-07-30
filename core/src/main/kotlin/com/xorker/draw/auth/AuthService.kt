@@ -50,8 +50,9 @@ internal class AuthService(
 
     private fun createToken(userId: UserId): Token {
         return Token(
-            accessTokenRepository.createAccessToken(userId),
-            refreshTokenRepository.createRefreshToken(userId),
+            accessToken = accessTokenRepository.createAccessToken(userId),
+            refreshToken = refreshTokenRepository.createRefreshToken(userId),
+            userId = userId,
         )
     }
 }

@@ -53,8 +53,8 @@ internal class MafiaGameService(
 
         val voter = session.user
 
-        assertIs<MafiaPhase.Vote>(gameInfo.phase)
-        val phase = gameInfo.phase as MafiaPhase.Vote
+        val phase = gameInfo.phase
+        assertIs<MafiaPhase.Vote>(phase)
 
         vote(phase.players, voter, targetUserId)
 

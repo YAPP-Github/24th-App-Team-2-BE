@@ -4,7 +4,7 @@ import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
 
 class MafiaAnswerMessage(
-    override val body: Any,
+    override val body: MafiaAnswerBody,
 ) : SessionMessage {
     override val action = ResponseAction.ANSWER
     override val status = SessionMessage.Status.OK

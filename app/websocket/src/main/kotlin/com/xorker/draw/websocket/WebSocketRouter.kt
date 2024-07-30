@@ -3,9 +3,6 @@ package com.xorker.draw.websocket
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.xorker.draw.exception.InvalidRequestValueException
 import com.xorker.draw.mafia.MafiaGameUseCase
-import com.xorker.draw.mafia.MafiaKeywordUseCase
-import com.xorker.draw.mafia.MafiaPhaseUseCase
-import com.xorker.draw.mafia.MafiaVoteUseCase
 import com.xorker.draw.mafia.phase.MafiaPhaseUseCase
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.websocket.message.request.RequestAction
@@ -23,8 +20,6 @@ class WebSocketRouter(
     private val sessionUseCase: SessionUseCase,
     private val mafiaPhaseUseCase: MafiaPhaseUseCase,
     private val mafiaGameUseCase: MafiaGameUseCase,
-    private val mafiaVoteUseCase: MafiaVoteUseCase,
-    private val mafiaKeywordUseCase: MafiaKeywordUseCase,
 ) {
     fun route(session: WebSocketSession, request: WebSocketRequest) {
         when (request.action) {
@@ -50,7 +45,7 @@ class WebSocketRouter(
                 val requestDto = request.extractBody<MafiaAnswerRequest>()
                 val sessionDto = session.getDto()
 
-                mafiaKeywordUseCase.inferAnswer(sessionDto, requestDto.answer)
+                mafiaGameUseCase.inferAnswer(sessionDto, requestDto.answer)
             }
         }
     }

@@ -12,5 +12,5 @@ class MafiaVoteStatusMessage(
 }
 
 data class MafiaVoteStatusBody(
-    val players: Map<UserId, Set<UserId>>,
+    val players: Map<UserId, List<UserId>>,
 )

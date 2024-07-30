@@ -3,18 +3,22 @@ package com.xorker.draw.mafia
 import com.xorker.draw.exception.InvalidRequestOnlyMyTurnException
 import com.xorker.draw.exception.InvalidRequestValueException
 import com.xorker.draw.mafia.dto.DrawRequest
-import com.xorker.draw.timer.TimerRepository
+import com.xorker.draw.mafia.phase.MafiaPhasePlayGameProcessor
+import com.xorker.draw.mafia.phase.MafiaPhaseService
+import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.Session
-import org.springframework.stereotype.Component
+import java.util.Vector
+import org.springframework.stereotype.Service
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-@Component
+@Service
 internal class MafiaGameService(
+    private val mafiaPhaseService: MafiaPhaseService,
+    private val mafiaPhasePlayGameProcessor: MafiaPhasePlayGameProcessor,
     private val mafiaGameRepository: MafiaGameRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
-    private val timerRepository: TimerRepository,
 ) : MafiaGameUseCase {
 
     override fun draw(session: Session, request: DrawRequest) {
@@ -39,26 +43,40 @@ internal class MafiaGameService(
 
         phase.timerJob.cancel()
 
-        processNextTurn(gameInfo)
+        mafiaPhasePlayGameProcessor.processNextTurn(gameInfo) {
+            mafiaPhaseService.vote(gameInfo.room.id)
+        }
     }
 
-    fun processNextTurn(gameInfo: MafiaGameInfo) {
+    override fun voteMafia(session: Session, targetUserId: UserId) {
+        val gameInfo = session.getGameInfo()
+
+        val voter = session.user
+
         val phase = gameInfo.phase
-        assertIs<MafiaPhase.Playing>(phase)
-        val gameOption = gameInfo.gameOption
+        assertIs<MafiaPhase.Vote>(phase)
 
-        val nextTurn = phase.nextTurn(gameOption.round, gameOption.turnCount)
+        vote(phase.players, voter, targetUserId)
 
-        if (nextTurn == null) {
-            // TODO 투표로 넘기기
-            return
-        }
+        mafiaGameMessenger.broadcastVoteStatus(gameInfo)
+    }
 
-        phase.turnInfo = nextTurn
+    private fun vote(
+        players: Map<UserId, Vector<UserId>>,
+        voter: User,
+        targetUserId: UserId,
+    ) {
+        synchronized(voter) {
+            val voterUserId = voter.id
 
-        mafiaGameMessenger.broadcastNextTurn(gameInfo)
-        phase.timerJob = timerRepository.startTimer(gameInfo.gameOption.turnTime) {
-            processNextTurn(gameInfo)
+            players.forEach { player ->
+                val userIds = player.value
+
+                if (voterUserId in userIds) {
+                    userIds.remove(voterUserId)
+                }
+            }
+            players[targetUserId]?.add(voterUserId) ?: InvalidRequestValueException
         }
     }
 

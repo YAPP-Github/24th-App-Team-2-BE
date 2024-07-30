@@ -4,7 +4,7 @@ import com.xorker.draw.exception.InvalidMafiaPhaseException
 import com.xorker.draw.mafia.event.JobWithStartTime
 import com.xorker.draw.mafia.turn.TurnInfo
 import com.xorker.draw.user.UserId
-import java.util.concurrent.ConcurrentHashMap
+import java.util.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -36,10 +36,28 @@ sealed class MafiaPhase {
         var turnInfo: TurnInfo = TurnInfo(),
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
         var timerJob: JobWithStartTime,
-    ) : MafiaPhase(), MafiaPhaseWithTurnList, TurnInfo by turnInfo
+    ) : MafiaPhase(), MafiaPhaseWithTurnList, TurnInfo by turnInfo {
+        fun toVote(job: JobWithStartTime): Vote {
+            val players = mutableMapOf<UserId, Vector<UserId>>()
+            turnList.forEach { player ->
+                players[player.userId] = Vector()
+            }
+            return Vote(
+                job = job,
+                mafiaPlayer = mafiaPlayer,
+                keyword = keyword,
+                drawData = drawData,
+                players = players,
+            )
+        }
+    }
 
     class Vote(
-        val players: ConcurrentHashMap<UserId, MutableSet<UserId>>,
+        var job: JobWithStartTime,
+        val mafiaPlayer: MafiaPlayer,
+        val keyword: MafiaKeyword,
+        val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
+        val players: Map<UserId, Vector<UserId>>,
     ) : MafiaPhase()
 
     class InferAnswer() : MafiaPhase()

@@ -1,5 +1,6 @@
 package com.xorker.draw.websocket.config
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -18,6 +19,7 @@ class ObjectMapperConfig {
         return ObjectMapper().apply {
             registerModules(simpleModule)
             registerModules(KotlinModule.Builder().build())
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         }
     }
 }

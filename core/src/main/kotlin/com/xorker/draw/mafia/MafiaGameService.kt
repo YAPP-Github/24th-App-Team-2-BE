@@ -7,7 +7,7 @@ import com.xorker.draw.mafia.phase.MafiaPhasePlayGameProcessor
 import com.xorker.draw.mafia.phase.MafiaPhaseService
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.Session
-import java.util.*
+import java.util.Vector
 import org.springframework.stereotype.Service
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract

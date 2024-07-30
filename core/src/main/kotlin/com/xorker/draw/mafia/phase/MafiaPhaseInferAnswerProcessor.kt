@@ -27,7 +27,7 @@ internal class MafiaPhaseInferAnswerProcessor(
         return inferAnswerPhase
     }
 
-    private fun processInferAnswer(gameInfo: MafiaGameInfo, nextStep: () -> Unit) {
+    internal fun processInferAnswer(gameInfo: MafiaGameInfo, nextStep: () -> Unit) {
         val phase = gameInfo.phase
         assertIs<MafiaPhase.InferAnswer>(phase)
 

@@ -7,7 +7,8 @@ import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
 import com.xorker.draw.user.UserRepository
 import java.time.Duration
-import java.time.temporal.ChronoUnit
+import java.time.Period
+import java.time.temporal.TemporalAmount
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -29,7 +30,7 @@ internal class AuthService(
     override fun anonymousSignIn(): Token {
         val user = userRepository.createUser(""); // TODO 이름 정책 정해지면 변경 예정
 
-        return createToken(user.id, Duration.of(100, ChronoUnit.YEARS))
+        return createToken(user.id, Period.ofYears(100))
     }
 
     override fun reissue(refreshToken: String): Token {
@@ -50,7 +51,7 @@ internal class AuthService(
         return userRepository.createUser(authType.authPlatform, platformUserId, userName)
     }
 
-    private fun createToken(userId: UserId, expiredTime: Duration): Token {
+    private fun createToken(userId: UserId, expiredTime: TemporalAmount): Token {
         return Token(
             accessToken = accessTokenRepository.createAccessToken(userId, expiredTime),
             refreshToken = refreshTokenRepository.createRefreshToken(userId),

@@ -48,6 +48,7 @@ internal class MafiaPhaseMessengerImpl(
                 MafiaPhaseWaitBody(
                     room.id,
                     room.players.map { it.toResponse(room.owner) }.toList(),
+                    this.gameOption.toResponse(),
                 ),
             )
 

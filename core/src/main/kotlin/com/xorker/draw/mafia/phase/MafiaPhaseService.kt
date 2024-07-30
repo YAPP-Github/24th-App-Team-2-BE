@@ -5,6 +5,7 @@ import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameRepository
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.MafiaPhaseMessenger
+import com.xorker.draw.mafia.assert
 import com.xorker.draw.mafia.assertIs
 import com.xorker.draw.room.RoomId
 import org.springframework.stereotype.Service
@@ -94,7 +95,7 @@ internal class MafiaPhaseService(
 
         val phase = synchronized(gameInfo) {
             val votePhase = gameInfo.phase
-            assertIs<MafiaPhase.Vote>(votePhase)
+            assert<MafiaPhase.Vote, MafiaPhase.InferAnswer>(votePhase)
             mafiaPhaseEndGameProcessor.endGame(gameInfo)
         }
 

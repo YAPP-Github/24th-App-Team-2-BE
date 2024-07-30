@@ -43,6 +43,7 @@ internal class MafiaPhasePlayVoteProcessor(
 
             if (candidate.first == mafiaPlayer.userId) {
                 winStep.invoke()
+                return
             }
         }
         loseStep.invoke()

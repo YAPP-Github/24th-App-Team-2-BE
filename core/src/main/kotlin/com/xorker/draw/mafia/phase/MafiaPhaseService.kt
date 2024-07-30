@@ -1,12 +1,20 @@
-package com.xorker.draw.mafia
+package com.xorker.draw.mafia.phase
 
 import com.xorker.draw.exception.NotFoundRoomException
+import com.xorker.draw.mafia.MafiaGameInfo
+import com.xorker.draw.mafia.MafiaGameRepository
+import com.xorker.draw.mafia.MafiaPhase
+import com.xorker.draw.mafia.MafiaPhaseMessenger
+import com.xorker.draw.mafia.assertIs
 import com.xorker.draw.room.RoomId
 import org.springframework.stereotype.Service
 
 @Service
 internal class MafiaPhaseService(
     private val mafiaGameRepository: MafiaGameRepository,
+    private val startGameService: MafiaPhaseStartGameProcessor,
+    private val mafiaPhasePlayGameProcessor: MafiaPhasePlayGameProcessor,
+    private val mafiaPhasePlayVoteProcessor: MafiaPhasePlayVoteProcessor,
     private val startGameService: MafiaStartGameService,
     private val mafiaGameService: MafiaGameService,
     private val mafiaVoteService: MafiaVoteService,
@@ -35,7 +43,7 @@ internal class MafiaPhaseService(
         val phase = synchronized(gameInfo) {
             val readyPhase = gameInfo.phase
             assertIs<MafiaPhase.Ready>(readyPhase)
-            mafiaGameService.playMafiaGame(gameInfo) {
+            mafiaPhasePlayGameProcessor.playMafiaGame(gameInfo) {
                 vote(roomId)
             }
         }
@@ -51,7 +59,7 @@ internal class MafiaPhaseService(
         val phase = synchronized(gameInfo) {
             val playingPhase = gameInfo.phase
             assertIs<MafiaPhase.Playing>(playingPhase)
-            mafiaVoteService.playVote(
+            mafiaPhasePlayVoteProcessor.playVote(
                 gameInfo,
                 {
                     interAnswer(roomId)

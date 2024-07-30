@@ -19,6 +19,7 @@ internal class MafiaPhaseService(
     private val mafiaGameService: MafiaGameService,
     private val mafiaVoteService: MafiaVoteService,
     private val mafiaKeywordService: MafiaKeywordService,
+    private val mafiaPhaseInferAnswerProcessor: MafiaPhaseInferAnswerProcessor,
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
 ) : MafiaPhaseUseCase {
 
@@ -81,7 +82,7 @@ internal class MafiaPhaseService(
         val phase = synchronized(gameInfo) {
             val votePhase = gameInfo.phase
             assertIs<MafiaPhase.Vote>(votePhase)
-            mafiaKeywordService.playInferAnswer(gameInfo) {
+            mafiaPhaseInferAnswerProcessor.playInferAnswer(gameInfo) {
                 endGame(roomId)
             }
         }

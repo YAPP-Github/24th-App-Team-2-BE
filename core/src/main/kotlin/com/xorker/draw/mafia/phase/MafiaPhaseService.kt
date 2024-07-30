@@ -72,8 +72,7 @@ internal class MafiaPhaseService(
     }
 
     override fun interAnswer(roomId: RoomId): MafiaPhase.InferAnswer {
-        // TODO
-        return MafiaPhase.InferAnswer()
+        TODO()
     }
 
     override fun endGame(roomId: RoomId): MafiaPhase.End {

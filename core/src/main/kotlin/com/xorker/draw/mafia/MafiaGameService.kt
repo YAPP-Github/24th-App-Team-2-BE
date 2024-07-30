@@ -8,7 +8,7 @@ import com.xorker.draw.mafia.phase.MafiaPhaseService
 import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.Session
-import java.util.Vector
+import java.util.*
 import org.springframework.stereotype.Service
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -77,6 +77,25 @@ internal class MafiaGameService(
                 }
             }
             players[targetUserId]?.add(voterUserId) ?: InvalidRequestValueException
+        }
+    }
+
+    override fun inferAnswer(session: Session, answer: String) {
+        val gameInfo = session.getGameInfo()
+
+        val phase = gameInfo.phase
+        assertIs<MafiaPhase.InferAnswer>(phase)
+
+        validateIsMafia(session.user, phase.mafiaPlayer)
+
+        phase.answer = answer
+
+        mafiaGameMessenger.broadcastAnswer(gameInfo, answer)
+    }
+
+    private fun validateIsMafia(player: User, mafiaPlayer: MafiaPlayer) {
+        if (player.id != mafiaPlayer.userId) {
+            throw InvalidRequestValueException
         }
     }
 

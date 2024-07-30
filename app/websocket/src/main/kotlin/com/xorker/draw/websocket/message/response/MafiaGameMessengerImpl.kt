@@ -11,6 +11,8 @@ import com.xorker.draw.room.RoomId
 import com.xorker.draw.websocket.BranchedBroadcastEvent
 import com.xorker.draw.websocket.BroadcastEvent
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
+import com.xorker.draw.websocket.message.response.dto.MafiaAnswerBody
+import com.xorker.draw.websocket.message.response.dto.MafiaAnswerMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaGameDrawMessage
 import com.xorker.draw.websocket.message.response.dto.MafiaGameTurnInfoBody
 import com.xorker.draw.websocket.message.response.dto.MafiaGameTurnInfoMessage
@@ -129,5 +131,13 @@ class MafiaGameMessengerImpl(
         val event = BroadcastEvent(roomId, message)
 
         broadcaster.publishBroadcastEvent(event)
+    }
+
+    override fun broadcastAnswer(gameInfo: MafiaGameInfo, answer: String) {
+        val roomId = gameInfo.room.id
+
+        val message = MafiaAnswerMessage(MafiaAnswerBody(answer))
+
+        broadcaster.broadcast(roomId, message)
     }
 }

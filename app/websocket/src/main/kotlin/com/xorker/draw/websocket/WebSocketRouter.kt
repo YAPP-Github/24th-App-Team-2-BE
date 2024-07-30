@@ -6,6 +6,7 @@ import com.xorker.draw.mafia.MafiaGameUseCase
 import com.xorker.draw.mafia.phase.MafiaPhaseUseCase
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.websocket.message.request.RequestAction
+import com.xorker.draw.websocket.message.request.dto.MafiaAnswerRequest
 import com.xorker.draw.websocket.message.request.dto.StartMafiaGameRequest
 import com.xorker.draw.websocket.message.request.dto.VoteMafiaRequest
 import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
@@ -38,6 +39,13 @@ class WebSocketRouter(
                 val sessionDto = session.getDto()
 
                 mafiaGameUseCase.voteMafia(sessionDto, requestDto.userId)
+            }
+
+            RequestAction.ANSWER -> {
+                val requestDto = request.extractBody<MafiaAnswerRequest>()
+                val sessionDto = session.getDto()
+
+                mafiaGameUseCase.inferAnswer(sessionDto, requestDto.answer)
             }
         }
     }

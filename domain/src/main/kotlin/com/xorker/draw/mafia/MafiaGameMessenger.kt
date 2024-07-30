@@ -10,4 +10,5 @@ interface MafiaGameMessenger {
     fun broadcastDraw(roomId: RoomId, data: Map<String, Any>)
     fun broadcastNextTurn(gameInfo: MafiaGameInfo)
     fun broadcastVoteStatus(mafiaGameInfo: MafiaGameInfo)
+    fun broadcastAnswer(gameInfo: MafiaGameInfo, answer: String)
 }

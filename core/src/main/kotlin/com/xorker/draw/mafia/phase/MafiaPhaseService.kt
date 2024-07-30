@@ -15,6 +15,7 @@ internal class MafiaPhaseService(
     private val startGameService: MafiaPhaseStartGameProcessor,
     private val mafiaPhasePlayGameProcessor: MafiaPhasePlayGameProcessor,
     private val mafiaPhasePlayVoteProcessor: MafiaPhasePlayVoteProcessor,
+    private val mafiaPhaseInferAnswerProcessor: MafiaPhaseInferAnswerProcessor,
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
 ) : MafiaPhaseUseCase {
 
@@ -72,7 +73,19 @@ internal class MafiaPhaseService(
     }
 
     override fun interAnswer(roomId: RoomId): MafiaPhase.InferAnswer {
-        TODO()
+        val gameInfo = getGameInfo(roomId)
+
+        val phase = synchronized(gameInfo) {
+            val votePhase = gameInfo.phase
+            assertIs<MafiaPhase.Vote>(votePhase)
+            mafiaPhaseInferAnswerProcessor.playInferAnswer(gameInfo) {
+                endGame(roomId)
+            }
+        }
+
+        mafiaPhaseMessenger.broadcastPhase(gameInfo)
+
+        return phase
     }
 
     override fun endGame(roomId: RoomId): MafiaPhase.End {

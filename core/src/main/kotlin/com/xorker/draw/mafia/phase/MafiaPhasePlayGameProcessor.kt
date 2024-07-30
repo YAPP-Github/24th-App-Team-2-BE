@@ -12,6 +12,7 @@ internal class MafiaPhasePlayGameProcessor(
     private val timerRepository: TimerRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
 ) {
+
     internal fun playMafiaGame(gameInfo: MafiaGameInfo, nextStep: () -> Unit): MafiaPhase.Playing {
         val phase = gameInfo.phase
         assertIs<MafiaPhase.Ready>(phase)

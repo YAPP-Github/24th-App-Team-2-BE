@@ -14,9 +14,7 @@ data class MafiaGameInfoMessage(
 }
 
 data class MafiaGameInfoBody(
-    val userId: UserId,
-    val turn: Int,
-    val isMafia: Boolean = false,
+    val mafiaUserId: UserId,
     val turnList: List<MafiaPlayer>,
     val category: String,
     val answer: String,

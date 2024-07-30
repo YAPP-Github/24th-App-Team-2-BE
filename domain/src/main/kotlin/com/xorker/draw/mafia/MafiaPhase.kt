@@ -129,7 +129,7 @@ inline fun <reified T : MafiaPhase> assertIs(phase: MafiaPhase) {
         returns() implies (phase is T)
     }
 
-    if (phase is T) {
+    if (phase !is T) {
         throw InvalidMafiaPhaseException("유효하지 않는 Phase 입니다. 기대값: ${T::class}, 요청값: $phase")
     }
 }

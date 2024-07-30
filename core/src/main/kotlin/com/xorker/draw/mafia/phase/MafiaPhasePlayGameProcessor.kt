@@ -2,6 +2,7 @@ package com.xorker.draw.mafia.phase
 
 import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameMessenger
+import com.xorker.draw.mafia.MafiaGameRepository
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.assertIs
 import com.xorker.draw.timer.TimerRepository
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component
 internal class MafiaPhasePlayGameProcessor(
     private val timerRepository: TimerRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
+    private val mafiaGameRepository: MafiaGameRepository,
 ) {
 
     internal fun playMafiaGame(gameInfo: MafiaGameInfo, nextStep: () -> Unit): MafiaPhase.Playing {
@@ -44,6 +46,7 @@ internal class MafiaPhasePlayGameProcessor(
 
         phase.turnInfo = nextTurn
 
+        mafiaGameRepository.saveGameInfo(gameInfo)
         mafiaGameMessenger.broadcastNextTurn(gameInfo)
         phase.timerJob = timerRepository.startTimer(gameInfo.gameOption.turnTime) {
             processNextTurn(gameInfo, nextStep)

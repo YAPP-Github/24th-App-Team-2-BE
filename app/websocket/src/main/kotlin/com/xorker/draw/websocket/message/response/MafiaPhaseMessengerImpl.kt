@@ -64,7 +64,7 @@ internal class MafiaPhaseMessengerImpl(
                     round = phase.round,
                     turn = phase.turn,
                     startTurnTime = LocalDateTime.now(), // TOOD: 턴 시스템 도입 시 수정
-                    draw = phase.drawData.take(phase.drawData.size - 1).map { it.second },
+                    draw = phase.getDraw(),
                 ),
             )
 

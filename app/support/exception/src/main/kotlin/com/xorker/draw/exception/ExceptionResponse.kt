@@ -2,10 +2,21 @@ package com.xorker.draw.exception
 
 data class ExceptionResponse(
     val code: String,
-    val title: String? = null,
-    val description: String? = null,
-    val buttons: List<ExceptionButtonResponse>? = null,
+    val dialog: DialogResponse?,
+    val toast: ToastResponse?,
 )
+
+sealed class ExceptionDesign
+
+data class ToastResponse(
+    val text: String,
+) : ExceptionDesign()
+
+data class DialogResponse(
+    val title: String? = null,
+    val description: String,
+    val buttons: List<ExceptionButtonResponse>,
+) : ExceptionDesign()
 
 data class ExceptionButtonResponse(
     val text: String,

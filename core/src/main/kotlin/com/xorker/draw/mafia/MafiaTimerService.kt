@@ -8,9 +8,9 @@ import com.xorker.draw.mafia.event.MafiaTurnExpiredEvent
 import com.xorker.draw.timer.TimerRepository
 import java.text.SimpleDateFormat
 import org.springframework.context.event.EventListener
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 internal class MafiaTimerService(
     private val timerRepository: TimerRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,

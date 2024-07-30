@@ -1,12 +1,16 @@
-package com.xorker.draw.mafia
+package com.xorker.draw.mafia.phase
 
+import com.xorker.draw.mafia.MafiaGameInfo
+import com.xorker.draw.mafia.MafiaKeywordRepository
+import com.xorker.draw.mafia.MafiaPhase
+import com.xorker.draw.mafia.MafiaPlayer
 import com.xorker.draw.timer.TimerRepository
 import java.util.*
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 import kotlin.random.Random
 
-@Service
-internal class MafiaStartGameService(
+@Component
+internal class MafiaPhaseStartGameProcessor(
     private val mafiaKeywordRepository: MafiaKeywordRepository,
     private val timerRepository: TimerRepository,
 ) {

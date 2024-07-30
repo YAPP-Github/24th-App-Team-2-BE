@@ -16,23 +16,19 @@ internal class MafiaGameRoomService(
 
     override fun connectSession(session: Session, request: SessionInitializeRequest) {
         var gameInfo = mafiaGameRepository.getGameInfo(session.roomId)
-
-        if (gameInfo != null) {
-            val player = gameInfo.findPlayer(session.user.id)
-
-            if (player != null) {
-                player.connect()
-                return
-            }
-        }
-
-        val player = MafiaPlayer(session.user.id, request.nickname, generateColor(gameInfo))
+        val userId = session.user.id
 
         if (gameInfo == null) {
-            if (request.roomId == null) throw NotFoundRoomException
+            if (request.roomId != null) throw NotFoundRoomException
+            val player = MafiaPlayer(userId, request.nickname, generateColor(null))
             gameInfo = createGameInfo(session, player)
         } else {
-            gameInfo.room.add(player)
+            val player = gameInfo.findPlayer(userId)
+            if (player != null) {
+                player.connect()
+            } else {
+                gameInfo.room.add(MafiaPlayer(userId, request.nickname, generateColor(gameInfo)))
+            }
         }
 
         mafiaGameRepository.saveGameInfo(gameInfo)

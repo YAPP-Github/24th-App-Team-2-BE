@@ -48,6 +48,7 @@ sealed class MafiaPhase {
                 keyword = keyword,
                 drawData = drawData,
                 players = players,
+                turnList = turnList,
             )
         }
     }
@@ -58,13 +59,25 @@ sealed class MafiaPhase {
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
         val players: Map<UserId, Vector<UserId>>,
-    ) : MafiaPhase() {
+        override val turnList: List<MafiaPlayer>,
+    ) : MafiaPhase(), MafiaPhaseWithTurnList {
         fun toInferAnswer(job: JobWithStartTime): InferAnswer {
             return InferAnswer(
                 job = job,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
                 drawData = drawData,
+                turnList = turnList,
+            )
+        }
+
+        fun toEnd(): End {
+            return End(
+                mafiaPlayer = mafiaPlayer,
+                keyword = keyword,
+                drawData = drawData,
+                showAnswer = false,
+                turnList = turnList,
             )
         }
     }
@@ -75,9 +88,28 @@ sealed class MafiaPhase {
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
         var answer: String? = null,
-    ) : MafiaPhase()
+        override val turnList: List<MafiaPlayer>,
+    ) : MafiaPhase(), MafiaPhaseWithTurnList {
+        fun toEnd(): End {
+            return End(
+                mafiaPlayer = mafiaPlayer,
+                keyword = keyword,
+                drawData = drawData,
+                answer = answer,
+                turnList = turnList,
+            )
+        }
+    }
 
-    class End() : MafiaPhase()
+    class End(
+        val mafiaPlayer: MafiaPlayer,
+        val keyword: MafiaKeyword,
+        val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
+        val showAnswer: Boolean = true,
+        var answer: String? = null,
+        var isMafiaWin: Boolean = false,
+        override val turnList: List<MafiaPlayer>,
+    ) : MafiaPhase(), MafiaPhaseWithTurnList
 }
 
 interface MafiaPhaseWithTurnList {

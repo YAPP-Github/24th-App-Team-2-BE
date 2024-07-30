@@ -5,14 +5,14 @@ import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
 import java.time.LocalDateTime
 
-class MafiaGameTurnInfoMessage(
+data class MafiaGameTurnInfoMessage(
     override val body: MafiaGameTurnInfoBody,
 ) : SessionMessage {
     override val action: ResponseAction = ResponseAction.TURN_INFO
     override val status: SessionMessage.Status = SessionMessage.Status.OK
 }
 
-class MafiaGameTurnInfoBody(
+data class MafiaGameTurnInfoBody(
     val round: Int,
     val turn: Int,
     val startTurnTime: LocalDateTime,

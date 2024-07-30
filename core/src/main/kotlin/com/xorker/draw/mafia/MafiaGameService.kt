@@ -5,6 +5,7 @@ import com.xorker.draw.exception.InvalidRequestValueException
 import com.xorker.draw.mafia.dto.DrawRequest
 import com.xorker.draw.mafia.phase.MafiaPhasePlayGameProcessor
 import com.xorker.draw.mafia.phase.MafiaPhaseService
+import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.Session
 import java.util.Vector
@@ -51,29 +52,32 @@ internal class MafiaGameService(
         val gameInfo = session.getGameInfo()
 
         val voter = session.user
-        val voterUserId = voter.id
 
         assertIs<MafiaPhase.Vote>(gameInfo.phase)
         val phase = gameInfo.phase as MafiaPhase.Vote
 
-        vote(phase.players, voterUserId, targetUserId)
+        vote(phase.players, voter, targetUserId)
 
         mafiaGameMessenger.broadcastVoteStatus(gameInfo)
     }
 
     private fun vote(
         players: Map<UserId, Vector<UserId>>,
-        voterUserId: UserId,
+        voter: User,
         targetUserId: UserId,
     ) {
-        players.forEach { player ->
-            val userIds = player.value
+        synchronized(voter) {
+            val voterUserId = voter.id
 
-            if (voterUserId in userIds) {
-                userIds.remove(voterUserId)
+            players.forEach { player ->
+                val userIds = player.value
+
+                if (voterUserId in userIds) {
+                    userIds.remove(voterUserId)
+                }
             }
+            players[targetUserId]?.add(voterUserId) ?: InvalidRequestValueException
         }
-        players[targetUserId]?.add(voterUserId) ?: InvalidRequestValueException
     }
 
     private fun Session.getGameInfo(): MafiaGameInfo =

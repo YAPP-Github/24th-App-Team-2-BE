@@ -30,7 +30,6 @@ class RequestLoggingWrapper(request: HttpServletRequest) : HttpServletRequestWra
         }
     }
 
-    @Throws(IOException::class)
     override fun getInputStream(): ServletInputStream {
         val byteArrayInputStream = ByteArrayInputStream(this.rawData)
         return object : ServletInputStream() {
@@ -44,7 +43,6 @@ class RequestLoggingWrapper(request: HttpServletRequest) : HttpServletRequestWra
 
             override fun setReadListener(readListener: ReadListener) {}
 
-            @Throws(IOException::class)
             override fun read(): Int {
                 return byteArrayInputStream.read()
             }

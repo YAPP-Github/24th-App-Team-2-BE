@@ -1,5 +1,6 @@
-package com.xorker.draw.mafia
+package com.xorker.draw.mafia.phase
 
+import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.room.RoomId
 
 interface MafiaPhaseUseCase {

@@ -1,8 +1,10 @@
 package com.xorker.draw.mafia
 
+import com.xorker.draw.exception.NotFoundRoomException
 import com.xorker.draw.room.Room
 import com.xorker.draw.websocket.Session
 import com.xorker.draw.websocket.SessionEventListener
+import com.xorker.draw.websocket.SessionInitializeRequest
 import org.springframework.stereotype.Component
 
 @Component
@@ -12,7 +14,7 @@ internal class MafiaGameRoomService(
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
 ) : SessionEventListener {
 
-    override fun connectSession(session: Session, nickname: String) {
+    override fun connectSession(session: Session, request: SessionInitializeRequest) {
         var gameInfo = mafiaGameRepository.getGameInfo(session.roomId)
 
         if (gameInfo != null) {
@@ -24,9 +26,10 @@ internal class MafiaGameRoomService(
             }
         }
 
-        val player = MafiaPlayer(session.user.id, nickname, generateColor(gameInfo))
+        val player = MafiaPlayer(session.user.id, request.nickname, generateColor(gameInfo))
 
         if (gameInfo == null) {
+            if (request.roomId == null) throw NotFoundRoomException
             gameInfo = createGameInfo(session, player)
         } else {
             gameInfo.room.add(player)

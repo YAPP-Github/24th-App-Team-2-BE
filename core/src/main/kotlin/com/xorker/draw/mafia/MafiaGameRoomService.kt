@@ -5,9 +5,9 @@ import com.xorker.draw.room.Room
 import com.xorker.draw.websocket.Session
 import com.xorker.draw.websocket.SessionEventListener
 import com.xorker.draw.websocket.SessionInitializeRequest
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 internal class MafiaGameRoomService(
     private val mafiaGameRepository: MafiaGameRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,

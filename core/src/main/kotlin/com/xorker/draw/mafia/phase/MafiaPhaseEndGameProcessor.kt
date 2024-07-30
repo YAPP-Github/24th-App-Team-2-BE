@@ -1,11 +1,14 @@
-package com.xorker.draw.mafia
+package com.xorker.draw.mafia.phase
 
 import com.xorker.draw.exception.InvalidMafiaPhaseException
-import org.springframework.stereotype.Service
+import com.xorker.draw.mafia.MafiaGameInfo
+import com.xorker.draw.mafia.MafiaPhase
+import org.springframework.stereotype.Component
 
-@Service
-internal class MafiaEndService {
+@Component
+internal class MafiaPhaseEndGameProcessor {
 
+    // TODO 게임 결과 DB 저장
     internal fun endGame(gameInfo: MafiaGameInfo): MafiaPhase.End {
         val phase = gameInfo.phase
 

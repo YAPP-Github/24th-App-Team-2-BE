@@ -52,6 +52,14 @@ class MafiaGameMessengerImpl(
         broadcaster.publishBroadcastEvent(event)
     }
 
+    override fun broadcastGameInfo(mafiaGameInfo: MafiaGameInfo) {
+        TODO("Not yet implemented")
+    }
+
+    override fun broadcastGameReady(mafiaGameInfo: MafiaGameInfo) {
+        TODO("Not yet implemented")
+    }
+
     override fun broadcastPlayerTurnList(mafiaGameInfo: MafiaGameInfo) {
         val room = mafiaGameInfo.room
         val roomId = room.id

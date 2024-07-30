@@ -3,6 +3,7 @@ package com.xorker.draw.mafia
 import com.xorker.draw.exception.InvalidRequestOnlyMyTurnException
 import com.xorker.draw.exception.InvalidRequestValueException
 import com.xorker.draw.mafia.dto.DrawRequest
+import com.xorker.draw.mafia.phase.MafiaPhaseInferAnswerProcessor
 import com.xorker.draw.mafia.phase.MafiaPhasePlayGameProcessor
 import com.xorker.draw.mafia.phase.MafiaPhaseService
 import com.xorker.draw.user.User
@@ -17,6 +18,7 @@ import kotlin.contracts.contract
 internal class MafiaGameService(
     private val mafiaPhaseService: MafiaPhaseService,
     private val mafiaPhasePlayGameProcessor: MafiaPhasePlayGameProcessor,
+    private val mafiaPhaseInferAnswerProcessor: MafiaPhaseInferAnswerProcessor,
     private val mafiaGameRepository: MafiaGameRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
 ) : MafiaGameUseCase {
@@ -61,6 +63,35 @@ internal class MafiaGameService(
         mafiaGameMessenger.broadcastVoteStatus(gameInfo)
     }
 
+    override fun inferAnswer(session: Session, answer: String) {
+        val gameInfo = session.getGameInfo()
+
+        val phase = gameInfo.phase
+        assertIs<MafiaPhase.InferAnswer>(phase)
+
+        validateIsMafia(session.user, phase.mafiaPlayer)
+
+        phase.answer = answer
+
+        mafiaGameMessenger.broadcastAnswer(gameInfo, answer)
+    }
+
+    override fun decideAnswer(session: Session, answer: String) {
+        val gameInfo = session.getGameInfo()
+
+        val phase = gameInfo.phase
+        assertIs<MafiaPhase.InferAnswer>(phase)
+
+        phase.answer = answer
+
+        val job = phase.job
+        job.cancel()
+
+        mafiaPhaseInferAnswerProcessor.processInferAnswer(gameInfo) {
+            mafiaPhaseService.endGame(gameInfo.room.id)
+        }
+    }
+
     private fun vote(
         players: Map<UserId, Vector<UserId>>,
         voter: User,
@@ -78,19 +109,6 @@ internal class MafiaGameService(
             }
             players[targetUserId]?.add(voterUserId) ?: InvalidRequestValueException
         }
-    }
-
-    override fun inferAnswer(session: Session, answer: String) {
-        val gameInfo = session.getGameInfo()
-
-        val phase = gameInfo.phase
-        assertIs<MafiaPhase.InferAnswer>(phase)
-
-        validateIsMafia(session.user, phase.mafiaPlayer)
-
-        phase.answer = answer
-
-        mafiaGameMessenger.broadcastAnswer(gameInfo, answer)
     }
 
     private fun validateIsMafia(player: User, mafiaPlayer: MafiaPlayer) {

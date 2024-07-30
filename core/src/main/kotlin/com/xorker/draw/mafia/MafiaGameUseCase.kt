@@ -9,4 +9,5 @@ interface MafiaGameUseCase {
     fun nextTurnByUser(session: Session)
     fun voteMafia(session: Session, targetUserId: UserId)
     fun inferAnswer(session: Session, answer: String)
+    fun decideAnswer(session: Session, answer: String)
 }

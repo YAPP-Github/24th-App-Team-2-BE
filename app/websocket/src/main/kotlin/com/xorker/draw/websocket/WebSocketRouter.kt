@@ -52,9 +52,7 @@ class WebSocketRouter(
                 val requestDto = request.extractBody<MafiaAnswerRequest>()
                 val sessionDto = session.getDto()
 
-                mafiaKeywordUseCase.decideAnswer(sessionDto, requestDto.answer) {
-                    mafiaPhaseUseCase.endGame(sessionDto.roomId)
-                }
+                mafiaGameUseCase.decideAnswer(sessionDto, requestDto.answer)
             }
         }
     }

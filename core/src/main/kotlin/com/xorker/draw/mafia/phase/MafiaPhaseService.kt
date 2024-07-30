@@ -12,13 +12,9 @@ import org.springframework.stereotype.Service
 @Service
 internal class MafiaPhaseService(
     private val mafiaGameRepository: MafiaGameRepository,
-    private val startGameService: MafiaPhaseStartGameProcessor,
+    private val mafiaPhaseStartGameProcessor: MafiaPhaseStartGameProcessor,
     private val mafiaPhasePlayGameProcessor: MafiaPhasePlayGameProcessor,
     private val mafiaPhasePlayVoteProcessor: MafiaPhasePlayVoteProcessor,
-    private val startGameService: MafiaStartGameService,
-    private val mafiaGameService: MafiaGameService,
-    private val mafiaVoteService: MafiaVoteService,
-    private val mafiaKeywordService: MafiaKeywordService,
     private val mafiaPhaseInferAnswerProcessor: MafiaPhaseInferAnswerProcessor,
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
 ) : MafiaPhaseUseCase {
@@ -28,7 +24,7 @@ internal class MafiaPhaseService(
 
         val phase = synchronized(gameInfo) {
             assertIs<MafiaPhase.Wait>(gameInfo.phase)
-            startGameService.startMafiaGame(gameInfo) {
+            mafiaPhaseStartGameProcessor.startMafiaGame(gameInfo) {
                 playGame(roomId)
             }
         }

@@ -1,18 +1,18 @@
-package com.xorker.draw.websocket.message.response.dto
+package com.xorker.draw.websocket.message.response.dto.game
 
 import com.xorker.draw.mafia.MafiaPlayer
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
 
-data class MafiaPlayerListMessage(
-    override val body: MafiaPlayerListBody,
+data class MafiaGamePlayerListMessage(
+    override val body: MafiaGamePlayerListBody,
 ) : SessionMessage {
     override val action: ResponseAction = ResponseAction.PLAYER_LIST
     override val status: SessionMessage.Status = SessionMessage.Status.OK
 }
 
-data class MafiaPlayerListBody(
+data class MafiaGamePlayerListBody(
     val players: List<MafiaPlayerResponse>,
 )
 

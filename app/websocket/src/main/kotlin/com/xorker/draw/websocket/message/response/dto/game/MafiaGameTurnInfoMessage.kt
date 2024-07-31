@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket.message.response.dto
+package com.xorker.draw.websocket.message.response.dto.game
 
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.ResponseAction

@@ -9,7 +9,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class LocalDateTimeSerializer : JsonSerializer<LocalDateTime>() {
-    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm.ss.SSSXXX")
+    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 
     override fun serialize(value: LocalDateTime, gen: JsonGenerator, p2: SerializerProvider) {
         val zonedDateTime: ZonedDateTime = value.atZone(ZoneId.of("Asia/Seoul")) // TODO 서버 인스턴스 Zone 구하기

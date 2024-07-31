@@ -9,8 +9,9 @@ import com.xorker.draw.mafia.MafiaPlayer
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
-import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoBody
-import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoMessage
+import com.xorker.draw.websocket.message.response.dto.game.toResponse
+import com.xorker.draw.websocket.message.response.dto.phase.MafiaGameInfoBody
+import com.xorker.draw.websocket.message.response.dto.phase.MafiaGameInfoMessage
 import com.xorker.draw.websocket.message.response.dto.phase.MafiaPhaseEndBody
 import com.xorker.draw.websocket.message.response.dto.phase.MafiaPhaseEndMessage
 import com.xorker.draw.websocket.message.response.dto.phase.MafiaPhaseInferAnswerBody
@@ -23,7 +24,7 @@ import com.xorker.draw.websocket.message.response.dto.phase.MafiaPhaseVoteBody
 import com.xorker.draw.websocket.message.response.dto.phase.MafiaPhaseVoteMessage
 import com.xorker.draw.websocket.message.response.dto.phase.MafiaPhaseWaitBody
 import com.xorker.draw.websocket.message.response.dto.phase.MafiaPhaseWaitMessage
-import com.xorker.draw.websocket.message.response.dto.toResponse
+import com.xorker.draw.websocket.message.response.dto.phase.toResponse
 import java.time.LocalDateTime
 import org.springframework.stereotype.Component
 

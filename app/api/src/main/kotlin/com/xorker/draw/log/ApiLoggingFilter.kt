@@ -1,6 +1,6 @@
 package com.xorker.draw.log
 
-import com.yapp.bol.logging.logger
+import com.xorker.draw.support.logging.logger
 import jakarta.servlet.Filter
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest

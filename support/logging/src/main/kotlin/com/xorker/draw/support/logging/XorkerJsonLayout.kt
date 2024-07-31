@@ -1,4 +1,4 @@
-package com.yapp.bol.logging
+package com.xorker.draw.support.logging
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.contrib.jackson.JacksonJsonFormatter

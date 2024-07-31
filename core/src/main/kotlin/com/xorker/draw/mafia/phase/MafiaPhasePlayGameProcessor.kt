@@ -21,7 +21,11 @@ internal class MafiaPhasePlayGameProcessor(
 
         val gameOption = gameInfo.gameOption
 
-        val job = timerRepository.startTimer(gameOption.turnTime) {
+        var time = gameOption.turnTime
+        time = time.plus(gameOption.introAnimationTime)
+        time = time.plus(gameOption.roundAnimationTime)
+
+        val job = timerRepository.startTimer(time) {
             processNextTurn(gameInfo, nextStep)
         }
 
@@ -47,10 +51,19 @@ internal class MafiaPhasePlayGameProcessor(
 
         phase.turnInfo = nextTurn
 
-        mafiaGameRepository.saveGameInfo(gameInfo)
-        mafiaGameMessenger.broadcastNextTurn(gameInfo)
-        phase.timerJob = timerRepository.startTimer(gameInfo.gameOption.turnTime) {
+        val time =
+            if (nextTurn.isLastTurn(room.size() - 1) && nextTurn.isLastRound(gameOption.round - 1).not()) {
+                gameOption.turnTime.plus(gameOption.roundAnimationTime)
+            } else {
+                gameOption.turnTime
+            }
+
+        phase.timerJob = timerRepository.startTimer(time) {
             processNextTurn(gameInfo, nextStep)
         }
+
+        mafiaGameRepository.saveGameInfo(gameInfo)
+
+        mafiaGameMessenger.broadcastNextTurn(gameInfo)
     }
 }

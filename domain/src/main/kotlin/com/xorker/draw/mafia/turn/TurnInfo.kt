@@ -14,9 +14,7 @@ interface TurnInfo {
         return TurnInfo(round, turn + 1)
     }
 
-    fun isLastTurn(maxTurnPerRound: Int): Boolean = turn == maxTurnPerRound
-
-    fun isLastRound(maxRound: Int): Boolean = round == maxRound
+    fun isFirstTurn(): Boolean = turn == 0
 }
 
 fun TurnInfo(round: Int = 0, turn: Int = 0): TurnInfo = TurnInfoImpl(round, turn)

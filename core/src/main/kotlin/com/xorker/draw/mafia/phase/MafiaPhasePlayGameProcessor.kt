@@ -52,7 +52,7 @@ internal class MafiaPhasePlayGameProcessor(
         phase.turnInfo = nextTurn
 
         val time =
-            if (nextTurn.isLastTurn(room.size() - 1) && nextTurn.isLastRound(gameOption.round - 1).not()) {
+            if (nextTurn.isFirstTurn()) {
                 gameOption.turnTime.plus(gameOption.roundAnimationTime)
             } else {
                 gameOption.turnTime

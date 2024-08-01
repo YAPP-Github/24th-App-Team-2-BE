@@ -65,6 +65,14 @@ sealed class MafiaPhase {
                 drawData.take(drawData.size - 1).map { it.second }
             }
         }
+
+        fun getCurrentDraw(): Map<String, Any> {
+            return if (drawData.isEmpty()) {
+                emptyMap()
+            } else {
+                drawData.last().second
+            }
+        }
     }
 
     class Vote(

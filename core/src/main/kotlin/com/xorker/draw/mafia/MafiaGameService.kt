@@ -126,6 +126,6 @@ internal class MafiaGameService(
             returns() implies (phase is MafiaPhase.Playing)
         }
         if (phase !is MafiaPhase.Playing) throw InvalidRequestValueException
-        if (phase.getPlayerTurn(userId) == phase.turn) throw InvalidRequestOnlyMyTurnException
+        if (phase.getPlayerTurn(userId) != phase.turn) throw InvalidRequestOnlyMyTurnException
     }
 }

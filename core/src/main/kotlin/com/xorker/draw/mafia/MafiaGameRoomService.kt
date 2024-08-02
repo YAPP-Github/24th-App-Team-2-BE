@@ -75,7 +75,7 @@ internal class MafiaGameRoomService(
         mafiaGameMessenger.broadcastPlayerList(gameInfo)
     }
 
-    private fun generateColor(gameInfo: MafiaGameInfo?): String {
+    internal fun generateColor(gameInfo: MafiaGameInfo?): String {
         if (gameInfo == null) return COLOR_LIST.first()
 
         val alreadyUsedColors =

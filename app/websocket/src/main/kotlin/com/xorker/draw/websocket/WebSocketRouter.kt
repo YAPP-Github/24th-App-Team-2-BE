@@ -55,6 +55,8 @@ class WebSocketRouter(
 
                 mafiaGameUseCase.decideAnswer(sessionDto, requestDto.answer)
             }
+
+            RequestAction.GAME_AGAIN -> mafiaGameUseCase.gameAgain(session.getDto())
         }
     }
 

@@ -10,4 +10,5 @@ enum class RequestAction(
     VOTE("마피아 투표"),
     ANSWER("마피아 정답 입력"),
     DECIDE_ANSWER("마피아 정답 확정"),
+    GAME_AGAIN("마피아 게임 다시하기"),
 }

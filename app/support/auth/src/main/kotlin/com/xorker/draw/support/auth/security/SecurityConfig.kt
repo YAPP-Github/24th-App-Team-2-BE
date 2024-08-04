@@ -36,6 +36,7 @@ internal class SecurityConfig {
                 it.anyRequest()
                     .permitAll()
             }
+            .anonymous { it.disable() }
             .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
     }

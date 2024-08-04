@@ -51,6 +51,7 @@ class ApiExceptionHandler(
     @Order(value = Ordered.LOWEST_PRECEDENCE)
     @ExceptionHandler(Exception::class)
     protected fun handleException(ex: Exception): ResponseEntity<ExceptionResponse> {
+        ex.printStackTrace()
         return responseFactory.create(UnknownException(ex))
     }
 }

@@ -21,10 +21,11 @@ internal class PrincipalUserArgumentResolver : HandlerMethodArgumentResolver {
         @Nullable mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         @Nullable binderFactory: WebDataBinderFactory?,
-    ): PrincipalUser {
+    ): PrincipalUser? {
         val principal = SecurityContextHolder.getContext()
             .authentication
-            .principal as Long
-        return PrincipalUser(UserId(principal))
+            .principal as? UserId
+            ?: return null
+        return PrincipalUser(principal)
     }
 }

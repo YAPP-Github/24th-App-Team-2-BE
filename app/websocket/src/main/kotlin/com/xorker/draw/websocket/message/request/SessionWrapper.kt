@@ -15,6 +15,8 @@ class SessionWrapper(
     override val id: SessionId = SessionId(session.id)
 
     override fun send(message: String) {
-        session.sendMessage(TextMessage(message))
+        synchronized(session) {
+            session.sendMessage(TextMessage(message))
+        }
     }
 }

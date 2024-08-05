@@ -8,7 +8,4 @@ data class PlayingRoomResponse(
 
     @Schema(description = "게임 방 코드")
     val roomId: RoomId? = null,
-
-    @Schema(description = "마피아 게임 진행 상태")
-    val phase: String? = null,
 )

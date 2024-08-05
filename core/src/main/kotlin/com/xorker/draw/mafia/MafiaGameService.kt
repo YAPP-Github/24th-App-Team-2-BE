@@ -6,7 +6,6 @@ import com.xorker.draw.mafia.dto.DrawRequest
 import com.xorker.draw.mafia.phase.MafiaPhaseInferAnswerProcessor
 import com.xorker.draw.mafia.phase.MafiaPhasePlayGameProcessor
 import com.xorker.draw.mafia.phase.MafiaPhaseService
-import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.Session
@@ -26,8 +25,8 @@ internal class MafiaGameService(
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
 ) : MafiaGameUseCase {
 
-    override fun getGameInfo(roomId: RoomId): MafiaGameInfo? {
-        return mafiaGameRepository.getGameInfo(roomId)
+    override fun getGameInfo(userId: UserId): MafiaGameInfo? {
+        return mafiaGameRepository.getGameInfo(userId)
     }
 
     override fun draw(session: Session, request: DrawRequest) {

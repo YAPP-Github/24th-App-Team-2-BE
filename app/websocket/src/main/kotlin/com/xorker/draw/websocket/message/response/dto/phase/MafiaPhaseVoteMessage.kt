@@ -15,5 +15,6 @@ class MafiaPhaseVoteMessage(
 data class MafiaPhaseVoteBody(
     val startTime: LocalDateTime,
     val mafiaGameInfo: MafiaGameInfoMessage? = null,
+    val draw: List<Map<String, Any>>,
     val players: Map<UserId, List<UserId>>,
 )

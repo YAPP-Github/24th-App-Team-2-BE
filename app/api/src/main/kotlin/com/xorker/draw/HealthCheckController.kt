@@ -1,6 +1,6 @@
 package com.xorker.draw
 
-import com.yapp.bol.logging.logger
+import com.xorker.draw.support.logging.logger
 import org.slf4j.MDC
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController

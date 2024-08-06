@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket.message.response.dto
+package com.xorker.draw.websocket.message.response.dto.phase
 
 import com.xorker.draw.mafia.MafiaGameOption
 import com.xorker.draw.mafia.MafiaPlayer
@@ -25,7 +25,8 @@ data class MafiaGameOptionResponse(
     val minimum: Int,
     val maximum: Int,
     val readyTime: Long,
-    val animationTime: Long,
+    val introAnimationTime: Long,
+    val roundAnimationTime: Long,
     val round: Int,
     val turnTime: Long,
     val turnCount: Int,
@@ -36,11 +37,12 @@ data class MafiaGameOptionResponse(
 fun MafiaGameOption.toResponse(): MafiaGameOptionResponse = MafiaGameOptionResponse(
     minimum = minimum,
     maximum = maximum,
-    readyTime = readyTime.toSeconds(),
-    animationTime = animationTime.toSeconds(),
+    readyTime = readyTime.toMillis(),
+    introAnimationTime = introAnimationTime.toMillis(),
+    roundAnimationTime = roundAnimationTime.toMillis(),
     round = round,
-    turnTime = turnTime.toSeconds(),
+    turnTime = turnTime.toMillis(),
     turnCount = turnCount,
-    voteTime = voteTime.toSeconds(),
-    answerTime = answerTime.toSeconds(),
+    voteTime = voteTime.toMillis(),
+    answerTime = answerTime.toMillis(),
 )

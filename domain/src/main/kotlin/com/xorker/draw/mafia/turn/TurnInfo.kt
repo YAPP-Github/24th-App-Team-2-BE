@@ -13,6 +13,8 @@ interface TurnInfo {
 
         return TurnInfo(round, turn + 1)
     }
+
+    fun isFirstTurn(): Boolean = turn == 0
 }
 
 fun TurnInfo(round: Int = 0, turn: Int = 0): TurnInfo = TurnInfoImpl(round, turn)

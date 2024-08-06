@@ -2,6 +2,7 @@ package com.xorker.draw.websocket.exception
 
 import com.xorker.draw.exception.XorkerException
 import com.xorker.draw.exception.XorkerExceptionHandler
+import com.xorker.draw.support.logging.logger
 import com.xorker.draw.websocket.message.request.RequestAction
 import com.xorker.draw.websocket.message.request.dto.ExceptionMessage
 import com.xorker.draw.websocket.parser.WebSocketResponseParser
@@ -14,8 +15,10 @@ class WebSocketExceptionHandler(
     private val exceptionHandler: XorkerExceptionHandler,
     private val responseParser: WebSocketResponseParser,
 ) {
+    private val log = logger()
+
     fun handleXorkerException(session: WebSocketSession, requestAction: RequestAction, ex: XorkerException) {
-        // TODO : Logging
+        log.error(ex.message, ex)
 
         val message = ExceptionMessage(
             requestAction,

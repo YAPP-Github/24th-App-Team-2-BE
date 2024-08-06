@@ -1,8 +1,10 @@
-package com.xorker.draw.websocket.message.response.dto
+package com.xorker.draw.websocket.message.response.dto.phase
 
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaGameOptionResponse
+import com.xorker.draw.websocket.message.response.dto.MafiaPlayerResponse
 
 data class MafiaPhaseWaitMessage(
     override val body: MafiaPhaseWaitBody,

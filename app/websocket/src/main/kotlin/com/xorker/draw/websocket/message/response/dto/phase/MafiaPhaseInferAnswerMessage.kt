@@ -1,7 +1,8 @@
-package com.xorker.draw.websocket.message.response.dto
+package com.xorker.draw.websocket.message.response.dto.phase
 
 import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoMessage
 import java.time.LocalDateTime
 
 class MafiaPhaseInferAnswerMessage(

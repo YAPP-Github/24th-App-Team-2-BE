@@ -1,12 +1,13 @@
-package com.xorker.draw.websocket.message.response.dto
+package com.xorker.draw.websocket.message.response.dto.phase
 
 import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
+import com.xorker.draw.websocket.message.response.dto.MafiaGameInfoMessage
 
 class MafiaPhaseEndMessage(
     override val body: MafiaPhaseEndBody,
 ) : SessionMessage {
-    override val action = ResponseAction.PHASE_INFER_ANSWER
+    override val action = ResponseAction.PHASE_END
     override val status = SessionMessage.Status.OK
 }
 

@@ -37,7 +37,8 @@ internal class MafiaPhasePlayGameProcessor(
 
         val gameOption = gameInfo.gameOption
 
-        val nextTurn = phase.nextTurn(gameOption.round, gameOption.turnCount)
+        val room = gameInfo.room
+        val nextTurn = phase.nextTurn(gameOption.round - 1, room.size() - 1)
 
         if (nextTurn == null) {
             nextStep.invoke()

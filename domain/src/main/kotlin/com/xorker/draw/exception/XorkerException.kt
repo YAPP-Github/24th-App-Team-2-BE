@@ -14,6 +14,7 @@ data object NotFoundRoomException : ClientException("c003", "존재하지 않는
 data object MaxRoomException : ClientException("c004", "인원 수가 가득 찬 Room Id") { private fun readResolve(): Any = MaxRoomException }
 data object AlreadyJoinRoomException : ClientException("c005", "이미 참여한 방") { private fun readResolve(): Any = AlreadyJoinRoomException }
 data object InvalidRequestOnlyMyTurnException : ClientException("c006", "요청자의 차례가 아니라서 처리 불가능") { private fun readResolve(): Any = InvalidRequestOnlyMyTurnException }
+data object InvalidRequestOtherPlayingException : ClientException("c007", "진행 중인 게임 방이 있습니다.") { private fun readResolve(): Any = InvalidRequestOtherPlayingException }
 
 //endregion
 

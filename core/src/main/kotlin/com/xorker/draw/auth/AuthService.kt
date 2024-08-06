@@ -36,7 +36,7 @@ internal class AuthService(
     override fun reissue(refreshToken: String): Token {
         val userId = refreshTokenRepository.getUserIdOrThrow(refreshToken)
 
-        return createToken(userId, Duration.ofHours(3))
+        return createToken(userId, Period.ofYears(100))
     }
 
     @Transactional

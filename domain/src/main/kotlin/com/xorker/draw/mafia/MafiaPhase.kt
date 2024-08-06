@@ -36,7 +36,13 @@ sealed class MafiaPhase {
         var turnInfo: TurnInfo = TurnInfo(),
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
         var timerJob: JobWithStartTime,
-    ) : MafiaPhase(), MafiaPhaseWithTurnList, TurnInfo by turnInfo {
+    ) : MafiaPhase(), MafiaPhaseWithTurnList, TurnInfo {
+        override val round: Int
+            get() = turnInfo.round
+
+        override val turn: Int
+            get() = turnInfo.turn
+
         fun toVote(job: JobWithStartTime): Vote {
             val players = mutableMapOf<UserId, Vector<UserId>>()
             turnList.forEach { player ->
@@ -50,6 +56,22 @@ sealed class MafiaPhase {
                 players = players,
                 turnList = turnList,
             )
+        }
+
+        fun getDraw(): List<Map<String, Any>> {
+            return if (drawData.isEmpty()) {
+                emptyList()
+            } else {
+                drawData.take(drawData.size - 1).map { it.second }
+            }
+        }
+
+        fun getCurrentDraw(): Map<String, Any> {
+            return if (drawData.isEmpty()) {
+                emptyMap()
+            } else {
+                drawData.last().second
+            }
         }
     }
 

@@ -14,4 +14,5 @@ data class MafiaPhaseWaitMessage(
 data class MafiaPhaseWaitBody(
     val roomId: RoomId,
     val players: List<MafiaPlayerResponse>,
+    val gameOption: MafiaGameOptionResponse,
 )

@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 class MafiaPhaseReadyMessage(
     override val body: MafiaPhaseReadyBody,
 ) : SessionMessage {
-    override val action = ResponseAction.GAME_READY
+    override val action = ResponseAction.PHASE_READY
     override val status = SessionMessage.Status.OK
 }
 

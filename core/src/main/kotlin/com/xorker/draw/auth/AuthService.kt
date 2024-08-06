@@ -6,6 +6,9 @@ import com.xorker.draw.auth.token.Token
 import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
 import com.xorker.draw.user.UserRepository
+import java.time.Duration
+import java.time.Period
+import java.time.temporal.TemporalAmount
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -21,19 +24,19 @@ internal class AuthService(
         val platformUserId = authRepository.getPlatformUserId(authType, token)
         val user = userRepository.getUser(authType.authPlatform, platformUserId) ?: createUser(authType, platformUserId)
 
-        return createToken(user.id)
+        return createToken(user.id, Duration.ofHours(3))
     }
 
     override fun anonymousSignIn(): Token {
         val user = userRepository.createUser(""); // TODO 이름 정책 정해지면 변경 예정
 
-        return createToken(user.id)
+        return createToken(user.id, Period.ofYears(100))
     }
 
     override fun reissue(refreshToken: String): Token {
         val userId = refreshTokenRepository.getUserIdOrThrow(refreshToken)
 
-        return createToken(userId)
+        return createToken(userId, Duration.ofHours(3))
     }
 
     @Transactional
@@ -48,9 +51,9 @@ internal class AuthService(
         return userRepository.createUser(authType.authPlatform, platformUserId, userName)
     }
 
-    private fun createToken(userId: UserId): Token {
+    private fun createToken(userId: UserId, expiredTime: TemporalAmount): Token {
         return Token(
-            accessToken = accessTokenRepository.createAccessToken(userId),
+            accessToken = accessTokenRepository.createAccessToken(userId, expiredTime),
             refreshToken = refreshTokenRepository.createRefreshToken(userId),
             userId = userId,
         )

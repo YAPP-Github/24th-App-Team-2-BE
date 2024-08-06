@@ -1,6 +1,5 @@
 package com.xorker.draw.websocket
 
-import com.xorker.draw.websocket.message.request.dto.SessionInitializeRequest
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
 
@@ -14,7 +13,7 @@ class WebSocketController(
         val sessionDto = sessionFactory.create(session, request)
 
         sessionEventListener.forEach {
-            it.connectSession(sessionDto, request.nickname)
+            it.connectSession(sessionDto, request)
         }
     }
 }

@@ -17,4 +17,5 @@ data class MafiaGameTurnInfoBody(
     val turn: Int,
     val startTurnTime: LocalDateTime,
     val currentTurnUser: UserId,
+    val draw: List<Map<String, Any>>,
 )

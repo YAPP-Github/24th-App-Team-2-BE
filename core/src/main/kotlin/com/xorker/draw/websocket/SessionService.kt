@@ -35,7 +35,7 @@ internal class SessionService : SessionUseCase, SessionEventListener {
         return userIdMap[userId]
     }
 
-    override fun connectSession(session: Session, nickname: String) {
+    override fun connectSession(session: Session, roomId: SessionInitializeRequest) {
         registerSession(session)
     }
 

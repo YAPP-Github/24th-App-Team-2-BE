@@ -115,6 +115,7 @@ class MafiaGameMessengerImpl(
             phase.turn,
             phase.timerJob.startTime,
             phase.turnList[phase.turn].userId,
+            phase.drawData.map { it.second },
         )
         broadcaster.broadcast(gameInfo.room.id, MafiaGameTurnInfoMessage(body))
     }

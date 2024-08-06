@@ -25,6 +25,15 @@ internal class MafiaGameAdapter : MafiaGameRepository, RoomRepository {
     }
 
     override fun removeGameInfo(gameInfo: MafiaGameInfo) {
+        gameInfo.room.players
+            .map { it.userId }
+            .forEach { userData.remove(it) }
+
+        val phase = gameInfo.phase
+        if (phase is MafiaPhaseWithTimer) {
+            phase.job.cancel()
+        }
+
         data.remove(gameInfo.room.id)
     }
 

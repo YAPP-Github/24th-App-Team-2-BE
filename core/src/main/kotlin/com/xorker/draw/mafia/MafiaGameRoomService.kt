@@ -47,6 +47,10 @@ internal class MafiaGameRoomService(
         val player = gameInfo.findPlayer(session.user.id) ?: return
 
         player.disconnect()
+
+        if (gameInfo.room.players.all { it.isConnect().not() }) {
+            mafiaGameRepository.removeGameInfo(gameInfo)
+        }
         mafiaGameRepository.saveGameInfo(gameInfo)
         mafiaGameMessenger.broadcastPlayerList(gameInfo)
     }
@@ -65,7 +69,6 @@ internal class MafiaGameRoomService(
 
         if (gameInfo.room.players.isEmpty()) {
             mafiaGameRepository.removeGameInfo(gameInfo)
-            return
         }
 
         if (gameInfo.room.owner == player) {

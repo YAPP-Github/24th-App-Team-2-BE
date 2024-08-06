@@ -58,7 +58,7 @@ internal class MafiaPhasePlayGameProcessor(
                 gameOption.turnTime
             }
 
-        phase.timerJob = timerRepository.startTimer(time) {
+        phase.job = timerRepository.startTimer(time) {
             processNextTurn(gameInfo, nextStep)
         }
 

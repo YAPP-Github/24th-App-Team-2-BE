@@ -19,10 +19,8 @@ internal class MafiaGameService(
     private val mafiaPhaseService: MafiaPhaseService,
     private val mafiaPhasePlayGameProcessor: MafiaPhasePlayGameProcessor,
     private val mafiaPhaseInferAnswerProcessor: MafiaPhaseInferAnswerProcessor,
-    private val mafiaGameRoomService: MafiaGameRoomService,
     private val mafiaGameRepository: MafiaGameRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
-    private val mafiaPhaseMessenger: MafiaPhaseMessenger,
 ) : MafiaGameUseCase {
 
     override fun getGameInfo(userId: UserId): MafiaGameInfo? {
@@ -98,30 +96,6 @@ internal class MafiaGameService(
         }
     }
 
-    override fun gameAgain(session: Session) {
-        val gameInfo = session.getGameInfo()
-        val room = gameInfo.room
-
-        val phase = gameInfo.phase
-        assert<MafiaPhase.End, MafiaPhase.Wait>(phase)
-
-        val user = session.user
-        val mafiaPlayer = MafiaPlayer(user.id, user.name, mafiaGameRoomService.generateColor(gameInfo))
-
-        if (gameInfo.phase is MafiaPhase.End) {
-            room.clear()
-            room.owner = mafiaPlayer
-            gameInfo.phase = MafiaPhase.Wait
-        }
-
-        room.add(mafiaPlayer)
-
-        mafiaGameRepository.saveGameInfo(gameInfo)
-
-        mafiaPhaseMessenger.unicastPhase(user.id, gameInfo)
-        mafiaGameMessenger.broadcastPlayerList(gameInfo)
-    }
-
     private fun vote(
         players: Map<UserId, Vector<UserId>>,
         voter: User,
@@ -156,6 +130,6 @@ internal class MafiaGameService(
             returns() implies (phase is MafiaPhase.Playing)
         }
         if (phase !is MafiaPhase.Playing) throw InvalidRequestValueException
-        if (phase.getPlayerTurn(userId) == phase.turn) throw InvalidRequestOnlyMyTurnException
+        if (phase.getPlayerTurn(userId) != phase.turn) throw InvalidRequestOnlyMyTurnException
     }
 }

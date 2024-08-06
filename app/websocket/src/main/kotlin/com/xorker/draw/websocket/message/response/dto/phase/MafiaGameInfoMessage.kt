@@ -37,12 +37,12 @@ data class MafiaGameOptionResponse(
 fun MafiaGameOption.toResponse(): MafiaGameOptionResponse = MafiaGameOptionResponse(
     minimum = minimum,
     maximum = maximum,
-    readyTime = readyTime.toSeconds(),
+    readyTime = readyTime.toMillis(),
     introAnimationTime = introAnimationTime.toMillis(),
     roundAnimationTime = roundAnimationTime.toMillis(),
     round = round,
-    turnTime = turnTime.toSeconds(),
+    turnTime = turnTime.toMillis(),
     turnCount = turnCount,
-    voteTime = voteTime.toSeconds(),
-    answerTime = answerTime.toSeconds(),
+    voteTime = voteTime.toMillis(),
+    answerTime = answerTime.toMillis(),
 )

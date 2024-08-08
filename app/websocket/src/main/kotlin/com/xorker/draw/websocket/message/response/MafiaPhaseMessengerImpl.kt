@@ -25,7 +25,6 @@ import com.xorker.draw.websocket.message.response.dto.phase.MafiaPhaseVoteMessag
 import com.xorker.draw.websocket.message.response.dto.phase.MafiaPhaseWaitBody
 import com.xorker.draw.websocket.message.response.dto.phase.MafiaPhaseWaitMessage
 import com.xorker.draw.websocket.message.response.dto.phase.toResponse
-import java.time.LocalDateTime
 import org.springframework.stereotype.Component
 
 @Component

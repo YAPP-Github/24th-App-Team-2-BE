@@ -1,5 +1,6 @@
 package com.xorker.draw.mafia
 
+import com.xorker.draw.exception.InvalidRequestValueException
 import com.xorker.draw.exception.NotFoundRoomException
 import com.xorker.draw.room.Room
 import com.xorker.draw.websocket.Session
@@ -96,7 +97,12 @@ internal class MafiaGameRoomService(
     }
 
     private fun createRoom(session: Session, locale: String, player: MafiaPlayer): Room<MafiaPlayer> {
-        val room = Room(session.roomId, locale, player, 10)
+        val language = locale.lowercase()
+        if (language !in languages) {
+            throw InvalidRequestValueException
+        }
+
+        val room = Room(session.roomId, language, player, 10)
         return room
     }
 
@@ -113,5 +119,7 @@ internal class MafiaGameRoomService(
             "FD66C1",
             "7E91A6",
         )
+
+        private val languages = mutableSetOf("ko", "en")
     }
 }

@@ -5,7 +5,6 @@ import com.xorker.draw.mafia.MafiaKeywordRepository
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.MafiaPlayer
 import com.xorker.draw.timer.TimerRepository
-import java.util.*
 import org.springframework.stereotype.Component
 import kotlin.random.Random
 
@@ -23,7 +22,7 @@ internal class MafiaPhaseStartGameProcessor(
         val turnList = generateTurnList(players)
 
         val mafiaIndex = Random.nextInt(0, players.size)
-        val keyword = mafiaKeywordRepository.getRandomKeyword(Locale.KOREAN) // TODO extract room locale
+        val keyword = mafiaKeywordRepository.getRandomKeyword(room.locale)
 
         val job = timerRepository.startTimer(gameOption.readyTime, nextStep)
 

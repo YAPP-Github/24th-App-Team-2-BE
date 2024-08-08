@@ -9,6 +9,7 @@ value class RoomId(val value: String)
 
 interface Room<P : Player> {
     val id: RoomId
+    val locale: String
     var owner: P
     val maxMemberNum: Int
     val players: List<P>
@@ -26,13 +27,15 @@ interface Room<P : Player> {
 
 fun <P : Player> Room(
     id: RoomId,
+    locale: String,
     owner: P,
     maxMemberNum: Int,
     players: MutableList<P> = mutableListOf(owner),
-): Room<P> = RoomImpl(id, owner, maxMemberNum, players)
+): Room<P> = RoomImpl(id, locale, owner, maxMemberNum, players)
 
 class RoomImpl<P : Player>(
     override val id: RoomId,
+    override val locale: String,
     override var owner: P,
     override val maxMemberNum: Int,
     private val _players: MutableList<P> = mutableListOf(owner),
@@ -61,5 +64,5 @@ class RoomImpl<P : Player>(
         _players.clear()
     }
 
-    override fun copy(): Room<P> = RoomImpl(id, owner, maxMemberNum, _players)
+    override fun copy(): Room<P> = RoomImpl(id, locale, owner, maxMemberNum, _players)
 }

@@ -21,7 +21,7 @@ internal class MafiaGameRoomService(
         if (gameInfo == null) {
             if (request.roomId != null) throw NotFoundRoomException
             val player = MafiaPlayer(userId, request.nickname, generateColor(null))
-            gameInfo = createGameInfo(session, player)
+            gameInfo = createGameInfo(session, request.locale, player)
         } else {
             val player = gameInfo.findPlayer(userId)
             if (player != null) {
@@ -86,8 +86,8 @@ internal class MafiaGameRoomService(
             .first()
     }
 
-    private fun createGameInfo(session: Session, player: MafiaPlayer): MafiaGameInfo {
-        val room = createRoom(session, player)
+    private fun createGameInfo(session: Session, locale: String, player: MafiaPlayer): MafiaGameInfo {
+        val room = createRoom(session, locale, player)
         return MafiaGameInfo(
             room,
             MafiaPhase.Wait,
@@ -95,8 +95,8 @@ internal class MafiaGameRoomService(
         )
     }
 
-    private fun createRoom(session: Session, player: MafiaPlayer): Room<MafiaPlayer> {
-        val room = Room(session.roomId, player, 10)
+    private fun createRoom(session: Session, locale: String, player: MafiaPlayer): Room<MafiaPlayer> {
+        val room = Room(session.roomId, locale, player, 10)
         return room
     }
 

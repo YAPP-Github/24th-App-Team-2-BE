@@ -64,7 +64,7 @@ internal class MafiaPhaseMessengerImpl(
                 MafiaPhasePlayingBody(
                     round = phase.round,
                     turn = phase.turn,
-                    startTurnTime = LocalDateTime.now(), // TOOD: 턴 시스템 도입 시 수정
+                    startTurnTime = phase.job.startTime,
                     draw = phase.getDraw(),
                     currentDraw = phase.getCurrentDraw(),
                     mafiaGameInfo = generateMafiaGameInfoMessage(phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption),

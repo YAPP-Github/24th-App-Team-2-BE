@@ -50,9 +50,10 @@ internal class MafiaGameRoomService(
 
         if (gameInfo.room.players.all { it.isConnect().not() }) {
             mafiaGameRepository.removeGameInfo(gameInfo)
+        } else {
+            mafiaGameRepository.saveGameInfo(gameInfo)
+            mafiaGameMessenger.broadcastPlayerList(gameInfo)
         }
-        mafiaGameRepository.saveGameInfo(gameInfo)
-        mafiaGameMessenger.broadcastPlayerList(gameInfo)
     }
 
     override fun exitSession(session: Session) {

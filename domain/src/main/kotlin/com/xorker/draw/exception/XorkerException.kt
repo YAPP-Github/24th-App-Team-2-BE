@@ -5,6 +5,7 @@ sealed class XorkerException(val code: String, message: String, cause: Throwable
 //region Client
 sealed class ClientException(code: String, message: String, cause: Throwable? = null) : XorkerException(code, message, cause)
 
+data object NeedForceUpdateException : ClientException("forceUpdate", "인증 실패") { private fun readResolve(): Any = NeedForceUpdateException }
 data object UnAuthenticationException : ClientException("auth401", "인증 실패") { private fun readResolve(): Any = UnAuthenticationException }
 data object UnAuthorizedException : ClientException("auth403", "인가 실패") { private fun readResolve(): Any = UnAuthorizedException }
 

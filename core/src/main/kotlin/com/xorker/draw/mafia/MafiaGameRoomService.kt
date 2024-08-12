@@ -70,6 +70,7 @@ internal class MafiaGameRoomService(
 
         if (gameInfo.room.players.isEmpty()) {
             mafiaGameRepository.removeGameInfo(gameInfo)
+            return
         }
 
         if (gameInfo.room.owner == player) {

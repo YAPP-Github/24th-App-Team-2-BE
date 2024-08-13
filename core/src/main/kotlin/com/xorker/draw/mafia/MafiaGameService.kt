@@ -47,7 +47,7 @@ internal class MafiaGameService(
         val phase = gameInfo.phase
         assertTurn(phase, session.user.id)
 
-        phase.timerJob.cancel()
+        phase.job.cancel()
 
         mafiaPhasePlayGameProcessor.processNextTurn(gameInfo) {
             mafiaPhaseService.vote(gameInfo.room.id)

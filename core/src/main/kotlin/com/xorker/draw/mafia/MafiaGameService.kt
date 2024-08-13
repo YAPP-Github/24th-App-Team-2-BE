@@ -23,6 +23,10 @@ internal class MafiaGameService(
     private val mafiaGameMessenger: MafiaGameMessenger,
 ) : MafiaGameUseCase {
 
+    override fun getGameInfo(userId: UserId): MafiaGameInfo? {
+        return mafiaGameRepository.getGameInfo(userId)
+    }
+
     override fun draw(session: Session, request: DrawRequest) {
         val gameInfo = session.getGameInfo()
         val phase = gameInfo.phase

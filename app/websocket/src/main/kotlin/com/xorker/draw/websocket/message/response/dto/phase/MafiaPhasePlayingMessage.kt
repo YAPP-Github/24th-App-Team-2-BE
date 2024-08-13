@@ -17,4 +17,5 @@ class MafiaPhasePlayingBody(
     val startTurnTime: LocalDateTime,
     val draw: List<Map<String, Any>>,
     val currentDraw: Map<String, Any>,
+    val mafiaGameInfo: MafiaGameInfoMessage,
 )

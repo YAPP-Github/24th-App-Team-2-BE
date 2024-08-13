@@ -78,6 +78,7 @@ internal class MafiaPhaseMessengerImpl(
                     } else {
                         null
                     },
+                    draw = phase.drawData.take(phase.drawData.size).map { it.second },
                     players = phase.players,
                 ),
             )

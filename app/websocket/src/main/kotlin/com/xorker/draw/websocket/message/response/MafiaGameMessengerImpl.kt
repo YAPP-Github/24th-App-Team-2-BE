@@ -59,7 +59,7 @@ class MafiaGameMessengerImpl(
         val body = MafiaGameTurnInfoBody(
             phase.round,
             phase.turn,
-            phase.timerJob.startTime,
+            phase.job.startTime,
             phase.turnList[phase.turn].userId,
             phase.drawData.map { it.second },
         )

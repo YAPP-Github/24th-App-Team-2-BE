@@ -37,11 +37,11 @@ internal class MafiaPhaseStartGameProcessor(
         return phase
     }
 
-    private fun generateTurnList(players: List<MafiaPlayer>): MutableList<MafiaPlayer> {
+    private fun generateTurnList(players: List<MafiaPlayer>): List<MafiaPlayer> {
         val turnList = mutableListOf<MafiaPlayer>()
         players.forEach {
             turnList.add(it)
         }
-        return turnList
+        return turnList.shuffled()
     }
 }

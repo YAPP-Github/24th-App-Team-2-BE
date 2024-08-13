@@ -48,8 +48,13 @@ internal class MafiaGameRoomService(
         val player = gameInfo.findPlayer(session.user.id) ?: return
 
         player.disconnect()
-        mafiaGameRepository.saveGameInfo(gameInfo)
-        mafiaGameMessenger.broadcastPlayerList(gameInfo)
+
+        if (gameInfo.room.players.all { it.isConnect().not() }) {
+            mafiaGameRepository.removeGameInfo(gameInfo)
+        } else {
+            mafiaGameRepository.saveGameInfo(gameInfo)
+            mafiaGameMessenger.broadcastPlayerList(gameInfo)
+        }
     }
 
     override fun exitSession(session: Session) {
@@ -83,7 +88,9 @@ internal class MafiaGameRoomService(
         val alreadyUsedColors =
             gameInfo.room.players.map { it.color }.toList()
 
-        return COLOR_LIST.filterNot { alreadyUsedColors.contains(it) }
+        return COLOR_LIST
+            .filterNot { alreadyUsedColors.contains(it) }
+            .shuffled()
             .first()
     }
 

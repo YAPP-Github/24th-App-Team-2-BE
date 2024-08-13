@@ -1,6 +1,7 @@
 package com.xorker.draw.exception
 
 import com.xorker.draw.exception.ExceptionButtonAction.CloseDialog
+import com.xorker.draw.exception.ExceptionButtonAction.ForceUpdate
 import java.util.*
 import org.springframework.context.MessageSource
 
@@ -11,6 +12,7 @@ enum class ExceptionButtonType(
     OK("exception.button.ok", CloseDialog),
     CANCEL("exception.button.cancel", CloseDialog),
     CLOSE("exception.button.close", CloseDialog),
+    FORCE_UPDATE("exception.button.forceUpdate", ForceUpdate),
     ;
 
     private val responseMap = HashMap<Locale, ExceptionButtonResponse>()
@@ -32,9 +34,12 @@ enum class ExceptionButtonType(
 private val buttonOk = listOf(ExceptionButtonType.OK)
 private val buttonOkCancel = listOf(ExceptionButtonType.OK, ExceptionButtonType.CANCEL)
 private val buttonOkClose = listOf(ExceptionButtonType.OK, ExceptionButtonType.CLOSE)
+private val buttonForceUpdate = listOf(ExceptionButtonType.FORCE_UPDATE)
 
 fun XorkerException.getButtons(): List<ExceptionButtonType> {
     return when (this) {
+        NeedForceUpdateException -> buttonForceUpdate
+
         InvalidRequestValueException,
         UnAuthorizedException,
         NotFoundRoomException,
@@ -56,6 +61,7 @@ fun XorkerException.getButtons(): List<ExceptionButtonType> {
         is InvalidMafiaPhaseException,
         InvalidRequestOnlyMyTurnException,
         InvalidMafiaGameVotePhaseStatusException,
+        InvalidRequestOtherPlayingException,
         -> buttonOk
     }
 }

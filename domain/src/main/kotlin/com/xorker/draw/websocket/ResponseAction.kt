@@ -5,8 +5,6 @@ enum class ResponseAction(
 ) {
     PLAYER_LIST("대기방 갱신"),
     GAME_INFO("마피아 게임 정보"),
-    GAME_READY("마피아 게임 준비"),
-    PLAYER_TURN_LIST("플레이어 턴 순서"),
     DRAW("그림 데이터"),
     TURN_INFO("새로운 턴 시작"),
     VOTE_STATUS("마피아 투표 현황"),

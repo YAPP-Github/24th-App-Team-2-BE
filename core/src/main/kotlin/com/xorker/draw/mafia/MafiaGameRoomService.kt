@@ -1,5 +1,6 @@
 package com.xorker.draw.mafia
 
+import com.xorker.draw.exception.InvalidRequestValueException
 import com.xorker.draw.exception.NotFoundRoomException
 import com.xorker.draw.room.Room
 import com.xorker.draw.websocket.Session
@@ -21,7 +22,7 @@ internal class MafiaGameRoomService(
         if (gameInfo == null) {
             if (request.roomId != null) throw NotFoundRoomException
             val player = MafiaPlayer(userId, request.nickname, generateColor(null))
-            gameInfo = createGameInfo(session, player)
+            gameInfo = createGameInfo(session, request.locale, player)
         } else {
             val player = gameInfo.findPlayer(userId)
             if (player != null) {
@@ -93,8 +94,8 @@ internal class MafiaGameRoomService(
             .first()
     }
 
-    private fun createGameInfo(session: Session, player: MafiaPlayer): MafiaGameInfo {
-        val room = createRoom(session, player)
+    private fun createGameInfo(session: Session, locale: String, player: MafiaPlayer): MafiaGameInfo {
+        val room = createRoom(session, locale, player)
         return MafiaGameInfo(
             room,
             MafiaPhase.Wait,
@@ -102,8 +103,13 @@ internal class MafiaGameRoomService(
         )
     }
 
-    private fun createRoom(session: Session, player: MafiaPlayer): Room<MafiaPlayer> {
-        val room = Room(session.roomId, player, 10)
+    private fun createRoom(session: Session, locale: String, player: MafiaPlayer): Room<MafiaPlayer> {
+        val language = locale.lowercase()
+        if (language !in languages) {
+            throw InvalidRequestValueException
+        }
+
+        val room = Room(session.roomId, language, player, 10)
         return room
     }
 
@@ -120,5 +126,7 @@ internal class MafiaGameRoomService(
             "FD66C1",
             "7E91A6",
         )
+
+        private val languages = mutableSetOf("ko", "en")
     }
 }

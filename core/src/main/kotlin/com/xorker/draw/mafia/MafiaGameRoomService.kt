@@ -87,7 +87,9 @@ internal class MafiaGameRoomService(
         val alreadyUsedColors =
             gameInfo.room.players.map { it.color }.toList()
 
-        return COLOR_LIST.filterNot { alreadyUsedColors.contains(it) }
+        return COLOR_LIST
+            .filterNot { alreadyUsedColors.contains(it) }
+            .shuffled()
             .first()
     }
 

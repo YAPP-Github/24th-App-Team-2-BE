@@ -97,6 +97,7 @@ internal class MafiaPhaseMessengerImpl(
 
             is MafiaPhase.End -> MafiaPhaseEndMessage(
                 MafiaPhaseEndBody(
+                    startTime = phase.job.startTime,
                     mafiaGameInfo = if (isOrigin.not()) {
                         generateMafiaGameInfoMessage(phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
                     } else {

@@ -13,4 +13,5 @@ data class MafiaGameOption(
     val turnCount: Int = 1, // 턴 당 최대 획 수
     val voteTime: Duration = Duration.ofMillis(15000), // 투표 시간
     val answerTime: Duration = Duration.ofMillis(15000), // 정답 입력 시간
+    val endTime: Duration = Duration.ofMillis(15000), // 종료 시간
 )

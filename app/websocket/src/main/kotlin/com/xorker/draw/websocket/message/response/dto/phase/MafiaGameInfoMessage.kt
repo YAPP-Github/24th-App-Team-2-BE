@@ -32,6 +32,7 @@ data class MafiaGameOptionResponse(
     val turnCount: Int,
     val voteTime: Long,
     val answerTime: Long,
+    val endTime: Long,
 )
 
 fun MafiaGameOption.toResponse(): MafiaGameOptionResponse = MafiaGameOptionResponse(
@@ -45,4 +46,5 @@ fun MafiaGameOption.toResponse(): MafiaGameOptionResponse = MafiaGameOptionRespo
     turnCount = turnCount,
     voteTime = voteTime.toMillis(),
     answerTime = answerTime.toMillis(),
+    endTime = endTime.toMillis(),
 )

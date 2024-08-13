@@ -75,7 +75,7 @@ sealed class MafiaPhase {
         }
     }
 
-    class Vote(
+    data class Vote(
         val job: JobWithStartTime,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
@@ -93,8 +93,9 @@ sealed class MafiaPhase {
             )
         }
 
-        fun toEnd(): End {
+        fun toEnd(job: JobWithStartTime): End {
             return End(
+                job = job,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
                 drawData = drawData,
@@ -112,8 +113,9 @@ sealed class MafiaPhase {
         var answer: String? = null,
         override val turnList: List<MafiaPlayer>,
     ) : MafiaPhase(), MafiaPhaseWithTurnList {
-        fun toEnd(): End {
+        fun toEnd(job: JobWithStartTime): End {
             return End(
+                job = job,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
                 drawData = drawData,
@@ -124,6 +126,7 @@ sealed class MafiaPhase {
     }
 
     class End(
+        val job: JobWithStartTime,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,

@@ -19,11 +19,23 @@ class WebSocketController(
 
     fun initializeSession(session: WebSocketSession, request: SessionInitializeRequest) {
         val sessionDto = sessionFactory.create(session, request)
-
         val roomId = request.roomId
-        if (roomId != null) {
-            val gameInfo = mafiaGameUseCase.getGameInfo(RoomId(roomId)) ?: throw NotFoundRoomException
 
+        val joinedRoomId = mafiaGameUseCase.getGameInfo(sessionDto.user.id)?.room?.id
+        if (joinedRoomId != null && roomId != joinedRoomId.value) {
+            throw InvalidRequestOtherPlayingException
+        }
+
+        if (roomId == null) {
+            sessionEventListener.forEach {
+                it.connectSession(sessionDto, request)
+            }
+            return
+        }
+
+        val gameInfo = mafiaGameUseCase.getGameInfo(RoomId(roomId)) ?: throw NotFoundRoomException
+
+        synchronized(gameInfo) {
             if (gameInfo.phase != MafiaPhase.Wait && gameInfo.room.players.any { it.userId == sessionDto.user.id }.not()) {
                 throw AlreadyPlayingRoomException
             }
@@ -31,15 +43,11 @@ class WebSocketController(
             if (gameInfo.gameOption.maximum <= gameInfo.room.size()) {
                 throw MaxRoomException
             }
-        }
 
-        val joinedRoomId = mafiaGameUseCase.getGameInfo(sessionDto.user.id)?.room?.id
-        if (joinedRoomId != null && roomId != joinedRoomId.value) {
-            throw InvalidRequestOtherPlayingException
-        }
+            sessionEventListener.forEach {
+                it.connectSession(sessionDto, request)
+            }
 
-        sessionEventListener.forEach {
-            it.connectSession(sessionDto, request)
         }
     }
 }

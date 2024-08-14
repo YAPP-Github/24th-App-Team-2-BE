@@ -1,3 +1,21 @@
+## Class Naming Convention
+<table>
+    <tr>
+        <th>모듈</th>
+        <th>접미어</th>
+        <th>설명</th>
+    </tr>
+    <tr>
+        <td rowspan="2">Domain</td>
+        <td>UseCase</td>
+        <td>In Port 인터페이스 </td>
+    </tr>
+    <tr>
+        <td>Repository</td>
+        <td>Out Port 인터페이스</td>
+    </tr>
+</table>
+
 ## 모듈 구조
 ### 1. domain: 도메인 모듈
 

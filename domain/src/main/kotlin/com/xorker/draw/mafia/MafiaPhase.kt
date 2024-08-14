@@ -59,19 +59,32 @@ sealed class MafiaPhase {
         }
 
         fun getDraw(): List<Map<String, Any>> {
-            return if (drawData.isEmpty()) {
-                emptyList()
-            } else {
-                drawData.take(drawData.size - 1).map { it.second }
+            if (drawData.isEmpty()) {
+                return emptyList()
             }
+
+            val currentUser = turnList[turnInfo.turn]
+
+            if (drawData.last().first == currentUser.userId) {
+                return drawData.take(drawData.size - 1).map { it.second }
+            }
+
+            return drawData.map { it.second }
         }
 
         fun getCurrentDraw(): Map<String, Any> {
-            return if (drawData.isEmpty()) {
-                emptyMap()
-            } else {
-                drawData.last().second
+            if (drawData.isEmpty()) {
+                return emptyMap()
             }
+
+            val currentUser = turnList[turnInfo.turn]
+
+            val last = drawData.last()
+            if (last.first == currentUser.userId) {
+                return last.second
+            }
+
+            return emptyMap()
         }
     }
 

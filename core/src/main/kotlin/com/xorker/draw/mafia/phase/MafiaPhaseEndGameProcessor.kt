@@ -85,11 +85,16 @@ internal class MafiaPhaseEndGameProcessor(
 
     private fun judgeGameResult(endPhase: MafiaPhase.End) {
         val showAnswer = endPhase.showAnswer
-        val keyword = endPhase.keyword
+
         if (showAnswer.not()) {
             endPhase.isMafiaWin = true
             return
         }
-        endPhase.isMafiaWin = keyword.answer == endPhase.answer // TODO 동의어 처리
+
+        val keyword = endPhase.keyword
+
+        endPhase.isMafiaWin = endPhase.answer?.let {
+            keyword.answer.lowercase() == it.lowercase() // TODO 동의어 처리
+        } ?: false
     }
 }

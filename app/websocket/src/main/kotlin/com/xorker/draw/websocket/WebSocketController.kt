@@ -47,7 +47,6 @@ class WebSocketController(
             sessionEventListener.forEach {
                 it.connectSession(sessionDto, request)
             }
-
         }
     }
 }

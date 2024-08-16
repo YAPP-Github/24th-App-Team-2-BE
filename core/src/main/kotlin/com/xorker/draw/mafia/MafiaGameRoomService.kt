@@ -83,10 +83,7 @@ internal class MafiaGameRoomService(
     }
 
     private fun generateColor(gameInfo: MafiaGameInfo?): String {
-        if (gameInfo == null) return COLOR_LIST.first()
-
-        val alreadyUsedColors =
-            gameInfo.room.players.map { it.color }.toList()
+        val alreadyUsedColors = gameInfo?.room?.players?.map { it.color }?.toList() ?: emptyList()
 
         return COLOR_LIST
             .filterNot { alreadyUsedColors.contains(it) }

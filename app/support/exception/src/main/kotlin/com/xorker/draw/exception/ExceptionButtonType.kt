@@ -62,6 +62,7 @@ fun XorkerException.getButtons(): List<ExceptionButtonType> {
         InvalidRequestOnlyMyTurnException,
         InvalidMafiaGameVotePhaseStatusException,
         InvalidRequestOtherPlayingException,
+        AlreadyPlayingRoomException,
         -> buttonOk
     }
 }

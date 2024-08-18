@@ -12,6 +12,11 @@
         <appender-ref ref="API_FILE"/>
     </logger>
 
+    <logger name="com.xorker.draw.websocket.log.WebSocketLogger" level="INFO" additivity="false">
+        <appender-ref ref="WS_CONSOLE"/>
+        <appender-ref ref="WS_FILE"/>
+    </logger>
+
     <logger name="org.hibernate" level="ERROR"/>
     <logger name="org.springframework.web" level="INFO"/>
 </configuration>

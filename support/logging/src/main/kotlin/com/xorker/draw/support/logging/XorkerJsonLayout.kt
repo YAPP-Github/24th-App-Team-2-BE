@@ -23,6 +23,8 @@ class XorkerJsonLayout : JsonLayout() {
     override fun addCustomDataToJsonMap(map: MutableMap<String, Any>, event: ILoggingEvent) {
         super.addCustomDataToJsonMap(map, event)
 
+        map["msg"] = map.remove("message") as String
+
         MDC_LIST.forEach { key ->
             MDC.get(key)?.let { value -> map[key] = value }
         }

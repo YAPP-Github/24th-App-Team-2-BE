@@ -1,6 +1,7 @@
 package com.xorker.draw.websocket.log
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.xorker.draw.support.logging.defaultApiJsonMap
 import com.xorker.draw.support.logging.logger
 import com.xorker.draw.support.logging.registerRequestId
 import com.xorker.draw.websocket.SessionId
@@ -20,7 +21,7 @@ class WebSocketLogger(
     fun afterConnectionEstablished(session: WebSocketSession) {
         logger.info(
             objectMapper.writeValueAsString(
-                mapOf(
+                defaultApiJsonMap(
                     "action" to "WS_CONNECT",
                     "sessionId" to session.id,
                 ),
@@ -39,7 +40,7 @@ class WebSocketLogger(
     }
 
     private fun generateLog(sessionId: SessionId, request: WebSocketRequest): String {
-        val data = mutableMapOf<String, Any?>(
+        val data = defaultApiJsonMap(
             "action" to request.action,
             "requestBody" to request.body,
             "sessionId" to sessionId.value,
@@ -55,7 +56,7 @@ class WebSocketLogger(
     }
 
     fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-        val data = mutableMapOf<String, Any?>(
+        val data = defaultApiJsonMap(
             "action" to "WS_CLOSED",
             "status" to status,
             "sessionId" to session.id,

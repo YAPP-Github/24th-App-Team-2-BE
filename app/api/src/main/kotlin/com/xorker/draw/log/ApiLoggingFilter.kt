@@ -1,6 +1,7 @@
 package com.xorker.draw.log
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.xorker.draw.support.logging.defaultApiJsonMap
 import com.xorker.draw.support.logging.logger
 import com.xorker.draw.support.logging.registerRequestId
 import jakarta.servlet.Filter
@@ -39,7 +40,7 @@ class ApiLoggingFilter(
     }
 
     private fun generateLog(request: ContentCachingRequestWrapper, response: ContentCachingResponseWrapper): String {
-        val data = mapOf(
+        val data = defaultApiJsonMap(
             // Request 부분
             "method" to request.method,
             "uri" to request.requestURI,

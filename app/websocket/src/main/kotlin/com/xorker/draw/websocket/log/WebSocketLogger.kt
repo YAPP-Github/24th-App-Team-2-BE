@@ -9,6 +9,7 @@ import com.xorker.draw.websocket.SessionInitializeRequest
 import com.xorker.draw.websocket.SessionUseCase
 import com.xorker.draw.websocket.message.request.RequestAction
 import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
+import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.WebSocketSession
@@ -33,11 +34,13 @@ class WebSocketLogger(
 
     fun handleRequest(session: WebSocketSession, request: WebSocketRequest, origin: (WebSocketSession, WebSocketRequest) -> Unit) {
         registerRequestId()
+
         try {
             origin(session, request)
         } finally {
             val log = generateLog(SessionId(session.id), request)
             logger.info(log)
+            MDC.clear()
         }
     }
 

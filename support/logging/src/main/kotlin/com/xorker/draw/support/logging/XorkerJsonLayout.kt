@@ -30,6 +30,6 @@ class XorkerJsonLayout : JsonLayout() {
 
     companion object {
         // MDC에서 Json에 넣을 목록
-        private val MDC_LIST = listOf("requestId", "userId")
+        private val MDC_LIST = listOf("requestId", "userId", "roomId")
     }
 }

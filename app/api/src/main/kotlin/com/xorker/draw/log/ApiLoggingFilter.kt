@@ -36,6 +36,7 @@ class ApiLoggingFilter(
         } finally {
             logger.info(generateLog(request, response))
             response.copyBodyToResponse()
+            MDC.clear()
         }
     }
 
@@ -45,15 +46,15 @@ class ApiLoggingFilter(
             "method" to request.method,
             "uri" to request.requestURI,
             "query" to request.queryString,
-            "header" to request.headerNames.asSequence().map { it to request.getHeader(it) }.toMap(),
+            "header" to request.headerNames.asSequence()
+                .filterNot { it.lowercase() == "authorization" }
+                .map { it to request.getHeader(it) }
+                .toMap(),
             "requestBody" to request.contentAsString,
 
             // Response 부분
             "status" to response.status,
             "responseBody" to String(response.contentAsByteArray),
-
-            "requestId" to MDC.get("requestId"),
-            "userId" to MDC.get("userId"),
         )
 
         return objectMapper.writeValueAsString(data)

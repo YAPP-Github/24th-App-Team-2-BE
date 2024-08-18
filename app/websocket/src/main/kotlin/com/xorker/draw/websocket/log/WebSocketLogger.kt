@@ -5,7 +5,9 @@ import com.xorker.draw.support.logging.defaultApiJsonMap
 import com.xorker.draw.support.logging.logger
 import com.xorker.draw.support.logging.registerRequestId
 import com.xorker.draw.websocket.SessionId
+import com.xorker.draw.websocket.SessionInitializeRequest
 import com.xorker.draw.websocket.SessionUseCase
+import com.xorker.draw.websocket.message.request.RequestAction
 import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
@@ -40,9 +42,15 @@ class WebSocketLogger(
     }
 
     private fun generateLog(sessionId: SessionId, request: WebSocketRequest): String {
+        val body: Any? = if (request.action == RequestAction.INIT) {
+            objectMapper.readValue(request.body, SessionInitializeRequest::class.java).copy(accessToken = "[masked]")
+        } else {
+            request.body
+        }
+
         val data = defaultApiJsonMap(
             "action" to request.action,
-            "requestBody" to request.body,
+            "requestBody" to body,
             "sessionId" to sessionId.value,
         )
 

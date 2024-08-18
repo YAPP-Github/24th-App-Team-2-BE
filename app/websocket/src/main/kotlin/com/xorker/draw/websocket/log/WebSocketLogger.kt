@@ -22,6 +22,8 @@ class WebSocketLogger(
     private val logger = logger()
 
     fun afterConnectionEstablished(session: WebSocketSession) {
+        registerRequestId()
+
         logger.info(
             objectMapper.writeValueAsString(
                 defaultApiJsonMap(
@@ -67,6 +69,8 @@ class WebSocketLogger(
     }
 
     fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
+        registerRequestId()
+
         val data = defaultApiJsonMap(
             "action" to "WS_CLOSED",
             "status" to status,

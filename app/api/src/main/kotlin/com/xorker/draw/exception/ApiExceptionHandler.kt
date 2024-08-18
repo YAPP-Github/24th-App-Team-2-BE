@@ -1,5 +1,7 @@
 package com.xorker.draw.exception
 
+import com.xorker.draw.support.logging.logger
+import io.sentry.Sentry
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.http.HttpStatus
@@ -17,41 +19,57 @@ typealias ExceptionResponseEntity = ResponseEntity<ExceptionResponse>
 class ApiExceptionHandler(
     private val responseFactory: ExceptionResponseFactory,
 ) {
+    private val log = logger()
+
     @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
     protected fun handleException(ex: HttpRequestMethodNotSupportedException): ExceptionResponseEntity {
+        log.warn(ex.message, ex)
         return responseFactory.create(HttpStatus.METHOD_NOT_ALLOWED, InvalidRequestValueException)
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException::class)
     protected fun handleException(ex: MethodArgumentTypeMismatchException): ExceptionResponseEntity {
+        log.warn(ex.message, ex)
         return responseFactory.create(InvalidRequestValueException)
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     protected fun handleException(ex: MethodArgumentNotValidException): ExceptionResponseEntity {
+        log.warn(ex.message, ex)
         return responseFactory.create(InvalidRequestValueException)
     }
 
     @ExceptionHandler(BindException::class)
     protected fun handleException(ex: BindException): ExceptionResponseEntity {
+        log.warn(ex.message, ex)
         return responseFactory.create(InvalidRequestValueException)
     }
 
     @ExceptionHandler(XorkerException::class)
     protected fun handleException(ex: XorkerException): ExceptionResponseEntity {
+        log.warn(ex.message, ex)
+        return responseFactory.create(ex)
+    }
+
+    @ExceptionHandler(ServerException::class)
+    protected fun handleException(ex: ServerException): ExceptionResponseEntity {
+        log.error(ex.message, ex)
+        Sentry.captureException(ex)
         return responseFactory.create(ex)
     }
 
     @ExceptionHandler(CriticalException::class)
     protected fun handleException(ex: CriticalException): ExceptionResponseEntity {
-        // TODO: Alert Development , Discord Webhook or Sentry
+        log.error(ex.message, ex)
+        Sentry.captureException(ex)
         return responseFactory.create(ex)
     }
 
     @Order(value = Ordered.LOWEST_PRECEDENCE)
     @ExceptionHandler(Exception::class)
-    protected fun handleException(ex: Exception): ResponseEntity<ExceptionResponse> {
-        ex.printStackTrace()
+    protected fun handleException(ex: Exception): ExceptionResponseEntity {
+        log.error(ex.message, ex)
+        Sentry.captureException(ex)
         return responseFactory.create(UnknownException(ex))
     }
 }

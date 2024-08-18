@@ -14,6 +14,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-web:${Versions.SPRING_BOOT}")
     implementation("org.springframework.boot:spring-boot-starter-websocket:${Versions.SPRING_BOOT}")
+    implementation("io.sentry:sentry-spring-boot-starter-jakarta:${Versions.SENTRY}")
 }
 
 tasks {

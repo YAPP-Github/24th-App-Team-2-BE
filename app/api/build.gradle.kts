@@ -17,6 +17,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.SPRING_BOOT}")
     implementation("org.springframework.boot:spring-boot-starter-aop:${Versions.SPRING_BOOT}")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${Versions.WEBMVC_UI}")
+    implementation("io.sentry:sentry-spring-boot-starter-jakarta:${Versions.SENTRY}")
 }
 
 tasks {

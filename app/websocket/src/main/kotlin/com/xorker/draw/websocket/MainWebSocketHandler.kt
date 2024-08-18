@@ -1,8 +1,11 @@
 package com.xorker.draw.websocket
 
+import com.xorker.draw.exception.InvalidWebSocketStatusException
 import com.xorker.draw.exception.XorkerException
+import com.xorker.draw.support.logging.logger
 import com.xorker.draw.websocket.exception.WebSocketExceptionHandler
 import com.xorker.draw.websocket.parser.WebSocketRequestParser
+import io.sentry.Sentry
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
@@ -17,6 +20,9 @@ class MainWebSocketHandler(
     private val sessionEventListener: List<SessionEventListener>,
     private val webSocketExceptionHandler: WebSocketExceptionHandler,
 ) : TextWebSocketHandler() {
+
+    private val log = logger()
+
     override fun afterConnectionEstablished(session: WebSocketSession) {
     }
 
@@ -31,7 +37,13 @@ class MainWebSocketHandler(
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-        val sessionDto = sessionUseCase.getSession(SessionId(session.id)) ?: return // TODO error logging
+        val sessionDto = sessionUseCase.getSession(SessionId(session.id))
+
+        if (sessionDto == null) {
+            log.error(InvalidWebSocketStatusException.message, InvalidWebSocketStatusException)
+            Sentry.captureException(InvalidWebSocketStatusException)
+            return
+        }
 
         when (status) {
             CloseStatus.NORMAL ->

@@ -61,6 +61,7 @@ fun XorkerException.getButtons(): List<ExceptionButtonType> {
         InvalidRequestOnlyMyTurnException,
         InvalidRequestOtherPlayingException,
         AlreadyPlayingRoomException,
+        InvalidWebSocketStatusException,
         -> buttonOk
     }
 }

@@ -1,10 +1,13 @@
 package com.xorker.draw.websocket.exception
 
+import com.xorker.draw.exception.CriticalException
+import com.xorker.draw.exception.ServerException
 import com.xorker.draw.exception.XorkerException
 import com.xorker.draw.exception.XorkerExceptionHandler
 import com.xorker.draw.support.logging.logger
 import com.xorker.draw.websocket.message.request.RequestAction
 import com.xorker.draw.websocket.parser.WebSocketResponseParser
+import io.sentry.Sentry
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
@@ -17,7 +20,7 @@ class WebSocketExceptionHandler(
     private val log = logger()
 
     fun handleXorkerException(session: WebSocketSession, requestAction: RequestAction, ex: XorkerException) {
-        log.error(ex.message, ex)
+        logXorkerException(ex)
 
         val message = ExceptionMessage(
             requestAction,
@@ -27,5 +30,16 @@ class WebSocketExceptionHandler(
         val messageStr = responseParser.parse(message)
 
         session.sendMessage(TextMessage(messageStr))
+    }
+
+    private fun logXorkerException(ex: XorkerException) {
+        when (ex) {
+            is ServerException, is CriticalException -> {
+                log.error(ex.message, ex)
+                Sentry.captureException(ex)
+            }
+
+            else -> log.warn(ex.message, ex)
+        }
     }
 }

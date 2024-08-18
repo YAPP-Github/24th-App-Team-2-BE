@@ -35,4 +35,5 @@ data object InvalidUserStatusException : CriticalException("crt002", "유효하�
 data object UnSupportedException : CriticalException("crt003", "정의하지 않는 행위") { private fun readResolve(): Any = UnSupportedException }
 data object InvalidBroadcastException : CriticalException("crt004", "유효하지 않은 브로드캐스트 상태") { private fun readResolve(): Any = InvalidBroadcastException }
 class InvalidMafiaPhaseException(message: String) : CriticalException("crt005", message)
+data object InvalidWebSocketStatusException : CriticalException("crt006", "웹 소켓 세션 상태가 유효하지 않음") { private fun readResolve(): Any = InvalidWebSocketStatusException }
 //endregion

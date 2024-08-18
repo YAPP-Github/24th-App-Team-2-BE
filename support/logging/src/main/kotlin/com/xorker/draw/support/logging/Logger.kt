@@ -1,6 +1,6 @@
 package com.xorker.draw.support.logging
 
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import org.slf4j.Logger
@@ -15,11 +15,13 @@ fun registerRequestId() {
 
 private val TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 fun defaultApiJsonMap(vararg pairs: Pair<String, Any?>): MutableMap<String, Any?> {
-    val now = LocalDateTime.now()
+    val now = ZonedDateTime.now()
 
     val map = mutableMapOf(*pairs)
 
     map["timestamp"] = TIMESTAMP_FORMATTER.format(now)
+    map["requestId"] = MDC.get("requestId")
+    map["userId"] = MDC.get("userId")
 
     return map
 }

@@ -9,6 +9,7 @@
 
     <logger name="com.xorker.draw.log.ApiLoggingFilter" level="INFO" additivity="false">
         <appender-ref ref="API_CONSOLE"/>
+        <appender-ref ref="API_FILE"/>
     </logger>
 
     <logger name="org.hibernate" level="ERROR"/>

@@ -4,6 +4,7 @@ import com.xorker.draw.exception.InvalidMafiaPhaseException
 import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameMessenger
 import com.xorker.draw.mafia.MafiaGameRepository
+import com.xorker.draw.mafia.MafiaGameResultRepository
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.MafiaPhaseMessenger
 import com.xorker.draw.mafia.assertIs
@@ -15,11 +16,11 @@ import org.springframework.stereotype.Component
 internal class MafiaPhaseEndGameProcessor(
     private val mafiaGameRepository: MafiaGameRepository,
     private val timerRepository: TimerRepository,
+    private val mafiaGameResultRepository: MafiaGameResultRepository,
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
     private val mafiaGameMessenger: MafiaGameMessenger,
 ) {
 
-    // TODO 게임 결과 DB 저장
     internal fun endGame(gameInfo: MafiaGameInfo): MafiaPhase.End {
         val phase = gameInfo.phase
 
@@ -34,6 +35,8 @@ internal class MafiaPhaseEndGameProcessor(
         judgeGameResult(endPhase)
 
         gameInfo.phase = endPhase
+
+        mafiaGameResultRepository.saveMafiaGameResult(gameInfo)
 
         return endPhase
     }

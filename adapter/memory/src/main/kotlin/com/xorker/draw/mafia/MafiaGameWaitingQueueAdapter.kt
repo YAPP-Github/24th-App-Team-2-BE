@@ -12,22 +12,14 @@ import org.springframework.stereotype.Component
 internal class MafiaGameWaitingQueueAdapter(
     private val eventPublisher: ApplicationEventPublisher,
 ) : MafiaGameWaitingQueueRepository {
-    private val koWaitingQueue: ConcurrentLinkedQueue<WaitingQueueSession> = ConcurrentLinkedQueue()
-    private val enWaitingQueue: ConcurrentLinkedQueue<WaitingQueueSession> = ConcurrentLinkedQueue()
     private val waitingQueue: ConcurrentHashMap<String, ConcurrentLinkedQueue<WaitingQueueSession>> = ConcurrentHashMap()
-    private val lock = Object()
-
-    init {
-        waitingQueue["ko"] = koWaitingQueue
-        waitingQueue["en"] = enWaitingQueue
-    }
 
     override fun enqueue(size: Int, session: WaitingQueueSession) {
-        val queue = waitingQueue[session.locale] ?: throw UnSupportedException
+        val queue = waitingQueue.getOrPut(session.locale) { ConcurrentLinkedQueue() }
 
         queue.add(session)
 
-        synchronized(lock) {
+        synchronized(this) {
             if (queue.size >= size) {
                 val players = mutableListOf<WaitingQueueSession>()
 

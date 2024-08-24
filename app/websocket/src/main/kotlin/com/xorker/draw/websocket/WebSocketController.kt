@@ -69,20 +69,11 @@ internal class WebSocketController(
     fun initializeSession(event: MafiaGameRandomMatchingEvent) {
         val players = event.players
 
-        var roomId: RoomId? = null
+        val roomId = RoomId(sessionFactory.generateRoomId())
 
         players.forEach {
             if (it is WaitingQueueSessionWrapper) {
-                if (roomId == null) {
-                    roomId = RoomId(sessionFactory.generateRoomId())
-                }
-
-                val sessionDto = it.toSessionWrapper(roomId as RoomId)
-
-                val joinedRoomId = mafiaGameUseCase.getGameInfo(sessionDto.user.id)?.room?.id
-                if (joinedRoomId != null && roomId != joinedRoomId) {
-                    throw InvalidRequestOtherPlayingException
-                }
+                val sessionDto = it.toSessionWrapper(roomId)
 
                 sessionEventListener.forEach { eventListener ->
                     eventListener.connectSession(sessionDto, it.locale)
@@ -94,6 +85,6 @@ internal class WebSocketController(
             }
         }
 
-        mafiaPhaseUseCase.startGame(roomId as RoomId)
+        mafiaPhaseUseCase.startGame(roomId)
     }
 }

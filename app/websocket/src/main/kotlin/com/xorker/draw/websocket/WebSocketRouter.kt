@@ -29,12 +29,17 @@ internal class WebSocketRouter(
             return
         }
 
+        if (request.action == RequestAction.RANDOM_MATCHING) {
+            webSocketController.initializeWaitingQueueSession(session, request.extractBody())
+            return
+        }
+
         val sessionDto = sessionUseCase.getSession(SessionId(session.id)) ?: throw InvalidRequestValueException
         MDC.put("roomId", sessionDto.roomId.value)
 
         when (request.action) {
             RequestAction.INIT -> throw UnSupportedException
-            RequestAction.RANDOM_MATCHING -> webSocketController.initializeWaitingQueueSession(session, request.extractBody())
+            RequestAction.RANDOM_MATCHING -> throw UnSupportedException
             RequestAction.START_GAME -> {
                 mafiaPhaseUseCase.startGame(sessionDto.roomId)
             }

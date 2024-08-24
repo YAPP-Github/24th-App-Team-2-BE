@@ -7,15 +7,25 @@ import com.xorker.draw.room.RoomRepository
 import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.message.request.SessionWrapper
-import org.springframework.stereotype.Service
+import com.xorker.draw.websocket.message.request.WaitingQueueSessionWrapper
+import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
 
-@Service
-class SessionFactory(
+@Component
+internal class SessionFactory(
     private val tokenUseCase: TokenUseCase,
     private val roomRepository: RoomRepository,
 ) {
-    fun create(session: WebSocketSession, request: SessionInitializeRequest): Session {
+
+    internal fun create(session: WebSocketSession, request: MafiaGameRandomMatchingRequest): WaitingQueueSession {
+        return WaitingQueueSessionWrapper(
+            session,
+            User(getUserId(request.accessToken), request.nickname),
+            request.locale,
+        )
+    }
+
+    internal fun create(session: WebSocketSession, request: SessionInitializeRequest): Session {
         return SessionWrapper(
             session,
             RoomId(request.roomId?.uppercase() ?: generateRoomId()),
@@ -23,7 +33,7 @@ class SessionFactory(
         )
     }
 
-    private fun generateRoomId(): String {
+    internal fun generateRoomId(): String {
         var value: String
 
         do {

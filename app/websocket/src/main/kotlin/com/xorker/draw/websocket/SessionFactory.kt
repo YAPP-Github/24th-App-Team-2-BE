@@ -9,6 +9,7 @@ import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.message.request.SessionWrapper
 import com.xorker.draw.websocket.message.request.WaitingQueueSessionWrapper
 import org.springframework.stereotype.Component
+import org.slf4j.MDC
 import org.springframework.web.socket.WebSocketSession
 
 @Component
@@ -26,9 +27,13 @@ internal class SessionFactory(
     }
 
     internal fun create(session: WebSocketSession, request: SessionInitializeRequest): Session {
+        val roomId = RoomId(request.roomId?.uppercase() ?: generateRoomId())
+
+        MDC.put("roomId", roomId.value)
+
         return SessionWrapper(
             session,
-            RoomId(request.roomId?.uppercase() ?: generateRoomId()),
+            roomId,
             User(getUserId(request.accessToken), request.nickname),
         )
     }

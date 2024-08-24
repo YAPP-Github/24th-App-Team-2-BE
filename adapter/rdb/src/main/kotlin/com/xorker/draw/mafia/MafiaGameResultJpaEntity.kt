@@ -20,10 +20,14 @@ internal class MafiaGameResultJpaEntity : BaseJpaEntity() {
     lateinit var gameResult: String
         protected set
 
+    @Column(name = "word_id", columnDefinition = "bigint")
+    var wordId: Long = 0
+
     companion object {
-        internal fun of(gameResult: String): MafiaGameResultJpaEntity {
+        internal fun of(gameResult: String, wordId: Long): MafiaGameResultJpaEntity {
             return MafiaGameResultJpaEntity().apply {
                 this.gameResult = gameResult
+                this.wordId = wordId
             }
         }
     }

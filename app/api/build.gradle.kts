@@ -18,6 +18,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop:${Versions.SPRING_BOOT}")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${Versions.WEBMVC_UI}")
     implementation("io.sentry:sentry-spring-boot-starter-jakarta:${Versions.SENTRY}")
+    implementation("io.sentry:sentry-logback:${Versions.SENTRY}")
 }
 
 tasks {

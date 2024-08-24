@@ -14,4 +14,6 @@ internal interface WordJpaRepository : JpaRepository<WordJpaEntity, Long> {
             "limit 1",
     )
     fun findRandomWord(@Param("locale") locale: String): WordJpaEntity
+
+    fun findByKeyword(keyword: String): WordJpaEntity?
 }

@@ -9,6 +9,12 @@
 
     <logger name="com.xorker.draw.log.ApiLoggingFilter" level="INFO" additivity="false">
         <appender-ref ref="API_CONSOLE"/>
+        <appender-ref ref="API_FILE"/>
+    </logger>
+
+    <logger name="com.xorker.draw.websocket.log.WebSocketLogger" level="INFO" additivity="false">
+        <appender-ref ref="WS_CONSOLE"/>
+        <appender-ref ref="WS_FILE"/>
     </logger>
 
     <logger name="org.hibernate" level="ERROR"/>

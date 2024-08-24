@@ -1,0 +1,10 @@
+sentry:
+    dsn: ${SENTRY_DSN}
+---
+spring.config.activate.on-profile: local, dev
+sentry:
+    environment: dev
+---
+spring.config.activate.on-profile: prod
+sentry:
+    environment: prod

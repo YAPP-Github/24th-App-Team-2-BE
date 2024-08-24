@@ -23,7 +23,10 @@ data class ExceptionButtonResponse(
     val action: ExceptionButtonAction,
 )
 
-sealed class ExceptionButtonAction(val type: String, description: String) {
+sealed class ExceptionButtonAction(
+    val type: String,
+    description: String,
+) {
     data object ForceUpdate : ExceptionButtonAction("FORCE_UPDATE", "강제 업데이트")
     data object CloseDialog : ExceptionButtonAction("DIALOG_CLOSE", "에러 팝업 닫기") // TODO: 클라랑 명칭 맞추기
     class OpenWebView(val url: String) : ExceptionButtonAction("OPEN_WEB_VIEW", "웹뷰 열기")

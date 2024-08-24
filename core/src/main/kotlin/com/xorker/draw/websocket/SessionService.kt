@@ -39,6 +39,10 @@ internal class SessionService : SessionUseCase, SessionEventListener {
         registerSession(session)
     }
 
+    override fun connectSession(session: Session, locale: String) {
+        registerSession(session)
+    }
+
     override fun disconnectSession(session: Session) {
         unregisterSession(session.id)
     }

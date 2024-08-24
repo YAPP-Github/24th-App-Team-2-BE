@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 
 interface WebSocketBroadcaster {
     fun unicast(userId: UserId, message: SessionMessage)
-    fun broadcast(roomId: RoomId, sessionMessage: SessionMessage)
+    fun broadcast(roomId: RoomId, message: SessionMessage)
     fun publishBroadcastEvent(event: BroadcastEvent)
     fun publishBranchedBroadcastEvent(event: BranchedBroadcastEvent)
     fun publishRespectiveBroadcastEvent(event: RespectiveBroadcastEvent)
@@ -22,12 +22,13 @@ interface WebSocketBroadcaster {
 internal class WebSocketBroadcasterSingleInstance(
     private val publisher: ApplicationEventPublisher,
 ) : WebSocketBroadcaster {
+
     override fun unicast(userId: UserId, message: SessionMessage) {
         publisher.publishEvent(UnicastEvent(userId, message))
     }
 
-    override fun broadcast(roomId: RoomId, sessionMessage: SessionMessage) {
-        publisher.publishEvent(BroadcastEvent(roomId, sessionMessage))
+    override fun broadcast(roomId: RoomId, message: SessionMessage) {
+        publisher.publishEvent(BroadcastEvent(roomId, message))
     }
 
     override fun publishBroadcastEvent(event: BroadcastEvent) {

@@ -1,6 +1,7 @@
 package com.xorker.draw.mafia
 
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.user.UserId
 
 interface MafiaGameMessenger {
     fun broadcastPlayerList(gameInfo: MafiaGameInfo)
@@ -8,4 +9,5 @@ interface MafiaGameMessenger {
     fun broadcastNextTurn(gameInfo: MafiaGameInfo)
     fun broadcastVoteStatus(gameInfo: MafiaGameInfo)
     fun broadcastAnswer(gameInfo: MafiaGameInfo, answer: String)
+    fun unicastRandomMatching(userId: UserId)
 }

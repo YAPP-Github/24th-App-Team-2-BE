@@ -37,6 +37,23 @@ internal class MafiaGameRoomService(
         mafiaGameMessenger.broadcastPlayerList(gameInfo)
     }
 
+    override fun connectSession(session: Session, locale: String) {
+        var gameInfo = mafiaGameRepository.getGameInfo(session.roomId)
+        val user = session.user
+
+        if (gameInfo == null) {
+            val player = MafiaPlayer(user.id, user.name, generateColor(null))
+
+            gameInfo = createGameInfo(session, locale, player)
+        } else {
+            val room = gameInfo.room
+
+            room.add(MafiaPlayer(user.id, user.name, generateColor(gameInfo)))
+        }
+
+        mafiaGameRepository.saveGameInfo(gameInfo)
+    }
+
     override fun disconnectSession(session: Session) {
         val gameInfo = mafiaGameRepository.getGameInfo(session.roomId) ?: return
 

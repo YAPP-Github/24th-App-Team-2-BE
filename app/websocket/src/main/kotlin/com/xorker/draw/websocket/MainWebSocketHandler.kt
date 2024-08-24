@@ -19,6 +19,7 @@ internal class MainWebSocketHandler(
     private val waitingQueueSessionUseCase: WaitingQueueSessionUseCase,
     private val router: WebSocketRouter,
     private val requestParser: WebSocketRequestParser,
+    private val waitingQueueSessionEventListener: List<WaitingQueueSessionEventListener>,
     private val sessionEventListener: List<SessionEventListener>,
     private val webSocketExceptionHandler: WebSocketExceptionHandler,
     private val metricManager: MetricManager,
@@ -51,7 +52,9 @@ internal class MainWebSocketHandler(
         val waitingQueueSessionDto = waitingQueueSessionUseCase.getSession(SessionId(session.id))
 
         if (waitingQueueSessionDto != null) {
-            waitingQueueSessionUseCase.unregisterSession(SessionId(session.id))
+            waitingQueueSessionEventListener.forEach {
+                it.exitSession(waitingQueueSessionDto)
+            }
             return
         }
 

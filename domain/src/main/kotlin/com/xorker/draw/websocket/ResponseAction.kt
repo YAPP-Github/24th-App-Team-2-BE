@@ -3,6 +3,7 @@ package com.xorker.draw.websocket
 enum class ResponseAction(
     description: String,
 ) {
+    RANDOM_MATCHING("랜덤 매칭 대기 큐 enqueue"),
     PLAYER_LIST("대기방 갱신"),
     GAME_INFO("마피아 게임 정보"),
     DRAW("그림 데이터"),

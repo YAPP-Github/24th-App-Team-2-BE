@@ -13,8 +13,9 @@ import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
 
 @Component
-class MainWebSocketHandler(
+internal class MainWebSocketHandler(
     private val sessionUseCase: SessionUseCase,
+    private val waitingQueueSessionUseCase: WaitingQueueSessionUseCase,
     private val router: WebSocketRouter,
     private val requestParser: WebSocketRequestParser,
     private val sessionEventListener: List<SessionEventListener>,
@@ -37,6 +38,13 @@ class MainWebSocketHandler(
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
+        val waitingQueueSessionDto = waitingQueueSessionUseCase.getSession(SessionId(session.id))
+
+        if (waitingQueueSessionDto != null) {
+            waitingQueueSessionUseCase.unregisterSession(SessionId(session.id))
+            return
+        }
+
         val sessionDto = sessionUseCase.getSession(SessionId(session.id))
 
         if (sessionDto == null) {

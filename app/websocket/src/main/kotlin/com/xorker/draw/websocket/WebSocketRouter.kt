@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
 
 @Component
-class WebSocketRouter(
+internal class WebSocketRouter(
     private val objectMapper: ObjectMapper,
     private val webSocketController: WebSocketController,
     private val sessionUseCase: SessionUseCase,
@@ -26,6 +26,7 @@ class WebSocketRouter(
     fun route(session: WebSocketSession, request: WebSocketRequest) {
         when (request.action) {
             RequestAction.INIT -> webSocketController.initializeSession(session, request.extractBody())
+            RequestAction.RANDOM_MATCHING -> webSocketController.initializeWaitingQueueSession(session, request.extractBody())
             RequestAction.START_GAME -> {
                 val requestDto = request.extractBody<MafiaGameStartGameRequest>()
 

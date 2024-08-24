@@ -9,8 +9,9 @@ dependencies {
     implementation(project(":app:support:auth"))
     implementation(project(":app:support:exception"))
     implementation(project(":core"))
-    implementation(project(":support:yaml"))
     implementation(project(":support:logging"))
+    implementation(project(":support:metric"))
+    implementation(project(":support:yaml"))
 
     implementation("org.springframework.boot:spring-boot-starter-web:${Versions.SPRING_BOOT}")
     implementation("org.springframework.boot:spring-boot-starter-websocket:${Versions.SPRING_BOOT}")

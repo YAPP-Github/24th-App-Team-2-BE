@@ -10,6 +10,7 @@ dependencies {
     implementation(project(":adapter:oauth"))
     implementation(project(":adapter:rdb"))
     implementation(project(":support:jwt"))
+    implementation(project(":support:metric"))
     implementation(project(":support:time"))
 
     implementation("org.springframework.boot:spring-boot-starter:${Versions.SPRING_BOOT}")

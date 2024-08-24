@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":app:websocket"))
     implementation(project(":core"))
     implementation(project(":support:logging"))
+    implementation(project(":support:metric"))
     implementation(project(":support:yaml"))
 
     implementation("org.springframework.boot:spring-boot-starter-web:${Versions.SPRING_BOOT}")

@@ -9,6 +9,7 @@ include(
     "domain",
     "core",
     "support:jwt",
+    "support:metric",
     "support:logging",
     "support:time",
     "support:yaml",

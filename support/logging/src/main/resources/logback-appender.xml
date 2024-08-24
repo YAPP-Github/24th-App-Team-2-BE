@@ -24,12 +24,12 @@
     </appender>
 
     <appender name="CONSOLE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/console/${HOSTNAME}.log</file>
+        <file>${LOG_PATH}/console/${HOSTNAME}-console.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/console/${HOSTNAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>60</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
+            <fileNamePattern>${LOG_PATH}/console/${HOSTNAME}-console-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+            <maxFileSize>20MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
         </rollingPolicy>
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
             <layout class="com.xorker.draw.support.logging.XorkerJsonLayout"/>
@@ -37,12 +37,12 @@
     </appender>
 
     <appender name="API_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/api/${HOSTNAME}.log</file>
+        <file>${LOG_PATH}/api/${HOSTNAME}-api.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/api/${HOSTNAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>60</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
+            <fileNamePattern>${LOG_PATH}/api/${HOSTNAME}-api-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+            <maxFileSize>20MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>%msg\n</pattern>
@@ -50,12 +50,12 @@
     </appender>
 
     <appender name="WS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/ws.log</file>
+        <file>${LOG_PATH}/ws/${HOSTNAME}-ws.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/ws-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>60</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
+            <fileNamePattern>${LOG_PATH}/ws/${HOSTNAME}-ws-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+            <maxFileSize>20MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>%msg\n</pattern>

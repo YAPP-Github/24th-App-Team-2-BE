@@ -5,6 +5,7 @@ import com.xorker.draw.user.UserId
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.MDC
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
@@ -22,6 +23,7 @@ internal class TokenAuthenticationFilter(
         val accessToken = getAccessToken(request)
         if (accessToken != null) {
             tokenUseCase.getUserId(accessToken)?.let {
+                MDC.put("userId", it.value.toString())
                 setAuthentication(request, accessToken, it)
             }
         }

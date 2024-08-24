@@ -55,14 +55,13 @@ fun XorkerException.getButtons(): List<ExceptionButtonType> {
         AlreadyJoinRoomException,
         MaxRoomException,
         UnSupportedException,
-        InvalidMafiaGamePlayingPhaseStatusException,
         NotFoundWordException,
         InvalidBroadcastException,
         is InvalidMafiaPhaseException,
         InvalidRequestOnlyMyTurnException,
-        InvalidMafiaGameVotePhaseStatusException,
         InvalidRequestOtherPlayingException,
         AlreadyPlayingRoomException,
+        InvalidWebSocketStatusException,
         -> buttonOk
     }
 }

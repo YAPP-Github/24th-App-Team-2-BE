@@ -20,7 +20,6 @@ class MetricManager(
         Gauge
             .builder("playing_game_room_gauge", playingPlayingRoomCount) { it.toDouble() }
             .register(metric)
-
     }
 
     fun increaseWebsocket() {
@@ -31,11 +30,11 @@ class MetricManager(
         connectedWebSocketCount.decrementAndGet()
     }
 
-    fun increaseGameCount(){
+    fun increaseGameCount() {
         playingPlayingRoomCount.incrementAndGet()
     }
 
-    fun decreaseGameCount(){
+    fun decreaseGameCount() {
         playingPlayingRoomCount.decrementAndGet()
     }
 }

@@ -5,5 +5,5 @@ logging.config: classpath:logback-local.xml
 spring.config.activate.on-profile: dev
 logging.config: classpath:logback-dev.xml
 ---
-spring.config.activate.on-profile: production
-logging.config: classpath:logback-production.xml
+spring.config.activate.on-profile: prod
+logging.config: classpath:logback-prod.xml

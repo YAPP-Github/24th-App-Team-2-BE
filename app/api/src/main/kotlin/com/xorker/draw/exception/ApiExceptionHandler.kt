@@ -1,7 +1,6 @@
 package com.xorker.draw.exception
 
 import com.xorker.draw.support.logging.logger
-import io.sentry.Sentry
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.http.HttpStatus
@@ -54,14 +53,12 @@ class ApiExceptionHandler(
     @ExceptionHandler(ServerException::class)
     protected fun handleException(ex: ServerException): ExceptionResponseEntity {
         log.error(ex.message, ex)
-        Sentry.captureException(ex)
         return responseFactory.create(ex)
     }
 
     @ExceptionHandler(CriticalException::class)
     protected fun handleException(ex: CriticalException): ExceptionResponseEntity {
         log.error(ex.message, ex)
-        Sentry.captureException(ex)
         return responseFactory.create(ex)
     }
 
@@ -69,7 +66,6 @@ class ApiExceptionHandler(
     @ExceptionHandler(Exception::class)
     protected fun handleException(ex: Exception): ExceptionResponseEntity {
         log.error(ex.message, ex)
-        Sentry.captureException(ex)
         return responseFactory.create(UnknownException(ex))
     }
 }

@@ -7,7 +7,6 @@ import com.xorker.draw.exception.XorkerExceptionHandler
 import com.xorker.draw.support.logging.logger
 import com.xorker.draw.websocket.message.request.RequestAction
 import com.xorker.draw.websocket.parser.WebSocketResponseParser
-import io.sentry.Sentry
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
@@ -36,7 +35,6 @@ class WebSocketExceptionHandler(
         when (ex) {
             is ServerException, is CriticalException -> {
                 log.error(ex.message, ex)
-                Sentry.captureException(ex)
             }
 
             else -> log.warn(ex.message, ex)

@@ -59,11 +59,7 @@ class WebSocketLogger(
             "sessionId" to sessionId.value,
         )
 
-        val session = sessionUseCase.getSession(sessionId)
-        if (session != null) {
-            data["userId"] = session.user.id.value
-            data["roomId"] = session.roomId
-        }
+        injectDefaultSessionInfo(sessionId, data)
 
         return objectMapper.writeValueAsString(data)
     }
@@ -77,13 +73,17 @@ class WebSocketLogger(
             "sessionId" to session.id,
         )
 
-        val sessionDto = sessionUseCase.getSession(SessionId(session.id))
+        injectDefaultSessionInfo(SessionId(session.id), data)
+
+        val log = objectMapper.writeValueAsString(data)
+        logger.info(log)
+    }
+
+    private fun injectDefaultSessionInfo(sessionId: SessionId, data: MutableMap<String, Any?>) {
+        val sessionDto = sessionUseCase.getSession(sessionId)
         if (sessionDto != null) {
             data["userId"] = sessionDto.user.id.value
             data["roomId"] = sessionDto.roomId
         }
-
-        val log = objectMapper.writeValueAsString(data)
-        logger.info(log)
     }
 }

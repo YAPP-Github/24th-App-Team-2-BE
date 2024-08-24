@@ -4,6 +4,7 @@ enum class RequestAction(
     description: String,
 ) {
     INIT("세션 초기화"),
+    RANDOM_MATCHING("마피아 게임 랜덤 매칭"),
     START_GAME("마피아 게임 시작"),
     DRAW("그림 그리기"),
     END_TURN("턴 넘기기"),

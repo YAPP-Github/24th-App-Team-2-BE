@@ -8,6 +8,7 @@ import com.xorker.draw.websocket.RespectiveBroadcastEvent
 import com.xorker.draw.websocket.SessionMessageBroker
 import com.xorker.draw.websocket.SessionUseCase
 import com.xorker.draw.websocket.UnicastEvent
+import com.xorker.draw.websocket.WaitingQueueSessionUseCase
 import com.xorker.draw.websocket.parser.WebSocketResponseParser
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component
 @Component
 class SimpleSessionMessageBroker(
     private val sessionUseCase: SessionUseCase,
+    private val waitingQueueSessionUseCase: WaitingQueueSessionUseCase,
     private val roomRepository: RoomRepository,
     private val parser: WebSocketResponseParser,
 ) : SessionMessageBroker {
@@ -22,10 +24,22 @@ class SimpleSessionMessageBroker(
     @EventListener
     override fun unicast(event: UnicastEvent) {
         val userId = event.userId
+
         val session = sessionUseCase.getSession(userId)
+
+        if (session == null) {
+            val waitingQueueSession = waitingQueueSessionUseCase.getSession(userId)
+
+            val response = parser.parse(event.message)
+
+            waitingQueueSession?.send(response)
+
+            return
+        }
+
         val response = parser.parse(event.message)
 
-        session?.send(response)
+        session.send(response)
     }
 
     @EventListener

@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket.message.request.dto
+package com.xorker.draw.websocket.exception
 
 import com.xorker.draw.exception.ExceptionResponse
 import com.xorker.draw.websocket.SessionMessage

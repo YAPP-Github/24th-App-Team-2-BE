@@ -6,6 +6,7 @@ import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.MafiaPhaseWithTurnList
 import com.xorker.draw.mafia.assertIs
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
 import com.xorker.draw.websocket.message.response.dto.game.MafiaGameAnswerBody
 import com.xorker.draw.websocket.message.response.dto.game.MafiaGameAnswerMessage
@@ -16,6 +17,8 @@ import com.xorker.draw.websocket.message.response.dto.game.MafiaGameTurnInfoBody
 import com.xorker.draw.websocket.message.response.dto.game.MafiaGameTurnInfoMessage
 import com.xorker.draw.websocket.message.response.dto.game.MafiaGameVoteStatusBody
 import com.xorker.draw.websocket.message.response.dto.game.MafiaGameVoteStatusMessage
+import com.xorker.draw.websocket.message.response.dto.game.MafiaRandomMatchingBody
+import com.xorker.draw.websocket.message.response.dto.game.MafiaRandomMatchingMessage
 import com.xorker.draw.websocket.message.response.dto.game.toResponse
 import org.springframework.stereotype.Component
 
@@ -91,5 +94,13 @@ class MafiaGameMessengerImpl(
         )
 
         broadcaster.broadcast(roomId, message)
+    }
+
+    override fun unicastRandomMatching(userId: UserId) {
+        val message = MafiaRandomMatchingMessage(
+            MafiaRandomMatchingBody(),
+        )
+
+        broadcaster.unicast(userId, message)
     }
 }

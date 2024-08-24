@@ -9,12 +9,12 @@ class ExceptionDesignFactory(
     private val messageSource: MessageSource,
 ) {
     fun generate(ex: XorkerException): ExceptionDesign {
-        when (ex) {
+        return when (ex) {
             is NotFoundRoomException,
             is MaxRoomException,
-            -> return generateToast(ex)
+            -> generateToast(ex)
 
-            else -> return generateDialog(ex)
+            else -> generateDialog(ex)
         }
     }
 

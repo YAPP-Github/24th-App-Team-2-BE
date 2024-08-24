@@ -12,3 +12,10 @@ interface Session {
     val roomId: RoomId
     fun send(message: String)
 }
+
+interface WaitingQueueSession {
+    val id: SessionId
+    val user: User
+    val locale: String
+    fun send(message: String)
+}

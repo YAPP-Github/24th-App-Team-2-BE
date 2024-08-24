@@ -1,6 +1,7 @@
 package com.xorker.draw.websocket
 
 import com.xorker.draw.exception.XorkerException
+import com.xorker.draw.support.metric.MetricManager
 import com.xorker.draw.websocket.exception.WebSocketExceptionHandler
 import com.xorker.draw.websocket.parser.WebSocketRequestParser
 import org.springframework.stereotype.Component
@@ -16,8 +17,10 @@ class MainWebSocketHandler(
     private val requestParser: WebSocketRequestParser,
     private val sessionEventListener: List<SessionEventListener>,
     private val webSocketExceptionHandler: WebSocketExceptionHandler,
+    private val metricManager: MetricManager,
 ) : TextWebSocketHandler() {
     override fun afterConnectionEstablished(session: WebSocketSession) {
+        metricManager.increaseWebsocket()
     }
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
@@ -31,6 +34,8 @@ class MainWebSocketHandler(
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
+        metricManager.decreaseWebsocket()
+
         val sessionDto = sessionUseCase.getSession(SessionId(session.id)) ?: return // TODO error logging
 
         when (status) {

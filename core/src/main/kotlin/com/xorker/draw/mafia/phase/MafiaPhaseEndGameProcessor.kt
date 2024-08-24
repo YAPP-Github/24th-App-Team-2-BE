@@ -8,6 +8,7 @@ import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.MafiaPhaseMessenger
 import com.xorker.draw.mafia.assertIs
 import com.xorker.draw.mafia.event.JobWithStartTime
+import com.xorker.draw.support.metric.MetricManager
 import com.xorker.draw.timer.TimerRepository
 import org.springframework.stereotype.Component
 
@@ -17,6 +18,7 @@ internal class MafiaPhaseEndGameProcessor(
     private val timerRepository: TimerRepository,
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
     private val mafiaGameMessenger: MafiaGameMessenger,
+    private val metricManager: MetricManager,
 ) {
 
     // TODO 게임 결과 DB 저장
@@ -57,6 +59,8 @@ internal class MafiaPhaseEndGameProcessor(
     private fun processEndGame(gameInfo: MafiaGameInfo) {
         val phase = gameInfo.phase
         assertIs<MafiaPhase.End>(phase)
+
+        metricManager.decreaseGameCount()
 
         val room = gameInfo.room
 

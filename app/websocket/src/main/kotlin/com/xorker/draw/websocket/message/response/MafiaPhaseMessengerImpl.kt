@@ -49,14 +49,21 @@ internal class MafiaPhaseMessengerImpl(
                 MafiaPhaseWaitBody(
                     room.id,
                     room.players.map { it.toResponse(room.owner) }.toList(),
-                    this.gameOption.toResponse(),
+                    gameOption.toResponse(),
                 ),
             )
 
             is MafiaPhase.Ready -> MafiaPhaseReadyMessage(
                 MafiaPhaseReadyBody(
                     startTime = phase.job.startTime,
-                    mafiaGameInfo = generateMafiaGameInfoMessage(this.room.id, phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption),
+                    mafiaGameInfo = generateMafiaGameInfoMessage(
+                        roomId = room.id,
+                        isRandomMatching = room.isRandomMatching,
+                        mafiaPlayer = phase.mafiaPlayer,
+                        turnList = phase.turnList,
+                        keyword = phase.keyword,
+                        gameOption = gameOption,
+                    ),
                 ),
             )
 
@@ -67,7 +74,14 @@ internal class MafiaPhaseMessengerImpl(
                     startTurnTime = phase.job.startTime,
                     draw = phase.getDraw(),
                     currentDraw = phase.getCurrentDraw(),
-                    mafiaGameInfo = generateMafiaGameInfoMessage(this.room.id, phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption),
+                    mafiaGameInfo = generateMafiaGameInfoMessage(
+                        roomId = room.id,
+                        isRandomMatching = room.isRandomMatching,
+                        mafiaPlayer = phase.mafiaPlayer,
+                        turnList = phase.turnList,
+                        keyword = phase.keyword,
+                        gameOption = gameOption,
+                    ),
                 ),
             )
 
@@ -75,8 +89,14 @@ internal class MafiaPhaseMessengerImpl(
                 MafiaPhaseVoteBody(
                     startTime = phase.job.startTime,
                     mafiaGameInfo = if (isOrigin.not()) {
-                        val room = this.room
-                        generateMafiaGameInfoMessage(room.id, phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
+                        generateMafiaGameInfoMessage(
+                            roomId = room.id,
+                            isRandomMatching = room.isRandomMatching,
+                            mafiaPlayer = phase.mafiaPlayer,
+                            turnList = phase.turnList,
+                            keyword = phase.keyword,
+                            gameOption = gameOption,
+                        )
                     } else {
                         null
                     },
@@ -89,8 +109,14 @@ internal class MafiaPhaseMessengerImpl(
                 MafiaPhaseInferAnswerBody(
                     startTime = phase.job.startTime,
                     mafiaGameInfo = if (isOrigin.not()) {
-                        val room = this.room
-                        generateMafiaGameInfoMessage(room.id, phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
+                        generateMafiaGameInfoMessage(
+                            roomId = room.id,
+                            isRandomMatching = room.isRandomMatching,
+                            mafiaPlayer = phase.mafiaPlayer,
+                            turnList = phase.turnList,
+                            keyword = phase.keyword,
+                            gameOption = gameOption,
+                        )
                     } else {
                         null
                     },
@@ -103,8 +129,14 @@ internal class MafiaPhaseMessengerImpl(
                 MafiaPhaseEndBody(
                     startTime = phase.job.startTime,
                     mafiaGameInfo = if (isOrigin.not()) {
-                        val room = this.room
-                        generateMafiaGameInfoMessage(room.id, phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
+                        generateMafiaGameInfoMessage(
+                            roomId = room.id,
+                            isRandomMatching = room.isRandomMatching,
+                            mafiaPlayer = phase.mafiaPlayer,
+                            turnList = phase.turnList,
+                            keyword = phase.keyword,
+                            gameOption = gameOption,
+                        )
                     } else {
                         null
                     },
@@ -119,6 +151,7 @@ internal class MafiaPhaseMessengerImpl(
 
     private fun generateMafiaGameInfoMessage(
         roomId: RoomId,
+        isRandomMatching: Boolean,
         mafiaPlayer: MafiaPlayer,
         turnList: List<MafiaPlayer>,
         keyword: MafiaKeyword,
@@ -127,6 +160,7 @@ internal class MafiaPhaseMessengerImpl(
         MafiaGameInfoMessage(
             MafiaGameInfoBody(
                 roomId = roomId,
+                isRandomMatching = isRandomMatching,
                 mafiaUserId = mafiaPlayer.userId,
                 turnList = turnList,
                 category = keyword.category,

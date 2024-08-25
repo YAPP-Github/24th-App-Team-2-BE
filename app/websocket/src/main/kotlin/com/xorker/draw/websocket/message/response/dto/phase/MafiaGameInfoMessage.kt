@@ -16,6 +16,7 @@ data class MafiaGameInfoMessage(
 
 data class MafiaGameInfoBody(
     val roomId: RoomId,
+    val isRandomMatching: Boolean,
     val mafiaUserId: UserId,
     val turnList: List<MafiaPlayer>,
     val category: String,

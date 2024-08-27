@@ -13,6 +13,7 @@ interface Room<P : Player> {
     var owner: P
     val maxMemberNum: Int
     val players: List<P>
+    val isRandomMatching: Boolean
 
     fun size(): Int = players.size
     fun isEmpty(): Boolean = size() == 0
@@ -31,7 +32,8 @@ fun <P : Player> Room(
     owner: P,
     maxMemberNum: Int,
     players: MutableList<P> = mutableListOf(owner),
-): Room<P> = RoomImpl(id, locale, owner, maxMemberNum, players)
+    isRandomMatching: Boolean = false,
+): Room<P> = RoomImpl(id, locale, owner, maxMemberNum, players, isRandomMatching)
 
 class RoomImpl<P : Player>(
     override val id: RoomId,
@@ -39,6 +41,7 @@ class RoomImpl<P : Player>(
     override var owner: P,
     override val maxMemberNum: Int,
     private val _players: MutableList<P> = mutableListOf(owner),
+    override val isRandomMatching: Boolean,
 ) : Room<P> {
     override val players: List<P> = _players
 
@@ -64,5 +67,5 @@ class RoomImpl<P : Player>(
         _players.clear()
     }
 
-    override fun copy(): Room<P> = RoomImpl(id, locale, owner, maxMemberNum, _players)
+    override fun copy(): Room<P> = RoomImpl(id, locale, owner, maxMemberNum, _players, isRandomMatching)
 }

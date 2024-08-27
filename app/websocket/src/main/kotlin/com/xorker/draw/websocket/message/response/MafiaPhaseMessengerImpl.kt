@@ -6,6 +6,7 @@ import com.xorker.draw.mafia.MafiaKeyword
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.MafiaPhaseMessenger
 import com.xorker.draw.mafia.MafiaPlayer
+import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
@@ -55,7 +56,7 @@ internal class MafiaPhaseMessengerImpl(
             is MafiaPhase.Ready -> MafiaPhaseReadyMessage(
                 MafiaPhaseReadyBody(
                     startTime = phase.job.startTime,
-                    mafiaGameInfo = generateMafiaGameInfoMessage(phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption),
+                    mafiaGameInfo = generateMafiaGameInfoMessage(this.room.id, phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption),
                 ),
             )
 
@@ -66,7 +67,7 @@ internal class MafiaPhaseMessengerImpl(
                     startTurnTime = phase.job.startTime,
                     draw = phase.getDraw(),
                     currentDraw = phase.getCurrentDraw(),
-                    mafiaGameInfo = generateMafiaGameInfoMessage(phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption),
+                    mafiaGameInfo = generateMafiaGameInfoMessage(this.room.id, phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption),
                 ),
             )
 
@@ -74,7 +75,8 @@ internal class MafiaPhaseMessengerImpl(
                 MafiaPhaseVoteBody(
                     startTime = phase.job.startTime,
                     mafiaGameInfo = if (isOrigin.not()) {
-                        generateMafiaGameInfoMessage(phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
+                        val room = this.room
+                        generateMafiaGameInfoMessage(room.id, phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
                     } else {
                         null
                     },
@@ -87,7 +89,8 @@ internal class MafiaPhaseMessengerImpl(
                 MafiaPhaseInferAnswerBody(
                     startTime = phase.job.startTime,
                     mafiaGameInfo = if (isOrigin.not()) {
-                        generateMafiaGameInfoMessage(phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
+                        val room = this.room
+                        generateMafiaGameInfoMessage(room.id, phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
                     } else {
                         null
                     },
@@ -100,7 +103,8 @@ internal class MafiaPhaseMessengerImpl(
                 MafiaPhaseEndBody(
                     startTime = phase.job.startTime,
                     mafiaGameInfo = if (isOrigin.not()) {
-                        generateMafiaGameInfoMessage(phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
+                        val room = this.room
+                        generateMafiaGameInfoMessage(room.id, phase.mafiaPlayer, phase.turnList, phase.keyword, gameOption)
                     } else {
                         null
                     },
@@ -114,6 +118,7 @@ internal class MafiaPhaseMessengerImpl(
     }
 
     private fun generateMafiaGameInfoMessage(
+        roomId: RoomId,
         mafiaPlayer: MafiaPlayer,
         turnList: List<MafiaPlayer>,
         keyword: MafiaKeyword,
@@ -121,6 +126,7 @@ internal class MafiaPhaseMessengerImpl(
     ): MafiaGameInfoMessage =
         MafiaGameInfoMessage(
             MafiaGameInfoBody(
+                roomId = roomId,
                 mafiaUserId = mafiaPlayer.userId,
                 turnList = turnList,
                 category = keyword.category,

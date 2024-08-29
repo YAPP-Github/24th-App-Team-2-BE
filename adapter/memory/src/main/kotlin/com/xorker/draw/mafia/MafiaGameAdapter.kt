@@ -20,7 +20,6 @@ internal class MafiaGameAdapter(
         if (room.isEmpty()) {
             removeGameInfo(gameInfo)
         } else {
-            metricManager.increaseGameCount()
             data[room.id] = gameInfo
             room.players.forEach {
                 userData[it.userId] = room.id

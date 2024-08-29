@@ -3,6 +3,7 @@ package com.xorker.draw.mafia
 import com.xorker.draw.exception.InvalidRequestValueException
 import com.xorker.draw.exception.NotFoundRoomException
 import com.xorker.draw.room.Room
+import com.xorker.draw.support.metric.MetricManager
 import com.xorker.draw.websocket.Session
 import com.xorker.draw.websocket.SessionEventListener
 import com.xorker.draw.websocket.SessionInitializeRequest
@@ -13,6 +14,7 @@ internal class MafiaGameRoomService(
     private val mafiaGameRepository: MafiaGameRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
+    private val metricManager: MetricManager,
 ) : SessionEventListener {
 
     override fun connectSession(session: Session, request: SessionInitializeRequest) {
@@ -109,6 +111,7 @@ internal class MafiaGameRoomService(
     }
 
     private fun createGameInfo(session: Session, locale: String, player: MafiaPlayer): MafiaGameInfo {
+        metricManager.increaseGameCount()
         val room = createRoom(session, locale, player)
         return MafiaGameInfo(
             room,

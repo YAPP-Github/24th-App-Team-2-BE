@@ -97,7 +97,10 @@ internal class MafiaPhaseEndGameProcessor(
         val keyword = endPhase.keyword
 
         endPhase.isMafiaWin = endPhase.answer?.let {
-            keyword.answer.lowercase() == it.lowercase() // TODO 동의어 처리
+            val trimmedAnswer = keyword.answer.replace(" ", "")
+            val trimmedMafiaAnswer = it.replace(" ", "")
+
+            trimmedAnswer.lowercase() == trimmedMafiaAnswer.lowercase() // TODO 동의어 처리
         } ?: false
     }
 }

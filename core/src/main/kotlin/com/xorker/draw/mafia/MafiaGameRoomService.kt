@@ -46,7 +46,7 @@ internal class MafiaGameRoomService(
         if (gameInfo == null) {
             val player = MafiaPlayer(user.id, user.name, generateColor(null))
 
-            gameInfo = createGameInfo(session, locale, player)
+            gameInfo = createGameInfo(session, locale, player, true)
         } else {
             val room = gameInfo.room
 
@@ -110,23 +110,29 @@ internal class MafiaGameRoomService(
             .first()
     }
 
-    private fun createGameInfo(session: Session, locale: String, player: MafiaPlayer): MafiaGameInfo {
+    private fun createGameInfo(session: Session, locale: String, player: MafiaPlayer, isRandomMatching: Boolean = false): MafiaGameInfo {
         metricManager.increaseGameCount()
-        val room = createRoom(session, locale, player)
+        val room = createRoom(session, locale, player, isRandomMatching)
         return MafiaGameInfo(
-            room,
-            MafiaPhase.Wait,
-            MafiaGameOption(),
+            room = room,
+            phase = MafiaPhase.Wait,
+            gameOption = MafiaGameOption(),
         )
     }
 
-    private fun createRoom(session: Session, locale: String, player: MafiaPlayer): Room<MafiaPlayer> {
+    private fun createRoom(session: Session, locale: String, player: MafiaPlayer, isRandomMatching: Boolean): Room<MafiaPlayer> {
         val language = locale.lowercase()
         if (language !in languages) {
             throw InvalidRequestValueException
         }
 
-        val room = Room(session.roomId, language, player, 10)
+        val room = Room(
+            id = session.roomId,
+            locale = language,
+            owner = player,
+            maxMemberNum = 10,
+            isRandomMatching = isRandomMatching,
+        )
         return room
     }
 

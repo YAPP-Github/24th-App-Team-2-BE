@@ -29,7 +29,7 @@ internal class MainWebSocketHandler(
     private val log = logger()
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        metricManager.increaseWebsocket()
+        metricManager.increaseWebsocket(session.id)
         webSocketLogger.afterConnectionEstablished(session)
     }
 
@@ -46,7 +46,7 @@ internal class MainWebSocketHandler(
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-        metricManager.decreaseWebsocket()
+        metricManager.decreaseWebsocket(session.id)
         webSocketLogger.afterConnectionClosed(session, status)
 
         val waitingQueueSessionDto = waitingQueueSessionUseCase.getSession(SessionId(session.id))

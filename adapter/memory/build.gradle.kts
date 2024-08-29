@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":support:metric"))
 
     implementation("org.springframework.boot:spring-boot-starter:${Versions.SPRING_BOOT}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.COROUTINES}")

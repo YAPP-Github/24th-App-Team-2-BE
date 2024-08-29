@@ -5,7 +5,6 @@ import com.xorker.draw.mafia.MafiaGameMessenger
 import com.xorker.draw.mafia.MafiaGameRepository
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.assertIs
-import com.xorker.draw.support.metric.MetricManager
 import com.xorker.draw.timer.TimerRepository
 import org.springframework.stereotype.Component
 
@@ -14,14 +13,11 @@ internal class MafiaPhasePlayGameProcessor(
     private val timerRepository: TimerRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
     private val mafiaGameRepository: MafiaGameRepository,
-    private val metricManager: MetricManager,
 ) {
 
     internal fun playMafiaGame(gameInfo: MafiaGameInfo, nextStep: () -> Unit): MafiaPhase.Playing {
         val phase = gameInfo.phase
         assertIs<MafiaPhase.Ready>(phase)
-
-        metricManager.increaseGameCount()
 
         val gameOption = gameInfo.gameOption
 

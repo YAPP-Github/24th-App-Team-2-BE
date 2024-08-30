@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
+import org.springframework.web.servlet.resource.NoResourceFoundException
 
 typealias ExceptionResponseEntity = ResponseEntity<ExceptionResponse>
 
@@ -40,6 +41,12 @@ class ApiExceptionHandler(
 
     @ExceptionHandler(BindException::class)
     protected fun handleException(ex: BindException): ExceptionResponseEntity {
+        log.warn(ex.message, ex)
+        return responseFactory.create(InvalidRequestValueException)
+    }
+
+    @ExceptionHandler(NoResourceFoundException::class)
+    protected fun handleException(ex: NoResourceFoundException): ExceptionResponseEntity {
         log.warn(ex.message, ex)
         return responseFactory.create(InvalidRequestValueException)
     }

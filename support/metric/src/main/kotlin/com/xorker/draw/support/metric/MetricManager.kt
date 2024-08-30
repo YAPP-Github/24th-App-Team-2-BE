@@ -2,19 +2,20 @@ package com.xorker.draw.support.metric
 
 import io.micrometer.core.instrument.Gauge
 import io.micrometer.core.instrument.MeterRegistry
+import java.util.concurrent.CopyOnWriteArraySet
 import java.util.concurrent.atomic.AtomicInteger
 import org.springframework.stereotype.Component
 
 @Component
 class MetricManager(
-    private val metric: MeterRegistry,
+    metric: MeterRegistry,
 ) {
-    private val connectedWebSocketCount: AtomicInteger = AtomicInteger()
+    private val connectedWebSocketCount: CopyOnWriteArraySet<String> = CopyOnWriteArraySet()
     private val playingPlayingRoomCount: AtomicInteger = AtomicInteger()
 
     init {
         Gauge
-            .builder("connect_websocket_gauge", connectedWebSocketCount) { it.toDouble() }
+            .builder("connect_websocket_gauge", connectedWebSocketCount) { it.size.toDouble() }
             .register(metric)
 
         Gauge
@@ -22,12 +23,12 @@ class MetricManager(
             .register(metric)
     }
 
-    fun increaseWebsocket() {
-        connectedWebSocketCount.incrementAndGet()
+    fun increaseWebsocket(sessionId: String) {
+        connectedWebSocketCount.add(sessionId)
     }
 
-    fun decreaseWebsocket() {
-        connectedWebSocketCount.decrementAndGet()
+    fun decreaseWebsocket(sessionId: String) {
+        connectedWebSocketCount.remove(sessionId)
     }
 
     fun increaseGameCount() {

@@ -3,20 +3,26 @@ package com.xorker.draw.mafia
 import com.xorker.draw.room.Room
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.room.RoomRepository
+import com.xorker.draw.support.metric.MetricManager
 import com.xorker.draw.user.UserId
 import java.util.concurrent.ConcurrentHashMap
 import org.springframework.stereotype.Component
 
 @Component
-internal class MafiaGameAdapter : MafiaGameRepository, RoomRepository {
+internal class MafiaGameAdapter(
+    private val metricManager: MetricManager,
+) : MafiaGameRepository, RoomRepository {
     private val data = ConcurrentHashMap<RoomId, MafiaGameInfo>()
     private val userData = ConcurrentHashMap<UserId, RoomId>()
 
     override fun saveGameInfo(gameInfo: MafiaGameInfo) {
         val room = gameInfo.room
         if (room.isEmpty()) {
-            data.remove(room.id)
+            removeGameInfo(gameInfo)
         } else {
+            if (data.containsKey(room.id).not()) {
+                metricManager.increaseGameCount()
+            }
             data[room.id] = gameInfo
             room.players.forEach {
                 userData[it.userId] = room.id
@@ -25,6 +31,7 @@ internal class MafiaGameAdapter : MafiaGameRepository, RoomRepository {
     }
 
     override fun removeGameInfo(gameInfo: MafiaGameInfo) {
+        metricManager.decreaseGameCount()
         gameInfo.room.players
             .map { it.userId }
             .forEach { removePlayer(it) }

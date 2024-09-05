@@ -1,0 +1,3 @@
+discord:
+    random-matching-url: ${RANDOM_MATCHING_URL}
+    start-game-url: ${START_GAME_URL}

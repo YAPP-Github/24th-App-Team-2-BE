@@ -103,6 +103,17 @@ internal class MafiaGameService(
         }
     }
 
+    override fun react(session: Session, reaction: String) {
+        val gameInfo = session.getGameInfo()
+
+        val phase = gameInfo.phase
+        assertIs<MafiaPhase.Playing>(phase)
+
+        val mafiaReaction = MafiaReactionType.of(reaction)
+
+        mafiaGameMessenger.broadcastReaction(gameInfo, mafiaReaction)
+    }
+
     private fun vote(
         players: Map<UserId, Vector<UserId>>,
         voter: User,

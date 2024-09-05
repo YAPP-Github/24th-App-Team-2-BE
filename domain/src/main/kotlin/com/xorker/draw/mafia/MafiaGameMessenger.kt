@@ -10,4 +10,5 @@ interface MafiaGameMessenger {
     fun broadcastVoteStatus(gameInfo: MafiaGameInfo)
     fun broadcastAnswer(gameInfo: MafiaGameInfo, answer: String)
     fun unicastRandomMatching(userId: UserId)
+    fun broadcastReaction(gameInfo: MafiaGameInfo, reaction: MafiaReactionType)
 }

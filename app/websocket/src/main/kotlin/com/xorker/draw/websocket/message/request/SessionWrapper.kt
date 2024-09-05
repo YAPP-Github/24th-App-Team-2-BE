@@ -8,7 +8,7 @@ import com.xorker.draw.websocket.WaitingQueueSession
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 
-class SessionWrapper(
+internal class SessionWrapper(
     private val session: WebSocketSession,
     override val roomId: RoomId,
     override val user: User,
@@ -22,7 +22,7 @@ class SessionWrapper(
     }
 }
 
-class WaitingQueueSessionWrapper(
+internal class WaitingQueueSessionWrapper(
     val session: WebSocketSession,
     override val user: User,
     override val locale: String,
@@ -36,7 +36,7 @@ class WaitingQueueSessionWrapper(
     }
 }
 
-fun WaitingQueueSessionWrapper.toSessionWrapper(roomId: RoomId): Session {
+internal fun WaitingQueueSessionWrapper.toSessionWrapper(roomId: RoomId): Session {
     return SessionWrapper(
         session = this.session,
         roomId = roomId,

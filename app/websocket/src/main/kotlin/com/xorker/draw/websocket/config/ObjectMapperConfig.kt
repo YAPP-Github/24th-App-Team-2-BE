@@ -9,7 +9,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class ObjectMapperConfig {
+internal class ObjectMapperConfig {
+
     @Bean
     fun customObjectMapper(): ObjectMapper {
         val simpleModule = SimpleModule().apply {

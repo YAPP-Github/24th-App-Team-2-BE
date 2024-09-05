@@ -4,7 +4,7 @@ import com.xorker.draw.exception.ExceptionResponse
 import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.message.request.RequestAction
 
-class ExceptionMessage(
+internal class ExceptionMessage(
     val action: RequestAction,
     val body: ExceptionResponse,
 ) {

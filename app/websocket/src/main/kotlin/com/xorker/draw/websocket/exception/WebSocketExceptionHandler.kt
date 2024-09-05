@@ -12,11 +12,11 @@ import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 
 @Component
-class WebSocketExceptionHandler(
+internal class WebSocketExceptionHandler(
     private val exceptionHandler: XorkerExceptionHandler,
     private val responseParser: WebSocketResponseParser,
 ) {
-    private val log = logger()
+    private val logger = logger()
 
     fun handleXorkerException(session: WebSocketSession, requestAction: RequestAction, ex: XorkerException) {
         logXorkerException(ex)
@@ -34,10 +34,10 @@ class WebSocketExceptionHandler(
     private fun logXorkerException(ex: XorkerException) {
         when (ex) {
             is ServerException, is CriticalException -> {
-                log.error(ex.message, ex)
+                logger.error(ex.message, ex)
             }
 
-            else -> log.warn(ex.message, ex)
+            else -> logger.warn(ex.message, ex)
         }
     }
 }

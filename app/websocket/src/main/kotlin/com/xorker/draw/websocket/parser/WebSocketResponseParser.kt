@@ -6,7 +6,7 @@ import com.xorker.draw.websocket.exception.ExceptionMessage
 import org.springframework.stereotype.Component
 
 @Component
-class WebSocketResponseParser(
+internal class WebSocketResponseParser(
     private val objectMapper: ObjectMapper,
 ) {
 

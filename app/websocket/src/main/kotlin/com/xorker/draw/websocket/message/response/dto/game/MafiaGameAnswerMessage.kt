@@ -3,7 +3,7 @@ package com.xorker.draw.websocket.message.response.dto.game
 import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
 
-class MafiaGameAnswerMessage(
+data class MafiaGameAnswerMessage(
     override val body: MafiaGameAnswerBody,
 ) : SessionMessage {
     override val action = ResponseAction.ANSWER

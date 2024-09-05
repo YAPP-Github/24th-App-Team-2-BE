@@ -4,7 +4,7 @@ import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
 
-class MafiaGameVoteStatusMessage(
+data class MafiaGameVoteStatusMessage(
     override val body: MafiaGameVoteStatusBody,
 ) : SessionMessage {
     override val action = ResponseAction.VOTE_STATUS

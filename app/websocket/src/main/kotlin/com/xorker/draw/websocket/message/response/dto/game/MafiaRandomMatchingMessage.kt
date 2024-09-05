@@ -3,7 +3,7 @@ package com.xorker.draw.websocket.message.response.dto.game
 import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
 
-class MafiaRandomMatchingMessage(
+data class MafiaRandomMatchingMessage(
     override val body: MafiaRandomMatchingBody,
 ) : SessionMessage {
     override val action = ResponseAction.RANDOM_MATCHING

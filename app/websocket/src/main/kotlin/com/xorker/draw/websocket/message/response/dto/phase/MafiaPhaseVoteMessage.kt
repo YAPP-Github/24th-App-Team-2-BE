@@ -5,7 +5,7 @@ import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
 import java.time.LocalDateTime
 
-class MafiaPhaseVoteMessage(
+data class MafiaPhaseVoteMessage(
     override val body: MafiaPhaseVoteBody,
 ) : SessionMessage {
     override val action = ResponseAction.PHASE_VOTE

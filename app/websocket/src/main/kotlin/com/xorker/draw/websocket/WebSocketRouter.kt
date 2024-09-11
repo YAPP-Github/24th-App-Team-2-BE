@@ -9,6 +9,7 @@ import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.message.request.RequestAction
 import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
 import com.xorker.draw.websocket.message.request.dto.game.MafiaGameInferAnswerRequest
+import com.xorker.draw.websocket.message.request.dto.game.MafiaGameReactionRequest
 import com.xorker.draw.websocket.message.request.dto.game.MafiaGameVoteMafiaRequest
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
@@ -63,6 +64,12 @@ internal class WebSocketRouter(
                 val requestDto = request.extractBody<MafiaGameInferAnswerRequest>()
 
                 mafiaGameUseCase.decideAnswer(sessionDto, requestDto.answer)
+            }
+
+            RequestAction.REACTION -> {
+                val requestDto = request.extractBody<MafiaGameReactionRequest>()
+
+                mafiaGameUseCase.react(sessionDto, requestDto.reaction)
             }
         }
     }

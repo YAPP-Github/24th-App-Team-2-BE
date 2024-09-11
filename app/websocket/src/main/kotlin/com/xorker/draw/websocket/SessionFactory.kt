@@ -18,7 +18,7 @@ internal class SessionFactory(
     private val roomRepository: RoomRepository,
 ) {
 
-    internal fun create(session: WebSocketSession, request: MafiaGameRandomMatchingRequest): WaitingQueueSession {
+    fun create(session: WebSocketSession, request: MafiaGameRandomMatchingRequest): WaitingQueueSession {
         return WaitingQueueSessionWrapper(
             session,
             User(getUserId(request.accessToken), request.nickname),
@@ -26,7 +26,7 @@ internal class SessionFactory(
         )
     }
 
-    internal fun create(session: WebSocketSession, request: SessionInitializeRequest): Session {
+    fun create(session: WebSocketSession, request: SessionInitializeRequest): Session {
         val roomId = RoomId(request.roomId?.uppercase() ?: generateRoomId())
 
         MDC.put("roomId", roomId.value)
@@ -38,7 +38,7 @@ internal class SessionFactory(
         )
     }
 
-    internal fun generateRoomId(): String {
+    fun generateRoomId(): String {
         var value: String
 
         do {

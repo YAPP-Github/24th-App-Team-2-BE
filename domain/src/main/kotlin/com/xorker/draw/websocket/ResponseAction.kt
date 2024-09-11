@@ -10,6 +10,7 @@ enum class ResponseAction(
     TURN_INFO("새로운 턴 시작"),
     VOTE_STATUS("마피아 투표 현황"),
     ANSWER("마피아 입력 키워드"),
+    REACTION("리액션"),
 
     PHASE_WAIT("Wait Phase 시작/초기화"),
     PHASE_READY("Ready Phase 시작/초기화"),

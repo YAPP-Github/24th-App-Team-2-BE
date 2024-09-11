@@ -1,4 +1,44 @@
-## Class Naming Convention
+#  Trouble Painter 🪄
+
+![1](https://github.com/user-attachments/assets/e39f0b35-511d-4499-92a2-043c2239f872)
+
+![2](https://github.com/user-attachments/assets/f4ef15cf-a16b-4b44-ad99-2e18ec28851b)
+
+![3](https://github.com/user-attachments/assets/65b07113-7c5f-4532-aae6-a62e89ee6ab6)
+
+![4](https://github.com/user-attachments/assets/1d3311e2-f687-485c-a123-64ea25b4fecc)
+
+<br>
+
+## Architecture ✨
+
+<div align=center>
+  
+<img width="700" src="https://github.com/user-attachments/assets/6a16defc-611a-4671-8c98-1998a461344a">
+
+</div>
+
+<br>
+
+## Teck Stack ✨
+
+| IDE | IntelliJ |
+|:---|:---|
+| Language | Kotlin |
+| Framework | Spring Boot 3.2.5, Gradle |
+| Authentication | Spring Security, JSON Web Tokens, Opaque Token |
+| Orm | Spring Data JPA |
+| Database | MySQL |
+| External | Nginx, Docker, Redis, Kubernetes, ELK |
+| Monitoring | Prometheus, Grafana, Sentry |
+| CI/CD | ArgoCD, Github Action |
+| API Docs | Notion, Swagger |
+| Other Tool | Jira, Discord, Postman, Figma |
+
+<br>
+
+## Class Naming Convention ✨
+
 <table>
     <tr>
         <th>모듈</th>
@@ -16,8 +56,11 @@
     </tr>
 </table>
 
-## 모듈 구조
-### 1. domain: 도메인 모듈
+<br>
+
+## Module Structure ✨
+
+### domain: 도메인 모듈
 
 ```text
 - 비지니스 로직에서 해결하고자 하는 도메인 객체들
@@ -29,7 +72,7 @@
 |-------------|-----|---------|------|---------|--------|
 | 사용가능한 모듈 여부 | -   | -       | -    | -       | -      |
 
-### 2. support: 서포트 모듈
+### support: 서포트 모듈
 
 ```text
 - 프로젝트와는 독립적으로 동작 할 수 있는 객체들을 모아두는 모듈
@@ -40,7 +83,7 @@
 |-------------|-----|---------|------|---------|--------|
 | 사용가능한 모듈 여부 | -   | -       | -    | -       | -      |
 
-### 3. core: 코어 모듈
+### core: 코어 모듈
 
 ```text
 - 비지니스 로직을 관리하는 모듈
@@ -52,7 +95,7 @@
 | 사용가능한 모듈 여부 | - | Runtime | -    | O       | O      |
 
 
-### 4. adapter : 외부 통신 모듈
+### adapter : 외부 통신 모듈
 
 ```text
 - DB나 타 서비스 등 다른 서비스와 통신 하는 모듈
@@ -63,7 +106,7 @@
 |-------------|---|---|------|---------|--------|
 | 사용가능한 모듈 여부 | - | - | - | O       | O      |
 
-### 5. app : 요청 Receive 모듈
+### app : 요청 Receive 모듈
 
 ```text
 - 서비스에 들어오는 요청을 처리하는 구현체

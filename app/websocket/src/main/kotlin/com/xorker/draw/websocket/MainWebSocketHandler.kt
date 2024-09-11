@@ -26,7 +26,7 @@ internal class MainWebSocketHandler(
     private val webSocketLogger: WebSocketLogger,
 ) : TextWebSocketHandler() {
 
-    private val log = logger()
+    private val logger = logger()
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
         metricManager.increaseWebsocket(session.id)
@@ -59,7 +59,7 @@ internal class MainWebSocketHandler(
         }
 
         val sessionDto = sessionUseCase.getSession(SessionId(session.id))
-            ?: return log.error(InvalidWebSocketStatusException.message, InvalidWebSocketStatusException)
+            ?: return logger.error(InvalidWebSocketStatusException.message, InvalidWebSocketStatusException)
 
         when (status) {
             CloseStatus.NORMAL ->

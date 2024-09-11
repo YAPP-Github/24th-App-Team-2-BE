@@ -34,7 +34,7 @@ jobs:
                 run: ./gradlew test
 
             -   name: Upload CI results
-                uses: actions/upload-artifact@v2
+                uses: actions/upload-artifact@v3
                 with:
                     name: ci-results
                     path: build/ci-results

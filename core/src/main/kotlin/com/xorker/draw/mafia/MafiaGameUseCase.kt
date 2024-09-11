@@ -13,4 +13,5 @@ interface MafiaGameUseCase {
     fun voteMafia(session: Session, targetUserId: UserId)
     fun inferAnswer(session: Session, answer: String)
     fun decideAnswer(session: Session, answer: String)
+    fun react(session: Session, reaction: String)
 }

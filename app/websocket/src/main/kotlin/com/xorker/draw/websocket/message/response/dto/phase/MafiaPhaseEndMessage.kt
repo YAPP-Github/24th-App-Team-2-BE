@@ -4,7 +4,7 @@ import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
 import java.time.LocalDateTime
 
-class MafiaPhaseEndMessage(
+data class MafiaPhaseEndMessage(
     override val body: MafiaPhaseEndBody,
 ) : SessionMessage {
     override val action = ResponseAction.PHASE_END

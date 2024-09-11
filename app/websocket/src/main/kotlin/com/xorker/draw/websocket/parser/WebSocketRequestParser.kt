@@ -5,7 +5,7 @@ import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
 import org.springframework.stereotype.Component
 
 @Component
-class WebSocketRequestParser {
+internal class WebSocketRequestParser {
 
     fun parse(request: String): WebSocketRequest {
         val index = request.indexOf("\n")

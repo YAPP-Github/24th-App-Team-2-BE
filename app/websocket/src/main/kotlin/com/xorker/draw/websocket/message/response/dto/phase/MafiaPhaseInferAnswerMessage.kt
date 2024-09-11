@@ -4,7 +4,7 @@ import com.xorker.draw.websocket.ResponseAction
 import com.xorker.draw.websocket.SessionMessage
 import java.time.LocalDateTime
 
-class MafiaPhaseInferAnswerMessage(
+data class MafiaPhaseInferAnswerMessage(
     override val body: MafiaPhaseInferAnswerBody,
 ) : SessionMessage {
     override val action = ResponseAction.PHASE_INFER_ANSWER

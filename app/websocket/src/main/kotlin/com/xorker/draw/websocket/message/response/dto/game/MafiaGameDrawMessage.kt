@@ -12,6 +12,6 @@ data class MafiaGameDrawMessage(
     constructor(draw: Map<String, Any>) : this(MafiaGameDrawBody(draw))
 }
 
-class MafiaGameDrawBody(
+data class MafiaGameDrawBody(
     val draw: Map<String, Any>,
 )

@@ -14,7 +14,7 @@ import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
 @Component
-class SimpleSessionMessageBroker(
+internal class SimpleSessionMessageBroker(
     private val sessionUseCase: SessionUseCase,
     private val waitingQueueSessionUseCase: WaitingQueueSessionUseCase,
     private val roomRepository: RoomRepository,

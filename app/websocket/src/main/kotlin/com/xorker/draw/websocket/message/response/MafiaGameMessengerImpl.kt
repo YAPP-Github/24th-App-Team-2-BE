@@ -4,6 +4,7 @@ import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameMessenger
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.MafiaPhaseWithTurnList
+import com.xorker.draw.mafia.MafiaReactionType
 import com.xorker.draw.mafia.assertIs
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
@@ -13,6 +14,8 @@ import com.xorker.draw.websocket.message.response.dto.game.MafiaGameAnswerMessag
 import com.xorker.draw.websocket.message.response.dto.game.MafiaGameDrawMessage
 import com.xorker.draw.websocket.message.response.dto.game.MafiaGamePlayerListBody
 import com.xorker.draw.websocket.message.response.dto.game.MafiaGamePlayerListMessage
+import com.xorker.draw.websocket.message.response.dto.game.MafiaGameReactionBody
+import com.xorker.draw.websocket.message.response.dto.game.MafiaGameReactionMessage
 import com.xorker.draw.websocket.message.response.dto.game.MafiaGameTurnInfoBody
 import com.xorker.draw.websocket.message.response.dto.game.MafiaGameTurnInfoMessage
 import com.xorker.draw.websocket.message.response.dto.game.MafiaGameVoteStatusBody
@@ -23,12 +26,13 @@ import com.xorker.draw.websocket.message.response.dto.game.toResponse
 import org.springframework.stereotype.Component
 
 @Component
-class MafiaGameMessengerImpl(
+internal class MafiaGameMessengerImpl(
     private val broadcaster: WebSocketBroadcaster,
 ) : MafiaGameMessenger {
 
     override fun broadcastPlayerList(gameInfo: MafiaGameInfo) {
         val roomId = gameInfo.room.id
+
         val phase = gameInfo.phase
 
         val list =
@@ -102,5 +106,20 @@ class MafiaGameMessengerImpl(
         )
 
         broadcaster.unicast(userId, message)
+    }
+
+    override fun broadcastReaction(gameInfo: MafiaGameInfo, reaction: MafiaReactionType) {
+        val roomId = gameInfo.room.id
+
+        val phase = gameInfo.phase
+        assertIs<MafiaPhase.Playing>(phase)
+
+        val message = MafiaGameReactionMessage(
+            MafiaGameReactionBody(
+                reaction.name,
+            ),
+        )
+
+        broadcaster.broadcast(roomId, message)
     }
 }

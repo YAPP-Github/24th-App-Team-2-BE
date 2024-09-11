@@ -11,7 +11,7 @@ data class MafiaPhasePlayingMessage(
     override val status: SessionMessage.Status = SessionMessage.Status.OK
 }
 
-class MafiaPhasePlayingBody(
+data class MafiaPhasePlayingBody(
     val round: Int,
     val turn: Int,
     val startTurnTime: LocalDateTime,

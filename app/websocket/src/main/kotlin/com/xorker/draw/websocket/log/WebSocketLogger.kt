@@ -15,7 +15,7 @@ import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.WebSocketSession
 
 @Component
-class WebSocketLogger(
+internal class WebSocketLogger(
     private val sessionUseCase: SessionUseCase,
     private val objectMapper: ObjectMapper,
 ) {

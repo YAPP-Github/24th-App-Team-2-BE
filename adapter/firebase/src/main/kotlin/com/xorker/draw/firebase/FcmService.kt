@@ -18,7 +18,7 @@ class FcmService(
     }
 
     fun quickStart(localeStr: String, nickname: String) {
-        val locale = Locale.of(localeStr)
+        val locale = Locale(localeStr)
 
         val notification = Notification.builder()
             .setTitle(messageSource.getMessage("fcm.quickstart.title", null, locale))

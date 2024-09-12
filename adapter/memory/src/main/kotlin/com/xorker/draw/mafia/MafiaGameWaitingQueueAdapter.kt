@@ -1,6 +1,7 @@
 package com.xorker.draw.mafia
 
 import com.xorker.draw.exception.UnSupportedException
+import com.xorker.draw.firebase.FcmService
 import com.xorker.draw.mafia.event.MafiaGameRandomMatchingEvent
 import com.xorker.draw.websocket.WaitingQueueSession
 import java.util.concurrent.ConcurrentHashMap
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component
 @Component
 internal class MafiaGameWaitingQueueAdapter(
     private val eventPublisher: ApplicationEventPublisher,
+    private val fcmService: FcmService,
 ) : MafiaGameWaitingQueueRepository {
     private val waitingQueue: ConcurrentHashMap<String, ConcurrentLinkedQueue<WaitingQueueSession>> = ConcurrentHashMap()
 
@@ -32,6 +34,8 @@ internal class MafiaGameWaitingQueueAdapter(
                 val event = MafiaGameRandomMatchingEvent(players)
 
                 eventPublisher.publishEvent(event)
+            } else {
+                fcmService.quickStart(session)
             }
         }
     }

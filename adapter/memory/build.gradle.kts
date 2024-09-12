@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":adapter:firebase"))
     implementation(project(":domain"))
     implementation(project(":support:metric"))
 

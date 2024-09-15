@@ -19,7 +19,7 @@ internal class MafiaGameRandomMatchingService(
             throw InvalidRequestOtherPlayingException
         }
 
-        mafiaGameWaitingQueueRepository.enqueue(4, session)
+        mafiaGameWaitingQueueRepository.enqueue(3, session)
 
         mafiaGameMessenger.unicastRandomMatching(user.id)
     }

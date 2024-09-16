@@ -1,10 +1,11 @@
 package com.xorker.draw.websocket.session
 
+import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.Session
 import com.xorker.draw.websocket.SessionEventListener
 import com.xorker.draw.websocket.SessionId
-import com.xorker.draw.websocket.SessionInitializeRequest
+import com.xorker.draw.websocket.message.request.dto.game.SessionInitializeRequest
 import java.util.concurrent.ConcurrentHashMap
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
@@ -24,7 +25,7 @@ internal class SessionManager : SessionEventListener {
         return userIdMap[userId]
     }
 
-    override fun connectSession(session: Session, request: SessionInitializeRequest) {
+    override fun connectSession(session: Session, roomId: RoomId?, nickname: String, locale: String) {
         registerSession(session)
     }
 

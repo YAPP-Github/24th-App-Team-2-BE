@@ -5,9 +5,9 @@ import com.xorker.draw.support.logging.defaultApiJsonMap
 import com.xorker.draw.support.logging.logger
 import com.xorker.draw.support.logging.registerRequestId
 import com.xorker.draw.websocket.SessionId
-import com.xorker.draw.websocket.SessionInitializeRequest
 import com.xorker.draw.websocket.message.request.RequestAction
 import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
+import com.xorker.draw.websocket.message.request.dto.game.SessionInitializeRequest
 import com.xorker.draw.websocket.session.SessionManager
 import org.slf4j.MDC
 import org.springframework.stereotype.Component

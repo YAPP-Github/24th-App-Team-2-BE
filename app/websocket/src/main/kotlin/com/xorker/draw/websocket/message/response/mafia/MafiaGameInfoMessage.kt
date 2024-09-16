@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket.message.response.dto.phase
+package com.xorker.draw.websocket.message.response.mafia
 
 import com.xorker.draw.mafia.MafiaGameOption
 import com.xorker.draw.mafia.MafiaPlayer

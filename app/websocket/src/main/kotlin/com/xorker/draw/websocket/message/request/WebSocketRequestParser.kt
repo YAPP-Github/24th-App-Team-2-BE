@@ -1,7 +1,5 @@
-package com.xorker.draw.websocket.parser
+package com.xorker.draw.websocket.message.request
 
-import com.xorker.draw.websocket.message.request.RequestAction
-import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
 import org.springframework.stereotype.Component
 
 @Component

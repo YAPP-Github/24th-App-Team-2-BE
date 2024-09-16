@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket.message.response.dto.game
+package com.xorker.draw.websocket.message.response.mafia
 
 import com.xorker.draw.mafia.MafiaPlayer
 import com.xorker.draw.user.UserId

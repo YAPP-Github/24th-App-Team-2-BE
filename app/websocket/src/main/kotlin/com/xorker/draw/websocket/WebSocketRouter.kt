@@ -7,10 +7,10 @@ import com.xorker.draw.mafia.MafiaGameUseCase
 import com.xorker.draw.mafia.phase.MafiaPhaseUseCase
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.message.request.RequestAction
-import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
-import com.xorker.draw.websocket.message.request.dto.game.MafiaGameInferAnswerRequest
-import com.xorker.draw.websocket.message.request.dto.game.MafiaGameReactionRequest
-import com.xorker.draw.websocket.message.request.dto.game.MafiaGameVoteMafiaRequest
+import com.xorker.draw.websocket.message.request.WebSocketRequest
+import com.xorker.draw.websocket.message.request.mafia.MafiaGameInferAnswerRequest
+import com.xorker.draw.websocket.message.request.mafia.MafiaGameReactionRequest
+import com.xorker.draw.websocket.message.request.mafia.MafiaGameVoteMafiaRequest
 import com.xorker.draw.websocket.session.SessionManager
 import org.slf4j.MDC
 import org.springframework.stereotype.Component

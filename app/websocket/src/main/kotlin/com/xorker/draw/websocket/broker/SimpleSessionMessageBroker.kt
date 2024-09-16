@@ -2,12 +2,11 @@ package com.xorker.draw.websocket.broker
 
 import com.xorker.draw.exception.InvalidBroadcastException
 import com.xorker.draw.room.RoomRepository
-import com.xorker.draw.websocket.BranchedBroadcastEvent
-import com.xorker.draw.websocket.BroadcastEvent
-import com.xorker.draw.websocket.RespectiveBroadcastEvent
-import com.xorker.draw.websocket.SessionMessageBroker
-import com.xorker.draw.websocket.UnicastEvent
 import com.xorker.draw.websocket.WaitingQueueSessionUseCase
+import com.xorker.draw.websocket.broker.event.BranchedBroadcastEvent
+import com.xorker.draw.websocket.broker.event.BroadcastEvent
+import com.xorker.draw.websocket.broker.event.RespectiveBroadcastEvent
+import com.xorker.draw.websocket.broker.event.UnicastEvent
 import com.xorker.draw.websocket.parser.WebSocketResponseParser
 import com.xorker.draw.websocket.session.SessionManager
 import org.springframework.context.event.EventListener

@@ -5,7 +5,6 @@ import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.Session
 import com.xorker.draw.websocket.SessionEventListener
 import com.xorker.draw.websocket.SessionId
-import com.xorker.draw.websocket.message.request.dto.game.SessionInitializeRequest
 import java.util.concurrent.ConcurrentHashMap
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order

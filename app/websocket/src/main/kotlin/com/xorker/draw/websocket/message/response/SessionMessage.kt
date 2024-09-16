@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket
+package com.xorker.draw.websocket.message.response
 
 interface SessionMessage {
     val action: ResponseAction

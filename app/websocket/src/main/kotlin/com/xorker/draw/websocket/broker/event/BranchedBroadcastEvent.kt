@@ -2,7 +2,7 @@ package com.xorker.draw.websocket.broker.event
 
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
-import com.xorker.draw.websocket.SessionMessage
+import com.xorker.draw.websocket.message.response.SessionMessage
 
 data class BranchedBroadcastEvent(
     val roomId: RoomId,

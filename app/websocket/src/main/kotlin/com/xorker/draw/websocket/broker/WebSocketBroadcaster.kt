@@ -2,11 +2,11 @@ package com.xorker.draw.websocket.broker
 
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
-import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.broker.event.BranchedBroadcastEvent
 import com.xorker.draw.websocket.broker.event.BroadcastEvent
 import com.xorker.draw.websocket.broker.event.RespectiveBroadcastEvent
 import com.xorker.draw.websocket.broker.event.UnicastEvent
+import com.xorker.draw.websocket.message.response.SessionMessage
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 

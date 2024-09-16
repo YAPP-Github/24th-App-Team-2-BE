@@ -1,7 +1,7 @@
 package com.xorker.draw.websocket.message.response.dto.game
 
-import com.xorker.draw.websocket.ResponseAction
-import com.xorker.draw.websocket.SessionMessage
+import com.xorker.draw.websocket.message.response.ResponseAction
+import com.xorker.draw.websocket.message.response.SessionMessage
 
 data class MafiaGameDrawMessage(
     override val body: MafiaGameDrawBody,

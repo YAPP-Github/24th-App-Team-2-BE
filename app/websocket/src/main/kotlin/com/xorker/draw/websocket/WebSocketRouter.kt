@@ -11,6 +11,7 @@ import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
 import com.xorker.draw.websocket.message.request.dto.game.MafiaGameInferAnswerRequest
 import com.xorker.draw.websocket.message.request.dto.game.MafiaGameReactionRequest
 import com.xorker.draw.websocket.message.request.dto.game.MafiaGameVoteMafiaRequest
+import com.xorker.draw.websocket.session.SessionManager
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
@@ -19,7 +20,7 @@ import org.springframework.web.socket.WebSocketSession
 internal class WebSocketRouter(
     private val objectMapper: ObjectMapper,
     private val webSocketController: WebSocketController,
-    private val sessionUseCase: SessionUseCase,
+    private val sessionManager: SessionManager,
     private val mafiaPhaseUseCase: MafiaPhaseUseCase,
     private val mafiaGameUseCase: MafiaGameUseCase,
 ) {
@@ -35,7 +36,7 @@ internal class WebSocketRouter(
             return
         }
 
-        val sessionDto = sessionUseCase.getSession(SessionId(session.id)) ?: throw InvalidRequestValueException
+        val sessionDto = sessionManager.getSession(SessionId(session.id)) ?: throw InvalidRequestValueException
         MDC.put("roomId", sessionDto.roomId.value)
 
         when (request.action) {

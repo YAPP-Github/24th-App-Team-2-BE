@@ -6,16 +6,16 @@ import com.xorker.draw.websocket.BranchedBroadcastEvent
 import com.xorker.draw.websocket.BroadcastEvent
 import com.xorker.draw.websocket.RespectiveBroadcastEvent
 import com.xorker.draw.websocket.SessionMessageBroker
-import com.xorker.draw.websocket.SessionUseCase
 import com.xorker.draw.websocket.UnicastEvent
 import com.xorker.draw.websocket.WaitingQueueSessionUseCase
 import com.xorker.draw.websocket.parser.WebSocketResponseParser
+import com.xorker.draw.websocket.session.SessionManager
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
 @Component
 internal class SimpleSessionMessageBroker(
-    private val sessionUseCase: SessionUseCase,
+    private val sessionManager: SessionManager,
     private val waitingQueueSessionUseCase: WaitingQueueSessionUseCase,
     private val roomRepository: RoomRepository,
     private val parser: WebSocketResponseParser,
@@ -25,7 +25,7 @@ internal class SimpleSessionMessageBroker(
     override fun unicast(event: UnicastEvent) {
         val userId = event.userId
 
-        val session = sessionUseCase.getSession(userId)
+        val session = sessionManager.getSession(userId)
 
         if (session == null) {
             val waitingQueueSession = waitingQueueSessionUseCase.getSession(userId)
@@ -54,7 +54,7 @@ internal class SimpleSessionMessageBroker(
             room.players.forEach { player ->
                 val userId = player.userId
 
-                sessionUseCase.getSession(userId)?.send(response)
+                sessionManager.getSession(userId)?.send(response)
             }
         }
     }
@@ -75,7 +75,7 @@ internal class SimpleSessionMessageBroker(
             room.players.forEach { player ->
                 val userId = player.userId
 
-                sessionUseCase.getSession(userId)?.let {
+                sessionManager.getSession(userId)?.let {
                     if (userId in branched) {
                         it.send(branchedResponse)
                     } else {
@@ -96,7 +96,7 @@ internal class SimpleSessionMessageBroker(
             room.players.forEach { player ->
                 val userId = player.userId
 
-                sessionUseCase.getSession(userId)?.let {
+                sessionManager.getSession(userId)?.let {
                     val response = parser.parse(messages[userId] ?: throw InvalidBroadcastException)
 
                     it.send(response)

@@ -11,6 +11,7 @@ import com.xorker.draw.mafia.phase.MafiaPhaseUseCase
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.websocket.message.request.WaitingQueueSessionWrapper
 import com.xorker.draw.websocket.message.request.toSessionWrapper
+import com.xorker.draw.websocket.session.SessionFactory
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession

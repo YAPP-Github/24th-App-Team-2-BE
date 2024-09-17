@@ -1,4 +1,5 @@
 include(
+    "adapter:firebase",
     "adapter:memory",
     "adapter:oauth",
     "adapter:rdb",

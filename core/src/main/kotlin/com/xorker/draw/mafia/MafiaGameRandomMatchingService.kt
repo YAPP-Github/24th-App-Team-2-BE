@@ -2,6 +2,7 @@ package com.xorker.draw.mafia
 
 import com.xorker.draw.exception.InvalidRequestOtherPlayingException
 import com.xorker.draw.mafia.event.MafiaGameRandomMatchingEvent
+import com.xorker.draw.notification.PushMessageUseCase
 import com.xorker.draw.user.User
 import com.xorker.draw.websocket.WaitingQueueUseCase
 import org.springframework.context.ApplicationEventPublisher
@@ -12,6 +13,7 @@ internal class MafiaGameRandomMatchingService(
     private val mafiaGameUseCase: MafiaGameUseCase,
     private val mafiaGameWaitingQueueRepository: MafiaGameWaitingQueueRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
+    private val pushMessageUseCase: PushMessageUseCase,
     private val eventPublisher: ApplicationEventPublisher,
 ) : WaitingQueueUseCase {
 
@@ -36,6 +38,8 @@ internal class MafiaGameRandomMatchingService(
                 val event = MafiaGameRandomMatchingEvent(players, locale)
 
                 eventPublisher.publishEvent(event)
+            } else {
+                pushMessageUseCase.quickStart(locale, user.name)
             }
         }
     }

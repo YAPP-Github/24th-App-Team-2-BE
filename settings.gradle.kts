@@ -8,6 +8,7 @@ include(
     "app:websocket",
     "domain",
     "core",
+    "event",
     "support:jwt",
     "support:metric",
     "support:logging",

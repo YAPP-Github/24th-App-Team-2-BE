@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     api(project(":domain"))
+    api(project(":event"))
     implementation(project(":adapter:memory"))
     implementation(project(":adapter:oauth"))
     implementation(project(":adapter:rdb"))

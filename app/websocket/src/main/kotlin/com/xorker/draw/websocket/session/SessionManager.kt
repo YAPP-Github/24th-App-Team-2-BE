@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Service
 internal class SessionManager(
-    private val metricManager: MetricManager,
+    metricManager: MetricManager,
 ) {
     private val sessionMap: ConcurrentHashMap<SessionId, Session> = ConcurrentHashMap()
     private val userIdMap: ConcurrentHashMap<UserId, Session> = ConcurrentHashMap()
@@ -38,7 +38,7 @@ internal class SessionManager(
     }
 
     fun unregisterSession(sessionId: SessionId): Session? {
-        val session = sessionMap.remove(sessionId)
-        return userIdMap.remove(session?.user?.id)
+        val session = sessionMap.remove(sessionId) ?: return null
+        return userIdMap.remove(session.user.id)
     }
 }

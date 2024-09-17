@@ -5,7 +5,6 @@ import com.xorker.draw.room.Room
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
-import com.xorker.draw.websocket.SessionEventListener
 import org.springframework.stereotype.Service
 
 @Service
@@ -13,9 +12,9 @@ internal class MafiaGameRoomService(
     private val mafiaGameRepository: MafiaGameRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
-) : SessionEventListener {
+) : UserConnectionUseCase {
 
-    override fun connectSession(userId: UserId, roomId: RoomId, nickname: String, locale: String) {
+    fun connectSession(userId: UserId, roomId: RoomId, nickname: String, locale: String) {
         var gameInfo = mafiaGameRepository.getGameInfo(roomId)
 
         if (gameInfo == null) {
@@ -35,7 +34,7 @@ internal class MafiaGameRoomService(
         mafiaGameMessenger.broadcastPlayerList(gameInfo)
     }
 
-    override fun connectSession(user: User, roomId: RoomId, locale: String) {
+    fun connectSession(user: User, roomId: RoomId, locale: String) {
         var gameInfo = mafiaGameRepository.getGameInfo(roomId)
 
         if (gameInfo == null) {
@@ -51,11 +50,12 @@ internal class MafiaGameRoomService(
         mafiaGameRepository.saveGameInfo(gameInfo)
     }
 
-    override fun disconnectSession(userId: UserId) {
+    override fun disconnectUser(user: User) {
+        val userId = user.id
         val gameInfo = mafiaGameRepository.getGameInfo(userId) ?: return
 
         if (gameInfo.phase == MafiaPhase.Wait) {
-            exitSession(userId)
+            exitUser(user)
             return
         }
 
@@ -71,11 +71,12 @@ internal class MafiaGameRoomService(
         }
     }
 
-    override fun exitSession(userId: UserId) {
+    override fun exitUser(user: User) {
+        val userId = user.id
         val gameInfo = mafiaGameRepository.getGameInfo(userId) ?: return
 
         if (gameInfo.phase != MafiaPhase.Wait) {
-            disconnectSession(userId)
+            disconnectUser(user)
             return
         }
 

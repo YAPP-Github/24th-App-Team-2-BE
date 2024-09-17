@@ -44,13 +44,13 @@ internal class WebSocketController(
         if (joinedRoomId != null && request.roomId != joinedRoomId.value) {
             throw InvalidRequestOtherPlayingException
         }
+        sessionManager.registerSession(sessionDto)
 
         val roomId = RoomId(request.roomId?.uppercase() ?: generateRoomId())
         // TODO 여기가맞나?
         MDC.put("roomId", roomId.value)
 
         if (request.roomId == null) {
-            sessionManager.registerSession(sessionDto)
             sessionEventListener.forEach {
                 it.connectSession(sessionDto.user.id, roomId, request.nickname, request.locale)
             }

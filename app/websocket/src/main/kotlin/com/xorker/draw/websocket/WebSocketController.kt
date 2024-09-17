@@ -22,7 +22,7 @@ import org.springframework.web.socket.WebSocketSession
 @Component
 internal class WebSocketController(
     private val sessionFactory: SessionFactory,
-    private val waitingQueueSessionEventListener: List<WaitingQueueSessionEventListener>,
+    private val waitingQueueUseCase: WaitingQueueUseCase,
     private val sessionEventListener: List<SessionEventListener>,
     private val sessionManager: SessionManager,
     private val roomRepository: RoomRepository,
@@ -34,9 +34,7 @@ internal class WebSocketController(
         val sessionDto = sessionFactory.create(session, request)
 
         sessionManager.registerSession(sessionDto)
-        waitingQueueSessionEventListener.forEach {
-            it.connectSession(sessionDto.user, sessionDto.locale)
-        }
+        waitingQueueUseCase.enqueue(sessionDto.user, sessionDto.locale)
     }
 
     fun initializeSession(session: WebSocketSession, request: SessionInitializeRequest) {
@@ -84,10 +82,6 @@ internal class WebSocketController(
         val roomId = RoomId(generateRoomId())
 
         players.forEach { user ->
-            waitingQueueSessionEventListener.forEach { eventListener ->
-                eventListener.exitSession(user, event.locale)
-            }
-
             sessionEventListener.forEach { eventListener ->
                 eventListener.connectSession(user, roomId, event.locale)
             }

@@ -20,7 +20,7 @@ internal class MainWebSocketHandler(
     private val sessionManager: SessionManager,
     private val router: WebSocketRouter,
     private val requestParser: WebSocketRequestParser,
-    private val waitingQueueSessionEventListener: List<WaitingQueueSessionEventListener>,
+    private val waitingQueueUseCase: WaitingQueueUseCase,
     private val sessionEventListener: List<SessionEventListener>,
     private val webSocketExceptionHandler: WebSocketExceptionHandler,
     private val metricManager: MetricManager,
@@ -55,9 +55,7 @@ internal class MainWebSocketHandler(
         val sessionDto = sessionManager.unregisterSession(sessionId)
             ?: return logger.error(InvalidWebSocketStatusException.message, InvalidWebSocketStatusException)
 
-        waitingQueueSessionEventListener.forEach {
-            it.exitSession(sessionDto.user, sessionDto.locale)
-        }
+        waitingQueueUseCase.remove(sessionDto.user, sessionDto.locale)
 
         when (status) {
             CloseStatus.NORMAL ->

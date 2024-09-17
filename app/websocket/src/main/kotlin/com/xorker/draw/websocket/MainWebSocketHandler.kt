@@ -1,6 +1,5 @@
 package com.xorker.draw.websocket
 
-import com.xorker.draw.exception.InvalidWebSocketStatusException
 import com.xorker.draw.exception.XorkerException
 import com.xorker.draw.mafia.UserConnectionUseCase
 import com.xorker.draw.support.logging.logger
@@ -29,37 +28,36 @@ internal class MainWebSocketHandler(
     private val logger = logger()
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        webSocketLogger.afterConnectionEstablished(session)
+        webSocketLogger.handshake(session)
     }
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val request = requestParser.parse(message.payload)
 
-        webSocketLogger.handleRequest(session, request) { s, req ->
+        webSocketLogger.message(session, request) {
             try {
-                router.route(s, req)
+                router.route(session, request)
             } catch (ex: XorkerException) {
-                webSocketExceptionHandler.handleXorkerException(s, req.action, ex)
+                webSocketExceptionHandler.handleXorkerException(session, request.action, ex)
             }
         }
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-        webSocketLogger.afterConnectionClosed(session, status)
+        webSocketLogger.connectionClosed(session, status) {
+            val sessionId = SessionId(session.id)
+            val sessionDto = sessionManager.unregisterSession(sessionId) ?: return@connectionClosed
 
-        val sessionId = SessionId(session.id)
-        val sessionDto = sessionManager.unregisterSession(sessionId)
-            ?: return logger.error(InvalidWebSocketStatusException.message, InvalidWebSocketStatusException)
+            waitingQueueUseCase.remove(sessionDto.user, sessionDto.locale)
 
-        waitingQueueUseCase.remove(sessionDto.user, sessionDto.locale)
+            when (status) {
+                CloseStatus.NORMAL -> {
+                    userConnectionUseCase.exitUser(sessionDto.user)
+                }
 
-        when (status) {
-            CloseStatus.NORMAL -> {
-                userConnectionUseCase.exitUser(sessionDto.user)
-            }
-
-            else -> {
-                userConnectionUseCase.disconnectUser(sessionDto.user)
+                else -> {
+                    userConnectionUseCase.disconnectUser(sessionDto.user)
+                }
             }
         }
     }

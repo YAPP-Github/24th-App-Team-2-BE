@@ -12,6 +12,7 @@ import com.xorker.draw.websocket.message.request.mafia.MafiaGameRandomMatchingRe
 import com.xorker.draw.websocket.message.request.mafia.SessionInitializeRequest
 import com.xorker.draw.websocket.session.SessionFactory
 import com.xorker.draw.websocket.session.SessionManager
+import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
 
@@ -39,9 +40,7 @@ internal class WebSocketController(
             throw InvalidRequestOtherPlayingException
         }
         sessionManager.registerSession(sessionDto)
-
-        // TODO 여기가맞나?
-        // MDC.put("roomId", roomId.value)
+        MDC.put("roomId", request.roomId)
 
         if (request.roomId == null) {
             userConnectionUseCase.connectUser(sessionDto.user, null, request.locale)

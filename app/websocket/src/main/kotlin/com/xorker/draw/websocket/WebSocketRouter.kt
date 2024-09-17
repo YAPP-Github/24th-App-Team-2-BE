@@ -37,8 +37,6 @@ internal class WebSocketRouter(
         }
 
         val sessionDto = sessionManager.getSession(SessionId(session.id)) ?: throw InvalidRequestValueException
-        // TODO 방법 찾기
-//        MDC.put("roomId", sessionDto.roomId.value)
 
         when (request.action) {
             RequestAction.INIT -> throw UnSupportedException

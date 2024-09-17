@@ -5,6 +5,7 @@ import com.xorker.draw.room.Room
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.room.RoomRepository
 import com.xorker.draw.user.User
+import org.slf4j.MDC
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,7 +17,11 @@ internal class MafiaGameRoomService(
 ) : UserConnectionUseCase {
 
     override fun connectUser(user: User, roomId: RoomId?, locale: String) {
-        val gameInfo = connectGame(user, roomId ?: generateRoomId(), locale)
+        val roomIdNotNull = roomId ?: generateRoomId()
+
+        MDC.put("roomId", roomIdNotNull.value)
+
+        val gameInfo = connectGame(user, roomIdNotNull, locale)
 
         mafiaPhaseMessenger.unicastPhase(user.id, gameInfo)
         mafiaGameMessenger.broadcastPlayerList(gameInfo)

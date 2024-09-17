@@ -14,4 +14,5 @@ object Versions {
     const val LOGBACK = "0.1.5"
     const val MICROMETER = "1.12.9"
     const val SENTRY = "7.0.0"
+    const val FIREBASE = "9.3.0"
 }

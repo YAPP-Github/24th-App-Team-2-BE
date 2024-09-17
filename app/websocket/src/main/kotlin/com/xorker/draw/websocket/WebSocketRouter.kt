@@ -11,8 +11,8 @@ import com.xorker.draw.websocket.message.request.WebSocketRequest
 import com.xorker.draw.websocket.message.request.mafia.MafiaGameInferAnswerRequest
 import com.xorker.draw.websocket.message.request.mafia.MafiaGameReactionRequest
 import com.xorker.draw.websocket.message.request.mafia.MafiaGameVoteMafiaRequest
+import com.xorker.draw.websocket.session.SessionId
 import com.xorker.draw.websocket.session.SessionManager
-import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
 
@@ -37,14 +37,13 @@ internal class WebSocketRouter(
         }
 
         val sessionDto = sessionManager.getSession(SessionId(session.id)) ?: throw InvalidRequestValueException
-        MDC.put("roomId", sessionDto.roomId.value)
+        // TODO 방법 찾기
+//        MDC.put("roomId", sessionDto.roomId.value)
 
         when (request.action) {
             RequestAction.INIT -> throw UnSupportedException
             RequestAction.RANDOM_MATCHING -> throw UnSupportedException
-            RequestAction.START_GAME -> {
-                mafiaPhaseUseCase.startGame(sessionDto.roomId)
-            }
+            RequestAction.START_GAME -> mafiaPhaseUseCase.startGame(sessionDto.user)
 
             RequestAction.DRAW -> mafiaGameUseCase.draw(sessionDto.user, request.extractBody())
             RequestAction.END_TURN -> mafiaGameUseCase.nextTurnByUser(sessionDto.user)

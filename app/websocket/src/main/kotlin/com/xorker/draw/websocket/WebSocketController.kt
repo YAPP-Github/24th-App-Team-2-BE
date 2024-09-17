@@ -9,11 +9,13 @@ import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.event.MafiaGameRandomMatchingEvent
 import com.xorker.draw.mafia.phase.MafiaPhaseUseCase
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.room.RoomRepository
 import com.xorker.draw.websocket.message.request.mafia.MafiaGameRandomMatchingRequest
 import com.xorker.draw.websocket.message.request.mafia.SessionInitializeRequest
 import com.xorker.draw.websocket.session.SessionFactory
 import com.xorker.draw.websocket.session.SessionManager
 import com.xorker.draw.websocket.session.SessionWrapper
+import org.slf4j.MDC
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
@@ -24,6 +26,7 @@ internal class WebSocketController(
     private val waitingQueueSessionEventListener: List<WaitingQueueSessionEventListener>,
     private val sessionEventListener: List<SessionEventListener>,
     private val sessionManager: SessionManager,
+    private val roomRepository: RoomRepository,
     private val mafiaGameUseCase: MafiaGameUseCase,
     private val mafiaPhaseUseCase: MafiaPhaseUseCase,
 ) {
@@ -44,15 +47,19 @@ internal class WebSocketController(
             throw InvalidRequestOtherPlayingException
         }
 
+        val roomId = RoomId(request.roomId?.uppercase() ?: generateRoomId())
+        // TODO 여기가맞나?
+        MDC.put("roomId", roomId.value)
+
         if (request.roomId == null) {
             sessionManager.registerSession(sessionDto)
             sessionEventListener.forEach {
-                it.connectSession(sessionDto.user.id, sessionDto.roomId, request.nickname, request.locale)
+                it.connectSession(sessionDto.user.id, roomId, request.nickname, request.locale)
             }
             return
         }
 
-        val gameInfo = mafiaGameUseCase.getGameInfoByRoomId(sessionDto.roomId) ?: throw NotFoundRoomException
+        val gameInfo = mafiaGameUseCase.getGameInfoByRoomId(roomId) ?: throw NotFoundRoomException
 
         synchronized(gameInfo) {
             if (gameInfo.phase != MafiaPhase.Wait && gameInfo.room.players.any { it.userId == sessionDto.user.id }.not()) {
@@ -65,7 +72,7 @@ internal class WebSocketController(
 
             sessionManager.registerSession(sessionDto)
             sessionEventListener.forEach {
-                it.connectSession(sessionDto.user.id, sessionDto.roomId, request.nickname, request.locale)
+                it.connectSession(sessionDto.user.id, roomId, request.nickname, request.locale)
             }
         }
     }
@@ -74,18 +81,17 @@ internal class WebSocketController(
     fun initializeSession(event: MafiaGameRandomMatchingEvent) {
         val players = event.players
 
-        val roomId = RoomId(sessionFactory.generateRoomId())
+        val roomId = RoomId(generateRoomId())
 
         players.forEach { user ->
             val sessionDto = SessionWrapper(
                 session = this.session, // TODO: fix
-                roomId = roomId,
                 user = user,
             )
 
             sessionManager.registerSession(sessionDto)
             sessionEventListener.forEach { eventListener ->
-                eventListener.connectSession(sessionDto.user, sessionDto.roomId, event.locale)
+                eventListener.connectSession(sessionDto.user, roomId, event.locale)
             }
 
             waitingQueueSessionEventListener.forEach { eventListener ->
@@ -94,5 +100,18 @@ internal class WebSocketController(
         }
 
         mafiaPhaseUseCase.startGame(roomId)
+    }
+
+    private fun generateRoomId(): String {
+        var value: String
+
+        do {
+            val charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+            value = (1..6)
+                .map { charset.random() }
+                .joinToString("")
+        } while (roomRepository.getRoom(RoomId(value)) != null)
+
+        return value
     }
 }

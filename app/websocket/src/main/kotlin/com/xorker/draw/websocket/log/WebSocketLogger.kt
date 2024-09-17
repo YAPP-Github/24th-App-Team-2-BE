@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.xorker.draw.support.logging.defaultApiJsonMap
 import com.xorker.draw.support.logging.logger
 import com.xorker.draw.support.logging.registerRequestId
-import com.xorker.draw.websocket.SessionId
 import com.xorker.draw.websocket.message.request.RequestAction
 import com.xorker.draw.websocket.message.request.WebSocketRequest
 import com.xorker.draw.websocket.message.request.mafia.SessionInitializeRequest
+import com.xorker.draw.websocket.session.SessionId
 import com.xorker.draw.websocket.session.SessionManager
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
@@ -83,7 +83,8 @@ internal class WebSocketLogger(
         val sessionDto = sessionManager.getSession(sessionId)
         if (sessionDto != null) {
             data["userId"] = sessionDto.user.id.value
-            data["roomId"] = sessionDto.roomId
+            // TODO 방법 찾기
+            // data["roomId"] = sessionDto.roomId
         }
     }
 }

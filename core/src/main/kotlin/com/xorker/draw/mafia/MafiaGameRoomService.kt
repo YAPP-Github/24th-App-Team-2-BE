@@ -51,11 +51,11 @@ internal class MafiaGameRoomService(
         mafiaGameRepository.saveGameInfo(gameInfo)
     }
 
-    override fun disconnectSession(userId: UserId, roomId: RoomId) {
-        val gameInfo = mafiaGameRepository.getGameInfo(roomId) ?: return
+    override fun disconnectSession(userId: UserId) {
+        val gameInfo = mafiaGameRepository.getGameInfo(userId) ?: return
 
         if (gameInfo.phase == MafiaPhase.Wait) {
-            exitSession(userId, roomId)
+            exitSession(userId)
             return
         }
 
@@ -71,11 +71,11 @@ internal class MafiaGameRoomService(
         }
     }
 
-    override fun exitSession(userId: UserId, roomId: RoomId) {
-        val gameInfo = mafiaGameRepository.getGameInfo(roomId) ?: return
+    override fun exitSession(userId: UserId) {
+        val gameInfo = mafiaGameRepository.getGameInfo(userId) ?: return
 
         if (gameInfo.phase != MafiaPhase.Wait) {
-            disconnectSession(userId, roomId)
+            disconnectSession(userId)
             return
         }
 

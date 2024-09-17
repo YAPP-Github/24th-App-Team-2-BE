@@ -54,7 +54,7 @@ internal class MainWebSocketHandler(
 
         if (waitingQueueSessionDto != null) {
             waitingQueueSessionEventListener.forEach {
-                it.exitSession(waitingQueueSessionDto)
+                it.exitSession(waitingQueueSessionDto.user, waitingQueueSessionDto.locale)
             }
             return
         }
@@ -65,12 +65,12 @@ internal class MainWebSocketHandler(
         when (status) {
             CloseStatus.NORMAL ->
                 sessionEventListener.forEach {
-                    it.exitSession(sessionDto.user.id, sessionDto.roomId)
+                    it.exitSession(sessionDto.user.id)
                 }
 
             else ->
                 sessionEventListener.forEach {
-                    it.disconnectSession(sessionDto.user.id, sessionDto.roomId)
+                    it.disconnectSession(sessionDto.user.id)
                 }
         }
     }

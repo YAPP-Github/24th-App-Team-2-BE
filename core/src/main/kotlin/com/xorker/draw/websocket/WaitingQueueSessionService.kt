@@ -1,5 +1,6 @@
 package com.xorker.draw.websocket
 
+import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
 import java.util.concurrent.ConcurrentHashMap
 import org.springframework.core.Ordered
@@ -40,11 +41,11 @@ internal class WaitingQueueSessionService : WaitingQueueSessionUseCase, WaitingQ
         return userIds[userId]
     }
 
-    override fun connectSession(session: WaitingQueueSession) {
-        registerSession(session)
+    override fun connectSession(user: User, locale: String) {
+//        registerSession(session)
     }
 
-    override fun exitSession(session: WaitingQueueSession) {
-        unregisterSession(session.id)
+    override fun exitSession(user: User, locale: String) {
+//        unregisterSession(session.id)
     }
 }

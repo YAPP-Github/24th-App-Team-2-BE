@@ -3,8 +3,8 @@ package com.xorker.draw.mafia
 import com.xorker.draw.exception.InvalidRequestValueException
 import com.xorker.draw.room.Room
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.room.RoomRepository
 import com.xorker.draw.user.User
-import com.xorker.draw.user.UserId
 import org.springframework.stereotype.Service
 
 @Service
@@ -12,42 +12,33 @@ internal class MafiaGameRoomService(
     private val mafiaGameRepository: MafiaGameRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
+    private val roomRepository: RoomRepository,
 ) : UserConnectionUseCase {
 
-    fun connectSession(userId: UserId, roomId: RoomId, nickname: String, locale: String) {
-        var gameInfo = mafiaGameRepository.getGameInfo(roomId)
+    override fun connectUser(user: User, roomId: RoomId?, locale: String) {
+        val gameInfo = connectGame(user, roomId ?: generateRoomId(), locale)
 
-        if (gameInfo == null) {
-            val player = MafiaPlayer(userId, nickname, generateColor(null))
-            gameInfo = createGameInfo(roomId, locale, player)
-        } else {
-            val player = gameInfo.findPlayer(userId)
-            if (player != null) {
-                player.connect()
-            } else {
-                gameInfo.room.add(MafiaPlayer(userId, nickname, generateColor(gameInfo)))
-            }
-        }
-
-        mafiaGameRepository.saveGameInfo(gameInfo)
-        mafiaPhaseMessenger.unicastPhase(userId, gameInfo)
+        mafiaPhaseMessenger.unicastPhase(user.id, gameInfo)
         mafiaGameMessenger.broadcastPlayerList(gameInfo)
     }
 
-    fun connectSession(user: User, roomId: RoomId, locale: String) {
+    fun connectGame(user: User, roomId: RoomId, locale: String): MafiaGameInfo {
         var gameInfo = mafiaGameRepository.getGameInfo(roomId)
 
         if (gameInfo == null) {
             val player = MafiaPlayer(user.id, user.name, generateColor(null))
-
-            gameInfo = createGameInfo(roomId, locale, player, true)
+            gameInfo = createGameInfo(roomId, locale, player)
         } else {
-            val room = gameInfo.room
-
-            room.add(MafiaPlayer(user.id, user.name, generateColor(gameInfo)))
+            val player = gameInfo.findPlayer(user.id)
+            if (player != null) {
+                player.connect()
+            } else {
+                gameInfo.room.add(MafiaPlayer(user.id, user.name, generateColor(gameInfo)))
+            }
         }
 
         mafiaGameRepository.saveGameInfo(gameInfo)
+        return gameInfo
     }
 
     override fun disconnectUser(user: User) {
@@ -129,6 +120,19 @@ internal class MafiaGameRoomService(
             isRandomMatching = isRandomMatching,
         )
         return room
+    }
+
+    fun generateRoomId(): RoomId {
+        var value: String
+
+        do {
+            val charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+            value = (1..6)
+                .map { charset.random() }
+                .joinToString("")
+        } while (roomRepository.getRoom(RoomId(value)) != null)
+
+        return RoomId(value)
     }
 
     companion object {

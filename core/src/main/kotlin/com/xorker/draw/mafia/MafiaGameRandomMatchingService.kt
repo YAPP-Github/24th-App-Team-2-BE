@@ -1,10 +1,9 @@
 package com.xorker.draw.mafia
 
 import com.xorker.draw.exception.InvalidRequestOtherPlayingException
-import com.xorker.draw.mafia.event.MafiaGameRandomMatchingEvent
+import com.xorker.draw.mafia.phase.MafiaPhaseUseCase
 import com.xorker.draw.user.User
 import com.xorker.draw.websocket.WaitingQueueUseCase
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 
 @Service
@@ -12,7 +11,8 @@ internal class MafiaGameRandomMatchingService(
     private val mafiaGameUseCase: MafiaGameUseCase,
     private val mafiaGameWaitingQueueRepository: MafiaGameWaitingQueueRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
-    private val eventPublisher: ApplicationEventPublisher,
+    private val mafiaPhaseUseCase: MafiaPhaseUseCase,
+    private val mafiaGameRoomService: MafiaGameRoomService,
 ) : WaitingQueueUseCase {
 
     override fun enqueue(user: User, locale: String) {
@@ -33,11 +33,19 @@ internal class MafiaGameRandomMatchingService(
                     players.add(player)
                 }
 
-                val event = MafiaGameRandomMatchingEvent(players, locale)
-
-                eventPublisher.publishEvent(event)
+                newGameStart(players, locale)
             }
         }
+    }
+
+    private fun newGameStart(players: List<User>, locale: String) {
+        val roomId = mafiaGameRoomService.generateRoomId()
+
+        players.forEach { user ->
+            mafiaGameRoomService.connectGame(user, roomId, locale)
+        }
+
+        mafiaPhaseUseCase.startGame(roomId)
     }
 
     override fun remove(user: User, locale: String) {

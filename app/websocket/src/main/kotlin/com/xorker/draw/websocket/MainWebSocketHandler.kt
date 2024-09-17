@@ -7,6 +7,7 @@ import com.xorker.draw.support.metric.MetricManager
 import com.xorker.draw.websocket.exception.WebSocketExceptionHandler
 import com.xorker.draw.websocket.log.WebSocketLogger
 import com.xorker.draw.websocket.message.request.WebSocketRequestParser
+import com.xorker.draw.websocket.session.SessionId
 import com.xorker.draw.websocket.session.SessionManager
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
@@ -17,7 +18,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler
 @Component
 internal class MainWebSocketHandler(
     private val sessionManager: SessionManager,
-    private val waitingQueueSessionUseCase: WaitingQueueSessionUseCase,
     private val router: WebSocketRouter,
     private val requestParser: WebSocketRequestParser,
     private val waitingQueueSessionEventListener: List<WaitingQueueSessionEventListener>,
@@ -50,17 +50,14 @@ internal class MainWebSocketHandler(
         metricManager.decreaseWebsocket(session.id)
         webSocketLogger.afterConnectionClosed(session, status)
 
-        val waitingQueueSessionDto = waitingQueueSessionUseCase.getSession(SessionId(session.id))
+        val sessionId = SessionId(session.id)
 
-        if (waitingQueueSessionDto != null) {
-            waitingQueueSessionEventListener.forEach {
-                it.exitSession(waitingQueueSessionDto.user, waitingQueueSessionDto.locale)
-            }
-            return
-        }
-
-        val sessionDto = sessionManager.getSession(SessionId(session.id))
+        val sessionDto = sessionManager.unregisterSession(sessionId)
             ?: return logger.error(InvalidWebSocketStatusException.message, InvalidWebSocketStatusException)
+
+        waitingQueueSessionEventListener.forEach {
+            it.exitSession(sessionDto.user, sessionDto.locale)
+        }
 
         when (status) {
             CloseStatus.NORMAL ->

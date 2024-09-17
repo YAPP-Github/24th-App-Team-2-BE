@@ -2,7 +2,6 @@ package com.xorker.draw.websocket.broker
 
 import com.xorker.draw.exception.InvalidBroadcastException
 import com.xorker.draw.room.RoomRepository
-import com.xorker.draw.websocket.WaitingQueueSessionUseCase
 import com.xorker.draw.websocket.broker.event.BranchedBroadcastEvent
 import com.xorker.draw.websocket.broker.event.BroadcastEvent
 import com.xorker.draw.websocket.broker.event.RespectiveBroadcastEvent
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component
 @Component
 internal class SimpleSessionMessageBroker(
     private val sessionManager: SessionManager,
-    private val waitingQueueSessionUseCase: WaitingQueueSessionUseCase,
     private val roomRepository: RoomRepository,
     private val parser: WebSocketResponseParser,
 ) : SessionMessageBroker {
@@ -27,7 +25,7 @@ internal class SimpleSessionMessageBroker(
         val session = sessionManager.getSession(userId)
 
         if (session == null) {
-            val waitingQueueSession = waitingQueueSessionUseCase.getSession(userId)
+            val waitingQueueSession = sessionManager.getSession(userId)
 
             val response = parser.parse(event.message)
 

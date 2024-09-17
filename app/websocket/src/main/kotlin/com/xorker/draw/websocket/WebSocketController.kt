@@ -14,7 +14,6 @@ import com.xorker.draw.websocket.message.request.mafia.MafiaGameRandomMatchingRe
 import com.xorker.draw.websocket.message.request.mafia.SessionInitializeRequest
 import com.xorker.draw.websocket.session.SessionFactory
 import com.xorker.draw.websocket.session.SessionManager
-import com.xorker.draw.websocket.session.SessionWrapper
 import org.slf4j.MDC
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -32,10 +31,11 @@ internal class WebSocketController(
 ) {
 
     fun initializeWaitingQueueSession(session: WebSocketSession, request: MafiaGameRandomMatchingRequest) {
-        val waitingQueueSessionDto = sessionFactory.create(session, request)
+        val sessionDto = sessionFactory.create(session, request)
 
+        sessionManager.registerSession(sessionDto)
         waitingQueueSessionEventListener.forEach {
-            it.connectSession(waitingQueueSessionDto.user, waitingQueueSessionDto.locale)
+            it.connectSession(sessionDto.user, sessionDto.locale)
         }
     }
 
@@ -84,18 +84,12 @@ internal class WebSocketController(
         val roomId = RoomId(generateRoomId())
 
         players.forEach { user ->
-            val sessionDto = SessionWrapper(
-                session = this.session, // TODO: fix
-                user = user,
-            )
-
-            sessionManager.registerSession(sessionDto)
-            sessionEventListener.forEach { eventListener ->
-                eventListener.connectSession(sessionDto.user, roomId, event.locale)
-            }
-
             waitingQueueSessionEventListener.forEach { eventListener ->
                 eventListener.exitSession(user, event.locale)
+            }
+
+            sessionEventListener.forEach { eventListener ->
+                eventListener.connectSession(user, roomId, event.locale)
             }
         }
 

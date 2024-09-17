@@ -1,5 +1,6 @@
 package com.xorker.draw.websocket.session
 
+import com.xorker.draw.support.metric.MetricManager
 import com.xorker.draw.user.UserId
 import java.util.concurrent.ConcurrentHashMap
 import org.springframework.core.Ordered
@@ -8,9 +9,15 @@ import org.springframework.stereotype.Service
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Service
-internal class SessionManager {
+internal class SessionManager(
+    private val metricManager: MetricManager,
+) {
     private val sessionMap: ConcurrentHashMap<SessionId, Session> = ConcurrentHashMap()
     private val userIdMap: ConcurrentHashMap<UserId, Session> = ConcurrentHashMap()
+
+    init {
+        metricManager.setWebSocketGauge(sessionMap)
+    }
 
     fun getSession(sessionId: SessionId): Session? {
         return sessionMap[sessionId]

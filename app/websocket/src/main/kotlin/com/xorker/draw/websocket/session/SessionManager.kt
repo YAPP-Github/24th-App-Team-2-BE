@@ -1,7 +1,6 @@
 package com.xorker.draw.websocket.session
 
 import com.xorker.draw.user.UserId
-import com.xorker.draw.websocket.Session
 import com.xorker.draw.websocket.SessionId
 import java.util.concurrent.ConcurrentHashMap
 import org.springframework.core.Ordered

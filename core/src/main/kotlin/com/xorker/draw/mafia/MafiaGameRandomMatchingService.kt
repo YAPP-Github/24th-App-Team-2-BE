@@ -15,7 +15,7 @@ internal class MafiaGameRandomMatchingService(
     override fun connectSession(session: WaitingQueueSession) {
         val user = session.user
 
-        mafiaGameUseCase.getGameInfo(user.id)?.let {
+        mafiaGameUseCase.getGameInfoByUserId(user.id)?.let {
             throw InvalidRequestOtherPlayingException
         }
 

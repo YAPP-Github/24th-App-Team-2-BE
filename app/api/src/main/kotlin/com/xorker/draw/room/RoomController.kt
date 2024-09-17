@@ -20,7 +20,7 @@ class RoomController(
     fun getPlayingRoom(
         @Parameter(hidden = true) user: PrincipalUser,
     ): PlayingRoomResponse {
-        val gameInfo = mafiaGameUseCase.getGameInfo(user.userId) ?: return PlayingRoomResponse()
+        val gameInfo = mafiaGameUseCase.getGameInfoByUserId(user.userId) ?: return PlayingRoomResponse()
 
         return PlayingRoomResponse(gameInfo.room.id)
     }

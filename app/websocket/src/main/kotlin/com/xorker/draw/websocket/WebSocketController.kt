@@ -40,7 +40,7 @@ internal class WebSocketController(
     fun initializeSession(session: WebSocketSession, request: SessionInitializeRequest) {
         val sessionDto = sessionFactory.create(session, request)
 
-        val joinedRoomId = mafiaGameUseCase.getGameInfo(sessionDto.user.id)?.room?.id
+        val joinedRoomId = mafiaGameUseCase.getGameInfoByUserId(sessionDto.user.id)?.room?.id
         if (joinedRoomId != null && request.roomId != joinedRoomId.value) {
             throw InvalidRequestOtherPlayingException
         }
@@ -53,7 +53,7 @@ internal class WebSocketController(
             return
         }
 
-        val gameInfo = mafiaGameUseCase.getGameInfo(sessionDto.roomId) ?: throw NotFoundRoomException
+        val gameInfo = mafiaGameUseCase.getGameInfoByRoomId(sessionDto.roomId) ?: throw NotFoundRoomException
 
         synchronized(gameInfo) {
             if (gameInfo.phase != MafiaPhase.Wait && gameInfo.room.players.any { it.userId == sessionDto.user.id }.not()) {

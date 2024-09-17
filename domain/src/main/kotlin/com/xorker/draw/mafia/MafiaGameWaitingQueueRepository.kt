@@ -1,8 +1,8 @@
 package com.xorker.draw.mafia
 
-import com.xorker.draw.websocket.WaitingQueueSession
+import com.xorker.draw.user.User
 
 interface MafiaGameWaitingQueueRepository {
-    fun enqueue(size: Int, session: WaitingQueueSession)
-    fun dequeue(session: WaitingQueueSession)
+    fun enqueue(size: Int, user: User, locale: String)
+    fun dequeue(user: User, locale: String)
 }

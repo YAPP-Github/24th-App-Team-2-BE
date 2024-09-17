@@ -13,8 +13,7 @@ import com.xorker.draw.websocket.message.request.mafia.MafiaGameRandomMatchingRe
 import com.xorker.draw.websocket.message.request.mafia.SessionInitializeRequest
 import com.xorker.draw.websocket.session.SessionFactory
 import com.xorker.draw.websocket.session.SessionManager
-import com.xorker.draw.websocket.session.WaitingQueueSessionWrapper
-import com.xorker.draw.websocket.session.toSessionWrapper
+import com.xorker.draw.websocket.session.SessionWrapper
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
@@ -33,7 +32,7 @@ internal class WebSocketController(
         val waitingQueueSessionDto = sessionFactory.create(session, request)
 
         waitingQueueSessionEventListener.forEach {
-            it.connectSession(waitingQueueSessionDto)
+            it.connectSession(waitingQueueSessionDto.user, waitingQueueSessionDto.locale)
         }
     }
 
@@ -77,18 +76,20 @@ internal class WebSocketController(
 
         val roomId = RoomId(sessionFactory.generateRoomId())
 
-        players.forEach {
-            if (it is WaitingQueueSessionWrapper) {
-                val sessionDto = it.toSessionWrapper(roomId)
+        players.forEach { user ->
+            val sessionDto = SessionWrapper(
+                session = this.session, // TODO: fix
+                roomId = roomId,
+                user = user,
+            )
 
-                sessionManager.registerSession(sessionDto)
-                sessionEventListener.forEach { eventListener ->
-                    eventListener.connectSession(sessionDto.user, sessionDto.roomId, it.locale)
-                }
+            sessionManager.registerSession(sessionDto)
+            sessionEventListener.forEach { eventListener ->
+                eventListener.connectSession(sessionDto.user, sessionDto.roomId, event.locale)
+            }
 
-                waitingQueueSessionEventListener.forEach { eventListener ->
-                    eventListener.exitSession(it)
-                }
+            waitingQueueSessionEventListener.forEach { eventListener ->
+                eventListener.exitSession(user, event.locale)
             }
         }
 

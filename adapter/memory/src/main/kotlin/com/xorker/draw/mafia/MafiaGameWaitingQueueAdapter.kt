@@ -2,7 +2,7 @@ package com.xorker.draw.mafia
 
 import com.xorker.draw.exception.UnSupportedException
 import com.xorker.draw.mafia.event.MafiaGameRandomMatchingEvent
-import com.xorker.draw.websocket.WaitingQueueSession
+import com.xorker.draw.user.User
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
 import org.springframework.context.ApplicationEventPublisher
@@ -12,16 +12,16 @@ import org.springframework.stereotype.Component
 internal class MafiaGameWaitingQueueAdapter(
     private val eventPublisher: ApplicationEventPublisher,
 ) : MafiaGameWaitingQueueRepository {
-    private val waitingQueue: ConcurrentHashMap<String, ConcurrentLinkedQueue<WaitingQueueSession>> = ConcurrentHashMap()
+    private val waitingQueue: ConcurrentHashMap<String, ConcurrentLinkedQueue<User>> = ConcurrentHashMap()
 
-    override fun enqueue(size: Int, session: WaitingQueueSession) {
-        val queue = waitingQueue.getOrPut(session.locale) { ConcurrentLinkedQueue() }
+    override fun enqueue(size: Int, user: User, locale: String) {
+        val queue = waitingQueue.getOrPut(locale) { ConcurrentLinkedQueue() }
 
-        queue.add(session)
+        queue.add(user)
 
         synchronized(this) {
             if (queue.size >= size) {
-                val players = mutableListOf<WaitingQueueSession>()
+                val players = mutableListOf<User>()
 
                 (0 until size).forEach { _ ->
                     queue.poll().let {
@@ -29,16 +29,16 @@ internal class MafiaGameWaitingQueueAdapter(
                     }
                 }
 
-                val event = MafiaGameRandomMatchingEvent(players)
+                val event = MafiaGameRandomMatchingEvent(players, locale)
 
                 eventPublisher.publishEvent(event)
             }
         }
     }
 
-    override fun dequeue(session: WaitingQueueSession) {
-        val queue = waitingQueue[session.locale] ?: throw UnSupportedException
+    override fun dequeue(user: User, locale: String) {
+        val queue = waitingQueue[locale] ?: throw UnSupportedException
 
-        queue.remove(session)
+        queue.remove(user)
     }
 }

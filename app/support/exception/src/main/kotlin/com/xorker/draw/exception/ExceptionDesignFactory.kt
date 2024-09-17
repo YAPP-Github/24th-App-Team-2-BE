@@ -1,12 +1,12 @@
 package com.xorker.draw.exception
 
-import org.springframework.context.MessageSource
+import com.xorker.draw.i18n.MessageService
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Component
 
 @Component
 class ExceptionDesignFactory(
-    private val messageSource: MessageSource,
+    private val messageService: MessageService,
 ) {
     fun generate(ex: XorkerException): ExceptionDesign {
         return when (ex) {
@@ -20,8 +20,8 @@ class ExceptionDesignFactory(
 
     private fun generateToast(ex: XorkerException): ToastResponse {
         val locale = LocaleContextHolder.getLocale()
-        val text = messageSource.getMessage("exception.${ex.code}.text", null, "ERROR", locale)
-            ?: messageSource.getMessage("exception.default.description", null, locale)
+        val text = messageService.getMessageOrNull("exception.${ex.code}.text", locale)
+            ?: messageService.getMessage("exception.default.description", locale)
 
         return ToastResponse(text)
     }
@@ -29,10 +29,11 @@ class ExceptionDesignFactory(
     private fun generateDialog(ex: XorkerException): DialogResponse {
         val locale = LocaleContextHolder.getLocale()
 
-        val title = messageSource.getMessage("exception.${ex.code}.title", null, "ERROR", locale) // TODO 기본 에러 처리 하기
-        val description = messageSource.getMessage("exception.${ex.code}.description", null, null, locale)
-            ?: messageSource.getMessage("exception.default.description", null, locale)
-        val buttons = ex.getButtons().map { it.toResponse(messageSource, locale) }
+        val title = messageService.getMessageOrNull("exception.${ex.code}.title", locale) ?: "ERROR" // TODO 기본 에러 처리 하기
+        val description =
+            messageService.getMessageOrNull("exception.${ex.code}.description", locale)
+                ?: messageService.getMessage("exception.default.description", locale)
+        val buttons = ex.getButtons().map { it.toResponse(messageService, locale) }
 
         return DialogResponse(title, description, buttons)
     }

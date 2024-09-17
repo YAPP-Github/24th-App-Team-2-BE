@@ -1,5 +1,8 @@
 package com.xorker.draw.exception
 
+import java.util.Locale
+import org.springframework.context.NoSuchMessageException
+
 sealed class XorkerException(val code: String, message: String, cause: Throwable? = null) : RuntimeException(message, cause)
 
 //region Client
@@ -36,4 +39,5 @@ data object UnSupportedException : CriticalException("crt003", "정의하지 않
 data object InvalidBroadcastException : CriticalException("crt004", "유효하지 않은 브로드캐스트 상태") { private fun readResolve(): Any = InvalidBroadcastException }
 class InvalidMafiaPhaseException(message: String) : CriticalException("crt005", message)
 data object InvalidWebSocketStatusException : CriticalException("crt006", "웹 소켓 세션 상태가 유효하지 않음") { private fun readResolve(): Any = InvalidWebSocketStatusException }
+class NotDefinedMessageCodeException(messageCode: String, locale: Locale, cause: NoSuchMessageException) : CriticalException("crt007", "정의되지 않은 메시지 코드 $locale $messageCode", cause)
 //endregion

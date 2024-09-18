@@ -8,6 +8,7 @@ plugins {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":support:logging"))
+    implementation(project(":support:yaml"))
 
     implementation("org.springframework.boot:spring-boot-starter:${Versions.SPRING_BOOT}")
 }

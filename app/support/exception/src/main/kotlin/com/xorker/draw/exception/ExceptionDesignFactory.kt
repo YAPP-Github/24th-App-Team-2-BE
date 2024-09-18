@@ -20,7 +20,7 @@ class ExceptionDesignFactory(
 
     private fun generateToast(ex: XorkerException): ToastResponse {
         val locale = LocaleContextHolder.getLocale()
-        val text = messageService.getMessageOrNull("exception.${ex.code}.text", locale)
+        val text = messageService.getMessageOrNull("exception.${ex.code}.description", locale)
             ?: messageService.getMessage("exception.default.description", locale)
 
         return ToastResponse(text)

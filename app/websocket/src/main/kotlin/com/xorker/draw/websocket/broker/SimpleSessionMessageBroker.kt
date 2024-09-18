@@ -22,17 +22,7 @@ internal class SimpleSessionMessageBroker(
     override fun unicast(event: UnicastEvent) {
         val userId = event.userId
 
-        val session = sessionManager.getSession(userId)
-
-        if (session == null) {
-            val waitingQueueSession = sessionManager.getSession(userId)
-
-            val response = parser.parse(event.message)
-
-            waitingQueueSession?.send(response)
-
-            return
-        }
+        val session = sessionManager.getSession(userId) ?: return
 
         val response = parser.parse(event.message)
 

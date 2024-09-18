@@ -61,7 +61,7 @@ internal class MafiaGameService(
     }
 
     override fun voteMafia(user: User, targetUserId: UserId) {
-        val gameInfo = mafiaGameRepository.getGameInfo(user.id) ?: throw InvalidRequestValueException
+        val gameInfo = user.getGameInfo()
 
         val phase = gameInfo.phase
         assertIs<MafiaPhase.Vote>(phase)
@@ -72,7 +72,7 @@ internal class MafiaGameService(
     }
 
     override fun inferAnswer(user: User, answer: String) {
-        val gameInfo = mafiaGameRepository.getGameInfo(user.id) ?: throw InvalidRequestValueException
+        val gameInfo = user.getGameInfo()
 
         val phase = gameInfo.phase
         assertIs<MafiaPhase.InferAnswer>(phase)

@@ -46,7 +46,7 @@ internal class MafiaGameRandomMatchingService(
         val roomId = mafiaGameRoomService.generateRoomId()
 
         players.forEach { user ->
-            mafiaGameRoomService.connectGame(user, roomId, locale)
+            mafiaGameRoomService.connectGame(user, roomId, locale, true)
         }
 
         mafiaPhaseUseCase.startGame(roomId)

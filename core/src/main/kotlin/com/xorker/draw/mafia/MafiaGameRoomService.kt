@@ -21,18 +21,18 @@ internal class MafiaGameRoomService(
 
         MDC.put("roomId", roomIdNotNull.value)
 
-        val gameInfo = connectGame(user, roomIdNotNull, locale)
+        val gameInfo = connectGame(user, roomIdNotNull, locale, false)
 
         mafiaPhaseMessenger.unicastPhase(user.id, gameInfo)
         mafiaGameMessenger.broadcastPlayerList(gameInfo)
     }
 
-    fun connectGame(user: User, roomId: RoomId, locale: String): MafiaGameInfo {
+    fun connectGame(user: User, roomId: RoomId, locale: String, isRandomMatching: Boolean): MafiaGameInfo {
         var gameInfo = mafiaGameRepository.getGameInfo(roomId)
 
         if (gameInfo == null) {
             val player = MafiaPlayer(user.id, user.name, generateColor(null))
-            gameInfo = createGameInfo(roomId, locale, player)
+            gameInfo = createGameInfo(roomId, locale, player, isRandomMatching)
         } else {
             val player = gameInfo.findPlayer(user.id)
             if (player != null) {
@@ -102,7 +102,7 @@ internal class MafiaGameRoomService(
             .first()
     }
 
-    private fun createGameInfo(roomId: RoomId, locale: String, player: MafiaPlayer, isRandomMatching: Boolean = false): MafiaGameInfo {
+    private fun createGameInfo(roomId: RoomId, locale: String, player: MafiaPlayer, isRandomMatching: Boolean): MafiaGameInfo {
         val room = createRoom(roomId, locale, player, isRandomMatching)
         return MafiaGameInfo(
             room = room,

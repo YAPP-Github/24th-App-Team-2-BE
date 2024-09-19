@@ -9,11 +9,11 @@ import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.event.MafiaGameRandomMatchingEvent
 import com.xorker.draw.mafia.phase.MafiaPhaseUseCase
 import com.xorker.draw.room.RoomId
-import com.xorker.draw.websocket.message.request.WaitingQueueSessionWrapper
-import com.xorker.draw.websocket.message.request.dto.game.MafiaGameRandomMatchingRequest
-import com.xorker.draw.websocket.message.request.dto.game.SessionInitializeRequest
-import com.xorker.draw.websocket.message.request.toSessionWrapper
+import com.xorker.draw.websocket.message.request.mafia.MafiaGameRandomMatchingRequest
+import com.xorker.draw.websocket.message.request.mafia.SessionInitializeRequest
 import com.xorker.draw.websocket.session.SessionFactory
+import com.xorker.draw.websocket.session.WaitingQueueSessionWrapper
+import com.xorker.draw.websocket.session.toSessionWrapper
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession

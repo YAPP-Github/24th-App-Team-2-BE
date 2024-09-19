@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket.message.request
+package com.xorker.draw.websocket.session
 
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.User

@@ -7,7 +7,7 @@ import com.xorker.draw.websocket.broker.event.BranchedBroadcastEvent
 import com.xorker.draw.websocket.broker.event.BroadcastEvent
 import com.xorker.draw.websocket.broker.event.RespectiveBroadcastEvent
 import com.xorker.draw.websocket.broker.event.UnicastEvent
-import com.xorker.draw.websocket.parser.WebSocketResponseParser
+import com.xorker.draw.websocket.message.response.WebSocketResponseParser
 import com.xorker.draw.websocket.session.SessionManager
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component

@@ -6,8 +6,8 @@ import com.xorker.draw.support.logging.logger
 import com.xorker.draw.support.logging.registerRequestId
 import com.xorker.draw.websocket.SessionId
 import com.xorker.draw.websocket.message.request.RequestAction
-import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
-import com.xorker.draw.websocket.message.request.dto.game.SessionInitializeRequest
+import com.xorker.draw.websocket.message.request.WebSocketRequest
+import com.xorker.draw.websocket.message.request.mafia.SessionInitializeRequest
 import com.xorker.draw.websocket.session.SessionManager
 import org.slf4j.MDC
 import org.springframework.stereotype.Component

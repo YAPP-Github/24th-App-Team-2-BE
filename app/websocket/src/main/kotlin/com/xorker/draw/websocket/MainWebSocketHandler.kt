@@ -65,12 +65,12 @@ internal class MainWebSocketHandler(
         when (status) {
             CloseStatus.NORMAL ->
                 sessionEventListener.forEach {
-                    it.exitSession(sessionDto)
+                    it.exitSession(sessionDto.user.id, sessionDto.roomId)
                 }
 
             else ->
                 sessionEventListener.forEach {
-                    it.disconnectSession(sessionDto)
+                    it.disconnectSession(sessionDto.user.id, sessionDto.roomId)
                 }
         }
     }

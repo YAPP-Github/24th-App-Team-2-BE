@@ -2,7 +2,6 @@ package com.xorker.draw.websocket.session
 
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.User
-import com.xorker.draw.websocket.Session
 import com.xorker.draw.websocket.SessionId
 import com.xorker.draw.websocket.WaitingQueueSession
 import org.springframework.web.socket.TextMessage

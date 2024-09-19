@@ -46,31 +46,31 @@ internal class WebSocketRouter(
                 mafiaPhaseUseCase.startGame(sessionDto.roomId)
             }
 
-            RequestAction.DRAW -> mafiaGameUseCase.draw(sessionDto, request.extractBody())
-            RequestAction.END_TURN -> mafiaGameUseCase.nextTurnByUser(sessionDto)
+            RequestAction.DRAW -> mafiaGameUseCase.draw(sessionDto.user, request.extractBody())
+            RequestAction.END_TURN -> mafiaGameUseCase.nextTurnByUser(sessionDto.user)
 
             RequestAction.VOTE -> {
                 val requestDto = request.extractBody<MafiaGameVoteMafiaRequest>()
 
-                mafiaGameUseCase.voteMafia(sessionDto, UserId(requestDto.userId))
+                mafiaGameUseCase.voteMafia(sessionDto.user, UserId(requestDto.userId))
             }
 
             RequestAction.ANSWER -> {
                 val requestDto = request.extractBody<MafiaGameInferAnswerRequest>()
 
-                mafiaGameUseCase.inferAnswer(sessionDto, requestDto.answer)
+                mafiaGameUseCase.inferAnswer(sessionDto.user, requestDto.answer)
             }
 
             RequestAction.DECIDE_ANSWER -> {
                 val requestDto = request.extractBody<MafiaGameInferAnswerRequest>()
 
-                mafiaGameUseCase.decideAnswer(sessionDto, requestDto.answer)
+                mafiaGameUseCase.decideAnswer(sessionDto.user, requestDto.answer)
             }
 
             RequestAction.REACTION -> {
                 val requestDto = request.extractBody<MafiaGameReactionRequest>()
 
-                mafiaGameUseCase.react(sessionDto, requestDto.reaction)
+                mafiaGameUseCase.react(sessionDto.user, requestDto.reaction)
             }
         }
     }

@@ -6,7 +6,6 @@ import com.xorker.draw.room.RoomId
 import com.xorker.draw.room.RoomRepository
 import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
-import com.xorker.draw.websocket.Session
 import com.xorker.draw.websocket.WaitingQueueSession
 import com.xorker.draw.websocket.message.request.mafia.MafiaGameRandomMatchingRequest
 import com.xorker.draw.websocket.message.request.mafia.SessionInitializeRequest

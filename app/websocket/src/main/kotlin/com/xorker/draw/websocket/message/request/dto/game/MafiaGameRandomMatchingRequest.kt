@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket
+package com.xorker.draw.websocket.message.request.dto.game
 
 data class MafiaGameRandomMatchingRequest(
     val accessToken: String,

@@ -4,8 +4,8 @@ import com.xorker.draw.mafia.MafiaGameOption
 import com.xorker.draw.mafia.MafiaPlayer
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
-import com.xorker.draw.websocket.ResponseAction
-import com.xorker.draw.websocket.SessionMessage
+import com.xorker.draw.websocket.message.response.ResponseAction
+import com.xorker.draw.websocket.message.response.SessionMessage
 
 data class MafiaGameInfoMessage(
     override val body: MafiaGameInfoBody,

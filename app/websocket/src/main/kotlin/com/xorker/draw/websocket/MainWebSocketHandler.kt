@@ -7,6 +7,7 @@ import com.xorker.draw.support.metric.MetricManager
 import com.xorker.draw.websocket.exception.WebSocketExceptionHandler
 import com.xorker.draw.websocket.log.WebSocketLogger
 import com.xorker.draw.websocket.parser.WebSocketRequestParser
+import com.xorker.draw.websocket.session.SessionManager
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
@@ -15,7 +16,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler
 
 @Component
 internal class MainWebSocketHandler(
-    private val sessionUseCase: SessionUseCase,
+    private val sessionManager: SessionManager,
     private val waitingQueueSessionUseCase: WaitingQueueSessionUseCase,
     private val router: WebSocketRouter,
     private val requestParser: WebSocketRequestParser,
@@ -58,7 +59,7 @@ internal class MainWebSocketHandler(
             return
         }
 
-        val sessionDto = sessionUseCase.getSession(SessionId(session.id))
+        val sessionDto = sessionManager.getSession(SessionId(session.id))
             ?: return logger.error(InvalidWebSocketStatusException.message, InvalidWebSocketStatusException)
 
         when (status) {

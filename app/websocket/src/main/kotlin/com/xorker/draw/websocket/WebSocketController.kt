@@ -10,7 +10,10 @@ import com.xorker.draw.mafia.event.MafiaGameRandomMatchingEvent
 import com.xorker.draw.mafia.phase.MafiaPhaseUseCase
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.websocket.message.request.WaitingQueueSessionWrapper
+import com.xorker.draw.websocket.message.request.dto.game.MafiaGameRandomMatchingRequest
+import com.xorker.draw.websocket.message.request.dto.game.SessionInitializeRequest
 import com.xorker.draw.websocket.message.request.toSessionWrapper
+import com.xorker.draw.websocket.session.SessionFactory
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession
@@ -34,21 +37,21 @@ internal class WebSocketController(
 
     fun initializeSession(session: WebSocketSession, request: SessionInitializeRequest) {
         val sessionDto = sessionFactory.create(session, request)
-        val roomId = request.roomId
+        val roomId = RoomId(request.roomId)
 
         val joinedRoomId = mafiaGameUseCase.getGameInfo(sessionDto.user.id)?.room?.id
-        if (joinedRoomId != null && roomId != joinedRoomId.value) {
+        if (joinedRoomId != null && roomId != joinedRoomId) {
             throw InvalidRequestOtherPlayingException
         }
 
         if (roomId == null) {
             sessionEventListener.forEach {
-                it.connectSession(sessionDto, request)
+                it.connectSession(sessionDto, roomId, request.nickname, request.locale)
             }
             return
         }
 
-        val gameInfo = mafiaGameUseCase.getGameInfo(RoomId(roomId)) ?: throw NotFoundRoomException
+        val gameInfo = mafiaGameUseCase.getGameInfo(roomId) ?: throw NotFoundRoomException
 
         synchronized(gameInfo) {
             if (gameInfo.phase != MafiaPhase.Wait && gameInfo.room.players.any { it.userId == sessionDto.user.id }.not()) {
@@ -60,7 +63,7 @@ internal class WebSocketController(
             }
 
             sessionEventListener.forEach {
-                it.connectSession(sessionDto, request)
+                it.connectSession(sessionDto, roomId, request.nickname, request.locale)
             }
         }
     }

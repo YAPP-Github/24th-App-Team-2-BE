@@ -8,7 +8,6 @@ import com.xorker.draw.mafia.MafiaPhaseMessenger
 import com.xorker.draw.mafia.MafiaPlayer
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
-import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
 import com.xorker.draw.websocket.message.response.dto.game.toResponse
 import com.xorker.draw.websocket.message.response.dto.phase.MafiaGameInfoBody

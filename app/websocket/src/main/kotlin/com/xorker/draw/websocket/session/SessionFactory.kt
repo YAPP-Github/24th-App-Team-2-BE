@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket
+package com.xorker.draw.websocket.session
 
 import com.xorker.draw.auth.token.TokenUseCase
 import com.xorker.draw.exception.UnAuthenticationException
@@ -6,8 +6,12 @@ import com.xorker.draw.room.RoomId
 import com.xorker.draw.room.RoomRepository
 import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
+import com.xorker.draw.websocket.Session
+import com.xorker.draw.websocket.WaitingQueueSession
 import com.xorker.draw.websocket.message.request.SessionWrapper
 import com.xorker.draw.websocket.message.request.WaitingQueueSessionWrapper
+import com.xorker.draw.websocket.message.request.dto.game.MafiaGameRandomMatchingRequest
+import com.xorker.draw.websocket.message.request.dto.game.SessionInitializeRequest
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketSession

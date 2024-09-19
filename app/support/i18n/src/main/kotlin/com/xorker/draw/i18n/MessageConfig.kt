@@ -7,7 +7,6 @@ import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.core.io.support.ResourcePatternResolver
 
-
 @Configuration
 class MessageConfig {
 

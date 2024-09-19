@@ -1,7 +1,6 @@
 package com.xorker.draw.websocket.session
 
 import com.xorker.draw.user.UserId
-import com.xorker.draw.websocket.SessionId
 import java.util.concurrent.ConcurrentHashMap
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
@@ -31,8 +30,8 @@ internal class SessionManager {
         userIdMap[session.user.id] = session
     }
 
-    fun unregisterSession(sessionId: SessionId) {
+    fun unregisterSession(sessionId: SessionId): Session? {
         val session = sessionMap.remove(sessionId)
-        userIdMap.remove(session?.user?.id)
+        return userIdMap.remove(session?.user?.id)
     }
 }

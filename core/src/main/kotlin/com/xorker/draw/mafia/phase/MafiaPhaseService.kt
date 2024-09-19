@@ -1,5 +1,6 @@
 package com.xorker.draw.mafia.phase
 
+import com.xorker.draw.exception.InvalidRequestValueException
 import com.xorker.draw.exception.NotFoundRoomException
 import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameRepository
@@ -8,6 +9,7 @@ import com.xorker.draw.mafia.MafiaPhaseMessenger
 import com.xorker.draw.mafia.assert
 import com.xorker.draw.mafia.assertIs
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.user.User
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,9 +23,18 @@ internal class MafiaPhaseService(
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
 ) : MafiaPhaseUseCase {
 
+    override fun startGame(user: User): MafiaPhase.Ready {
+        val gameInfo = mafiaGameRepository.getGameInfo(user.id) ?: throw InvalidRequestValueException
+        return startGame(gameInfo)
+    }
+
     override fun startGame(roomId: RoomId): MafiaPhase.Ready {
         val gameInfo = getGameInfo(roomId)
+        return startGame(gameInfo)
+    }
 
+    private fun startGame(gameInfo: MafiaGameInfo): MafiaPhase.Ready {
+        val roomId = gameInfo.room.id
         val phase = synchronized(gameInfo) {
             assertIs<MafiaPhase.Wait>(gameInfo.phase)
             mafiaPhaseStartGameProcessor.startMafiaGame(gameInfo) {

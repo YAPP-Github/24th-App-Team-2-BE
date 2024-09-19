@@ -7,6 +7,6 @@ import com.xorker.draw.user.UserId
 interface SessionEventListener {
     fun connectSession(userId: UserId, roomId: RoomId, nickname: String, locale: String)
     fun connectSession(user: User, roomId: RoomId, locale: String)
-    fun disconnectSession(userId: UserId, roomId: RoomId)
-    fun exitSession(userId: UserId, roomId: RoomId)
+    fun disconnectSession(userId: UserId)
+    fun exitSession(userId: UserId)
 }

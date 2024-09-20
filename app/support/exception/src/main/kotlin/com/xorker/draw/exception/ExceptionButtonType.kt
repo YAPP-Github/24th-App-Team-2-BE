@@ -2,8 +2,8 @@ package com.xorker.draw.exception
 
 import com.xorker.draw.exception.ExceptionButtonAction.CloseDialog
 import com.xorker.draw.exception.ExceptionButtonAction.ForceUpdate
+import com.xorker.draw.i18n.MessageService
 import java.util.*
-import org.springframework.context.MessageSource
 
 enum class ExceptionButtonType(
     private val i18nCode: String,
@@ -17,10 +17,10 @@ enum class ExceptionButtonType(
 
     private val responseMap = HashMap<Locale, ExceptionButtonResponse>()
 
-    fun toResponse(source: MessageSource, locale: Locale): ExceptionButtonResponse {
+    fun toResponse(source: MessageService, locale: Locale): ExceptionButtonResponse {
         if (responseMap.containsKey(locale).not()) {
             val response = ExceptionButtonResponse(
-                text = source.getMessage(this.i18nCode, null, locale),
+                text = source.getMessage(this.i18nCode, locale),
                 action = this.action,
             )
 
@@ -62,6 +62,7 @@ fun XorkerException.getButtons(): List<ExceptionButtonType> {
         InvalidRequestOtherPlayingException,
         AlreadyPlayingRoomException,
         InvalidWebSocketStatusException,
+        is NotDefinedMessageCodeException,
         -> buttonOk
     }
 }

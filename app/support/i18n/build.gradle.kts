@@ -7,9 +7,10 @@ plugins {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":app:support:i18n"))
+    implementation(project(":support:logging"))
+    implementation(project(":support:yaml"))
 
-    implementation("org.springframework.boot:spring-boot-starter-web:${Versions.SPRING_BOOT}")
+    implementation("org.springframework.boot:spring-boot-starter:${Versions.SPRING_BOOT}")
 }
 
 tasks {

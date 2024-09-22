@@ -1,0 +1,4 @@
+spring:
+    data:
+        redis:
+            port: 6379

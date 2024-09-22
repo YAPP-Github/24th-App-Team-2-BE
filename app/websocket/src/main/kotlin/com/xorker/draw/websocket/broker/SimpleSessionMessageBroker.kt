@@ -53,7 +53,6 @@ internal class SimpleSessionMessageBroker(
         roomRepository.getRoom(roomId)?.let { room ->
             room.players.forEach { player ->
                 val userId = player.userId
-
                 sessionUseCase.getSession(userId)?.send(response)
             }
         }

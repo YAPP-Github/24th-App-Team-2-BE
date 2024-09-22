@@ -1,5 +1,7 @@
 package com.xorker.draw.mafia
 
+import com.xorker.draw.mafia.dto.RedisMafiaGameInfo
+import com.xorker.draw.mafia.dto.toRedisMafiaGameInfo
 import com.xorker.draw.room.Room
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.room.RoomRepository
@@ -52,6 +54,7 @@ internal class MafiaGameAdapter(
             .forEach { removePlayer(it) }
 
         val phase = gameInfo.phase
+
         if (phase is MafiaPhaseWithTimer) {
             timerRepository.cancelTimer(room.id)
         }
@@ -60,12 +63,10 @@ internal class MafiaGameAdapter(
     }
 
     override fun getGameInfo(roomId: RoomId): MafiaGameInfo? {
-        val gameInfo = redisTemplateWithObject
+        return redisTemplateWithObject
             .opsForValue()
             .get(roomId.value)
             ?.toMafiaGameInfo()
-        println("Game info: $gameInfo")
-        return gameInfo
     }
 
     override fun getGameInfo(userId: UserId): MafiaGameInfo? {
@@ -73,12 +74,10 @@ internal class MafiaGameAdapter(
             .opsForValue()
             .get(userId.value.toString()) ?: return null
 
-        val gameInfo = redisTemplateWithObject
+        return redisTemplateWithObject
             .opsForValue()
             .get(roomId)
             ?.toMafiaGameInfo()
-        println("Game info: $gameInfo")
-        return gameInfo
     }
 
     override fun removePlayer(userId: UserId) {

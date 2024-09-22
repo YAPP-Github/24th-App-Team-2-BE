@@ -26,6 +26,7 @@ internal class MafiaPhasePlayGameProcessor(
         time = time.plus(gameOption.roundAnimationTime)
 
         val room = gameInfo.room
+
         timerRepository.startTimer(room.id, time) {
             processNextTurn(gameInfo, nextStep)
         }

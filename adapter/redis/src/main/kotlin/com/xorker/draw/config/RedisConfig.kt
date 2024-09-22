@@ -1,6 +1,6 @@
 package com.xorker.draw.config
 
-import com.xorker.draw.mafia.RedisMafiaGameInfo
+import com.xorker.draw.mafia.dto.RedisMafiaGameInfo
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
@@ -10,7 +10,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.StringRedisSerializer
 
 @Configuration
-class RedisConfig {
+internal class RedisConfig {
 
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {

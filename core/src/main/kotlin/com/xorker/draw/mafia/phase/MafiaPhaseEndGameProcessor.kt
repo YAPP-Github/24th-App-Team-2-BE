@@ -26,6 +26,7 @@ internal class MafiaPhaseEndGameProcessor(
         val gameOption = gameInfo.gameOption
 
         val room = gameInfo.room
+
         timerRepository.startTimer(room.id, gameOption.endTime) {
             processEndGame(gameInfo)
         }

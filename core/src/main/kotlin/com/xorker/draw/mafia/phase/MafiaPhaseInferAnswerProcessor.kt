@@ -20,6 +20,7 @@ internal class MafiaPhaseInferAnswerProcessor(
         val gameOption = gameInfo.gameOption
 
         val room = gameInfo.room
+
         timerRepository.startTimer(room.id, gameOption.answerTime) {
             processInferAnswer(gameInfo, nextStep)
         }

@@ -23,6 +23,7 @@ internal class MafiaPhasePlayVoteProcessor(
         val gameOption = gameInfo.gameOption
 
         val room = gameInfo.room
+
         timerRepository.startTimer(room.id, gameOption.voteTime) {
             processVote(gameInfo, winStep, loseStep)
         }
@@ -36,7 +37,6 @@ internal class MafiaPhasePlayVoteProcessor(
     }
 
     private fun processVote(gameInfo: MafiaGameInfo, winStep: () -> Unit, loseStep: () -> Unit) {
-        println("process vote")
         val phase = gameInfo.phase
         assertIs<MafiaPhase.Vote>(phase)
 

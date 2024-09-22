@@ -3,6 +3,7 @@ include(
     "adapter:memory",
     "adapter:oauth",
     "adapter:rdb",
+    "adapter:redis",
     "app:api",
     "app:support:auth",
     "app:support:exception",

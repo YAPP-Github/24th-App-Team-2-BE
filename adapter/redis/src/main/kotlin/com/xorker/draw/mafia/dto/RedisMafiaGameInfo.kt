@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.xorker.draw.mafia.MafiaGameInfo
 
 data class RedisMafiaGameInfo @JsonCreator constructor(
-    @JsonProperty("room") val room: RedisRoom,
+    @JsonProperty("room") val room: RedisMafiaRoom,
     @JsonProperty("phase") val phase: RedisMafiaPhase,
-    @JsonProperty("gameOption") val gameOption: RedisGameOption,
+    @JsonProperty("gameOption") val gameOption: RedisMafiaGameOption,
 ) {
     fun toMafiaGameInfo(): MafiaGameInfo = MafiaGameInfo(
         room = room.toRoom(),
@@ -17,7 +17,7 @@ data class RedisMafiaGameInfo @JsonCreator constructor(
 }
 
 fun MafiaGameInfo.toRedisMafiaGameInfo(): RedisMafiaGameInfo = RedisMafiaGameInfo(
-    room = RedisRoom(
+    room = RedisMafiaRoom(
         id = room.id.value,
         locale = room.locale,
         owner = RedisMafiaPlayer(
@@ -38,7 +38,7 @@ fun MafiaGameInfo.toRedisMafiaGameInfo(): RedisMafiaGameInfo = RedisMafiaGameInf
         isRandomMatching = room.isRandomMatching,
     ),
     phase = phase.toRedisMafiaPhase(),
-    gameOption = RedisGameOption(
+    gameOption = RedisMafiaGameOption(
         minimum = gameOption.minimum,
         maximum = gameOption.maximum,
         readyTime = gameOption.readyTime.toMillis(),

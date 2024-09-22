@@ -7,6 +7,7 @@ import com.xorker.draw.mafia.phase.MafiaPhaseInferAnswerProcessor
 import com.xorker.draw.mafia.phase.MafiaPhasePlayGameProcessor
 import com.xorker.draw.mafia.phase.MafiaPhaseService
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.timer.TimerRepository
 import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.Session
@@ -22,6 +23,7 @@ internal class MafiaGameService(
     private val mafiaPhaseInferAnswerProcessor: MafiaPhaseInferAnswerProcessor,
     private val mafiaGameRepository: MafiaGameRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
+    private val timerRepository: TimerRepository,
 ) : MafiaGameUseCase {
 
     override fun getGameInfo(userId: UserId): MafiaGameInfo? {
@@ -54,7 +56,7 @@ internal class MafiaGameService(
         val phase = gameInfo.phase
         assertTurn(phase, session.user.id)
 
-        phase.job.cancel()
+        timerRepository.cancelTimer(phase.jobKey)
 
         mafiaPhasePlayGameProcessor.processNextTurn(gameInfo) {
             mafiaPhaseService.vote(gameInfo.room.id)
@@ -95,8 +97,7 @@ internal class MafiaGameService(
 
         phase.answer = answer
 
-        val job = phase.job
-        job.cancel()
+        timerRepository.cancelTimer(phase.jobKey)
 
         mafiaPhaseInferAnswerProcessor.processInferAnswer(gameInfo) {
             mafiaPhaseService.endGame(gameInfo.room.id)

@@ -7,6 +7,7 @@ import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.MafiaPhaseMessenger
 import com.xorker.draw.mafia.MafiaPlayer
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.timer.TimerRepository
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Component
 @Component
 internal class MafiaPhaseMessengerImpl(
     private val broadcaster: WebSocketBroadcaster,
+    private val timerRepository: TimerRepository,
 ) : MafiaPhaseMessenger {
 
     override fun unicastPhase(userId: UserId, gameInfo: MafiaGameInfo) {
@@ -45,7 +47,7 @@ internal class MafiaPhaseMessengerImpl(
 
     private fun MafiaGameInfo.generateMessage(isOrigin: Boolean = true): SessionMessage {
         return when (val phase = this.phase) {
-            is MafiaPhase.Wait -> MafiaPhaseWaitMessage(
+            MafiaPhase.Wait -> MafiaPhaseWaitMessage(
                 MafiaPhaseWaitBody(
                     room.id,
                     room.players.map { it.toResponse(room.owner) }.toList(),
@@ -55,7 +57,7 @@ internal class MafiaPhaseMessengerImpl(
 
             is MafiaPhase.Ready -> MafiaPhaseReadyMessage(
                 MafiaPhaseReadyBody(
-                    startTime = phase.job.startTime,
+                    startTime = timerRepository.getTimerStartTime(room.id)!!,
                     mafiaGameInfo = generateMafiaGameInfoMessage(
                         roomId = room.id,
                         isRandomMatching = room.isRandomMatching,
@@ -71,7 +73,7 @@ internal class MafiaPhaseMessengerImpl(
                 MafiaPhasePlayingBody(
                     round = phase.round,
                     turn = phase.turn,
-                    startTurnTime = phase.job.startTime,
+                    startTurnTime = timerRepository.getTimerStartTime(room.id)!!,
                     draw = phase.getDraw(),
                     currentDraw = phase.getCurrentDraw(),
                     mafiaGameInfo = generateMafiaGameInfoMessage(
@@ -87,7 +89,7 @@ internal class MafiaPhaseMessengerImpl(
 
             is MafiaPhase.Vote -> MafiaPhaseVoteMessage(
                 MafiaPhaseVoteBody(
-                    startTime = phase.job.startTime,
+                    startTime = timerRepository.getTimerStartTime(room.id)!!,
                     mafiaGameInfo = if (isOrigin.not()) {
                         generateMafiaGameInfoMessage(
                             roomId = room.id,
@@ -107,7 +109,7 @@ internal class MafiaPhaseMessengerImpl(
 
             is MafiaPhase.InferAnswer -> MafiaPhaseInferAnswerMessage(
                 MafiaPhaseInferAnswerBody(
-                    startTime = phase.job.startTime,
+                    startTime = timerRepository.getTimerStartTime(room.id)!!,
                     mafiaGameInfo = if (isOrigin.not()) {
                         generateMafiaGameInfoMessage(
                             roomId = room.id,
@@ -127,7 +129,7 @@ internal class MafiaPhaseMessengerImpl(
 
             is MafiaPhase.End -> MafiaPhaseEndMessage(
                 MafiaPhaseEndBody(
-                    startTime = phase.job.startTime,
+                    startTime = timerRepository.getTimerStartTime(room.id)!!,
                     mafiaGameInfo = if (isOrigin.not()) {
                         generateMafiaGameInfoMessage(
                             roomId = room.id,

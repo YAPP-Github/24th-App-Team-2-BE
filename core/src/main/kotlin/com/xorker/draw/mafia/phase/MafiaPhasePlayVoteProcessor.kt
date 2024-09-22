@@ -1,6 +1,7 @@
 package com.xorker.draw.mafia.phase
 
 import com.xorker.draw.mafia.MafiaGameInfo
+import com.xorker.draw.mafia.MafiaGameRepository
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.assertIs
 import com.xorker.draw.timer.TimerRepository
@@ -12,6 +13,7 @@ import kotlin.math.max
 @Component
 internal class MafiaPhasePlayVoteProcessor(
     private val timerRepository: TimerRepository,
+    private val mafiaGameRepository: MafiaGameRepository,
 ) {
 
     internal fun playVote(gameInfo: MafiaGameInfo, winStep: () -> Unit, loseStep: () -> Unit): MafiaPhase.Vote {
@@ -20,17 +22,21 @@ internal class MafiaPhasePlayVoteProcessor(
 
         val gameOption = gameInfo.gameOption
 
-        val job = timerRepository.startTimer(gameOption.voteTime) {
+        val room = gameInfo.room
+        timerRepository.startTimer(room.id, gameOption.voteTime) {
             processVote(gameInfo, winStep, loseStep)
         }
 
-        val votePhase = phase.toVote(job)
+        val votePhase = phase.toVote()
         gameInfo.phase = votePhase
+
+        mafiaGameRepository.saveGameInfo(gameInfo)
 
         return votePhase
     }
 
     private fun processVote(gameInfo: MafiaGameInfo, winStep: () -> Unit, loseStep: () -> Unit) {
+        println("process vote")
         val phase = gameInfo.phase
         assertIs<MafiaPhase.Vote>(phase)
 

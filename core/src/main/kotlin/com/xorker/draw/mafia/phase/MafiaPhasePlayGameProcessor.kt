@@ -25,12 +25,15 @@ internal class MafiaPhasePlayGameProcessor(
         time = time.plus(gameOption.introAnimationTime)
         time = time.plus(gameOption.roundAnimationTime)
 
-        val job = timerRepository.startTimer(time) {
+        val room = gameInfo.room
+        timerRepository.startTimer(room.id, time) {
             processNextTurn(gameInfo, nextStep)
         }
 
-        val playingPhase = phase.toPlaying(job)
+        val playingPhase = phase.toPlaying()
         gameInfo.phase = playingPhase
+
+        mafiaGameRepository.saveGameInfo(gameInfo)
 
         return playingPhase
     }
@@ -58,7 +61,7 @@ internal class MafiaPhasePlayGameProcessor(
                 gameOption.turnTime
             }
 
-        phase.job = timerRepository.startTimer(time) {
+        timerRepository.startTimer(room.id, time) {
             processNextTurn(gameInfo, nextStep)
         }
 

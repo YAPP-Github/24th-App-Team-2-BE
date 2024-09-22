@@ -1,8 +1,8 @@
 package com.xorker.draw.mafia
 
 import com.xorker.draw.exception.InvalidMafiaPhaseException
-import com.xorker.draw.mafia.event.JobWithStartTime
 import com.xorker.draw.mafia.turn.TurnInfo
+import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
 import java.util.Vector
 import kotlin.contracts.ExperimentalContracts
@@ -13,29 +13,29 @@ sealed class MafiaPhase {
     data object Wait : MafiaPhase()
 
     data class Ready(
-        override val job: JobWithStartTime,
+        override val jobKey: RoomId,
         override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
     ) : MafiaPhase(), MafiaPhaseWithTurnList, MafiaPhaseWithTimer {
-        fun toPlaying(job: JobWithStartTime): Playing {
+        fun toPlaying(): Playing {
             return Playing(
+                jobKey = jobKey,
                 turnList = turnList,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
                 drawData = mutableListOf(),
-                job = job,
             )
         }
     }
 
     class Playing(
+        override val jobKey: RoomId,
         override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
         var turnInfo: TurnInfo = TurnInfo(),
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
-        override var job: JobWithStartTime,
     ) : MafiaPhase(), MafiaPhaseWithTurnList, TurnInfo, MafiaPhaseWithTimer {
         override val round: Int
             get() = turnInfo.round
@@ -43,13 +43,13 @@ sealed class MafiaPhase {
         override val turn: Int
             get() = turnInfo.turn
 
-        fun toVote(job: JobWithStartTime): Vote {
+        fun toVote(): Vote {
             val players = mutableMapOf<UserId, Vector<UserId>>()
             turnList.forEach { player ->
                 players[player.userId] = Vector()
             }
             return Vote(
-                job = job,
+                jobKey = jobKey,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
                 drawData = drawData,
@@ -89,65 +89,65 @@ sealed class MafiaPhase {
     }
 
     data class Vote(
-        override val job: JobWithStartTime,
+        override val jobKey: RoomId,
+        override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
         val players: Map<UserId, Vector<UserId>>,
-        override val turnList: List<MafiaPlayer>,
     ) : MafiaPhase(), MafiaPhaseWithTurnList, MafiaPhaseWithTimer {
-        fun toInferAnswer(job: JobWithStartTime): InferAnswer {
+        fun toInferAnswer(): InferAnswer {
             return InferAnswer(
-                job = job,
+                jobKey = jobKey,
+                turnList = turnList,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
                 drawData = drawData,
-                turnList = turnList,
             )
         }
 
-        fun toEnd(job: JobWithStartTime): End {
+        fun toEnd(): End {
             return End(
-                job = job,
+                jobKey = jobKey,
+                turnList = turnList,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
                 drawData = drawData,
                 showAnswer = false,
-                turnList = turnList,
             )
         }
     }
 
     class InferAnswer(
-        override val job: JobWithStartTime,
+        override val jobKey: RoomId,
+        override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
         var answer: String? = null,
-        override val turnList: List<MafiaPlayer>,
     ) : MafiaPhase(), MafiaPhaseWithTurnList, MafiaPhaseWithTimer {
-        fun toEnd(job: JobWithStartTime): End {
+        fun toEnd(): End {
             return End(
-                job = job,
+                jobKey = jobKey,
+                turnList = turnList,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
                 drawData = drawData,
                 answer = answer,
-                turnList = turnList,
             )
         }
     }
 
     class End(
-        val job: JobWithStartTime,
+        override val jobKey: RoomId,
+        override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
         val drawData: MutableList<Pair<UserId, Map<String, Any>>>,
         val showAnswer: Boolean = true,
         var answer: String? = null,
         var isMafiaWin: Boolean = false,
-        override val turnList: List<MafiaPlayer>,
-    ) : MafiaPhase(), MafiaPhaseWithTurnList
+    ) : MafiaPhase(), MafiaPhaseWithTurnList, MafiaPhaseWithTimer
 }
 
 interface MafiaPhaseWithTurnList {
@@ -162,7 +162,7 @@ interface MafiaPhaseWithTurnList {
 }
 
 interface MafiaPhaseWithTimer {
-    val job: JobWithStartTime
+    val jobKey: RoomId
 }
 
 @OptIn(ExperimentalContracts::class)

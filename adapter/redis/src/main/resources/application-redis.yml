@@ -2,3 +2,6 @@ spring:
     data:
         redis:
             port: 6379
+            host: ${REDIS_HOST}
+            url: jdbc:redis://${REDIS_USER}:${REDIS_PASSWORD}@${REDIS_HOST}:6379
+            password: ${REDIS_PASSWORD}

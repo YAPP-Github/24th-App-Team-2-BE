@@ -7,6 +7,7 @@ include(
     "app:api",
     "app:support:auth",
     "app:support:exception",
+    "app:support:i18n",
     "app:websocket",
     "domain",
     "core",

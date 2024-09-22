@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":app:support:i18n"))
     implementation(project(":support:metric"))
 
     implementation("org.springframework.boot:spring-boot-starter:${Versions.SPRING_BOOT}")

@@ -2,12 +2,9 @@ package com.xorker.draw.websocket.session
 
 import com.xorker.draw.user.UserId
 import java.util.concurrent.ConcurrentHashMap
-import org.springframework.core.Ordered
-import org.springframework.core.annotation.Order
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 
-@Order(Ordered.HIGHEST_PRECEDENCE)
-@Service
+@Component
 internal class SessionManager {
     private val sessionMap: ConcurrentHashMap<SessionId, Session> = ConcurrentHashMap()
     private val userIdMap: ConcurrentHashMap<UserId, Session> = ConcurrentHashMap()
@@ -18,6 +15,12 @@ internal class SessionManager {
 
     fun getSession(userId: UserId): Session? {
         return userIdMap[userId]
+    }
+
+    fun getSessions(): List<Session> {
+        val sessions = sessionMap.values
+
+        return sessions.toList()
     }
 
     fun registerSession(session: Session) {
@@ -33,5 +36,13 @@ internal class SessionManager {
     fun unregisterSession(sessionId: SessionId): Session? {
         val session = sessionMap.remove(sessionId)
         return userIdMap.remove(session?.user?.id)
+    }
+
+    fun setPing(sessionId: SessionId) {
+        val session = sessionMap[sessionId]
+
+        session?.let {
+            session.ping = true
+        }
     }
 }

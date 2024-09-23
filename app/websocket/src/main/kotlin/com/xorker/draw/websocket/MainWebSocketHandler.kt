@@ -1,9 +1,8 @@
 package com.xorker.draw.websocket
 
-import com.xorker.draw.exception.InvalidWebSocketStatusException
 import com.xorker.draw.exception.XorkerException
+import com.xorker.draw.mafia.UserConnectionUseCase
 import com.xorker.draw.support.logging.logger
-import com.xorker.draw.support.metric.MetricManager
 import com.xorker.draw.websocket.exception.WebSocketExceptionHandler
 import com.xorker.draw.websocket.log.WebSocketLogger
 import com.xorker.draw.websocket.message.request.WebSocketRequestParser
@@ -21,52 +20,45 @@ internal class MainWebSocketHandler(
     private val router: WebSocketRouter,
     private val requestParser: WebSocketRequestParser,
     private val waitingQueueUseCase: WaitingQueueUseCase,
-    private val sessionEventListener: List<SessionEventListener>,
     private val webSocketExceptionHandler: WebSocketExceptionHandler,
-    private val metricManager: MetricManager,
     private val webSocketLogger: WebSocketLogger,
+    private val userConnectionUseCase: UserConnectionUseCase,
 ) : TextWebSocketHandler() {
 
     private val logger = logger()
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        metricManager.increaseWebsocket(session.id)
-        webSocketLogger.afterConnectionEstablished(session)
+        webSocketLogger.handshake(session)
     }
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val request = requestParser.parse(message.payload)
 
-        webSocketLogger.handleRequest(session, request) { s, req ->
+        webSocketLogger.message(session, request) {
             try {
-                router.route(s, req)
+                router.route(session, request)
             } catch (ex: XorkerException) {
-                webSocketExceptionHandler.handleXorkerException(s, req.action, ex)
+                webSocketExceptionHandler.handleXorkerException(session, request.action, ex)
             }
         }
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-        metricManager.decreaseWebsocket(session.id)
-        webSocketLogger.afterConnectionClosed(session, status)
+        webSocketLogger.connectionClosed(session, status) {
+            val sessionId = SessionId(session.id)
+            val sessionDto = sessionManager.unregisterSession(sessionId) ?: return@connectionClosed
 
-        val sessionId = SessionId(session.id)
+            waitingQueueUseCase.remove(sessionDto.user, sessionDto.locale)
 
-        val sessionDto = sessionManager.unregisterSession(sessionId)
-            ?: return logger.error(InvalidWebSocketStatusException.message, InvalidWebSocketStatusException)
-
-        waitingQueueUseCase.remove(sessionDto.user, sessionDto.locale)
-
-        when (status) {
-            CloseStatus.NORMAL ->
-                sessionEventListener.forEach {
-                    it.exitSession(sessionDto.user.id)
+            when (status) {
+                CloseStatus.NORMAL -> {
+                    userConnectionUseCase.exitUser(sessionDto.user)
                 }
 
-            else ->
-                sessionEventListener.forEach {
-                    it.disconnectSession(sessionDto.user.id)
+                else -> {
+                    userConnectionUseCase.disconnectUser(sessionDto.user)
                 }
+            }
         }
     }
 }

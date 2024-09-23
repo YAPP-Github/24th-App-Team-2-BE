@@ -44,7 +44,7 @@ internal class MafiaGameAdapter(
         data.remove(gameInfo.room.id)
     }
 
-    override fun getGameInfo(roomId: RoomId): MafiaGameInfo? {
+    override fun getGameInfo(roomId: RoomId?): MafiaGameInfo? {
         return data[roomId]
     }
 

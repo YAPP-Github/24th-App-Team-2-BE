@@ -9,6 +9,7 @@ interface Session {
     val id: SessionId
     val user: User
     val locale: String
+    var ping: Boolean
 
     fun send(message: String)
 }

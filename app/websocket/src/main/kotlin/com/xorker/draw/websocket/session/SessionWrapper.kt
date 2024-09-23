@@ -10,6 +10,7 @@ internal class SessionWrapper(
     override val locale: String,
 ) : Session {
     override val id: SessionId = SessionId(session.id)
+    override var ping: Boolean = true
 
     override fun send(message: String) {
         synchronized(session) {

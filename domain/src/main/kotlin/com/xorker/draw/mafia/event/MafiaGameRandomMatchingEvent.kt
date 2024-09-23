@@ -1,7 +1,8 @@
 package com.xorker.draw.mafia.event
 
-import com.xorker.draw.websocket.WaitingQueueSession
+import com.xorker.draw.user.User
 
 data class MafiaGameRandomMatchingEvent(
-    val players: List<WaitingQueueSession>,
+    val players: List<User>,
+    val locale: String,
 )

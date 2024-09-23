@@ -2,11 +2,13 @@ package com.xorker.draw.mafia.phase
 
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.user.User
 
 interface MafiaPhaseUseCase {
     /**
      * MafiaPhase.Wait -> MafiaPhase.Ready
      */
+    fun startGame(user: User): MafiaPhase.Ready
     fun startGame(roomId: RoomId): MafiaPhase.Ready
 
     /**

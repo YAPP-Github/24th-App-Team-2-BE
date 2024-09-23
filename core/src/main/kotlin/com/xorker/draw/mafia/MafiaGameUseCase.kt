@@ -2,16 +2,16 @@ package com.xorker.draw.mafia
 
 import com.xorker.draw.mafia.dto.DrawRequest
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
-import com.xorker.draw.websocket.Session
 
 interface MafiaGameUseCase {
-    fun getGameInfo(userId: UserId): MafiaGameInfo?
-    fun getGameInfo(roomId: RoomId?): MafiaGameInfo?
-    fun draw(session: Session, request: DrawRequest)
-    fun nextTurnByUser(session: Session)
-    fun voteMafia(session: Session, targetUserId: UserId)
-    fun inferAnswer(session: Session, answer: String)
-    fun decideAnswer(session: Session, answer: String)
-    fun react(session: Session, reaction: String)
+    fun getGameInfoByUserId(userId: UserId): MafiaGameInfo?
+    fun getGameInfoByRoomId(roomId: RoomId?): MafiaGameInfo?
+    fun draw(user: User, request: DrawRequest)
+    fun nextTurnByUser(user: User)
+    fun voteMafia(user: User, targetUserId: UserId)
+    fun inferAnswer(user: User, answer: String)
+    fun decideAnswer(user: User, answer: String)
+    fun react(user: User, reaction: String)
 }

@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.xorker.draw.support.logging.defaultApiJsonMap
 import com.xorker.draw.support.logging.logger
 import com.xorker.draw.support.logging.registerRequestId
-import com.xorker.draw.websocket.SessionId
-import com.xorker.draw.websocket.SessionInitializeRequest
-import com.xorker.draw.websocket.SessionUseCase
 import com.xorker.draw.websocket.message.request.RequestAction
-import com.xorker.draw.websocket.message.request.dto.WebSocketRequest
+import com.xorker.draw.websocket.message.request.WebSocketRequest
+import com.xorker.draw.websocket.message.request.mafia.SessionInitializeRequest
+import com.xorker.draw.websocket.session.SessionId
+import com.xorker.draw.websocket.session.SessionManager
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
@@ -16,7 +16,7 @@ import org.springframework.web.socket.WebSocketSession
 
 @Component
 internal class WebSocketLogger(
-    private val sessionUseCase: SessionUseCase,
+    private val sessionManager: SessionManager,
     private val objectMapper: ObjectMapper,
 ) {
     private val logger = logger()
@@ -80,10 +80,11 @@ internal class WebSocketLogger(
     }
 
     private fun injectDefaultSessionInfo(sessionId: SessionId, data: MutableMap<String, Any?>) {
-        val sessionDto = sessionUseCase.getSession(sessionId)
+        val sessionDto = sessionManager.getSession(sessionId)
         if (sessionDto != null) {
             data["userId"] = sessionDto.user.id.value
-            data["roomId"] = sessionDto.roomId
+            // TODO 방법 찾기
+            // data["roomId"] = sessionDto.roomId
         }
     }
 }

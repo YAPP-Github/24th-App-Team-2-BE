@@ -6,7 +6,9 @@ import com.xorker.draw.support.logging.logger
 import com.xorker.draw.support.metric.MetricManager
 import com.xorker.draw.websocket.exception.WebSocketExceptionHandler
 import com.xorker.draw.websocket.log.WebSocketLogger
-import com.xorker.draw.websocket.parser.WebSocketRequestParser
+import com.xorker.draw.websocket.message.request.WebSocketRequestParser
+import com.xorker.draw.websocket.session.SessionId
+import com.xorker.draw.websocket.session.SessionManager
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
@@ -15,11 +17,10 @@ import org.springframework.web.socket.handler.TextWebSocketHandler
 
 @Component
 internal class MainWebSocketHandler(
-    private val sessionUseCase: SessionUseCase,
-    private val waitingQueueSessionUseCase: WaitingQueueSessionUseCase,
+    private val sessionManager: SessionManager,
     private val router: WebSocketRouter,
     private val requestParser: WebSocketRequestParser,
-    private val waitingQueueSessionEventListener: List<WaitingQueueSessionEventListener>,
+    private val waitingQueueUseCase: WaitingQueueUseCase,
     private val sessionEventListener: List<SessionEventListener>,
     private val webSocketExceptionHandler: WebSocketExceptionHandler,
     private val metricManager: MetricManager,
@@ -49,27 +50,22 @@ internal class MainWebSocketHandler(
         metricManager.decreaseWebsocket(session.id)
         webSocketLogger.afterConnectionClosed(session, status)
 
-        val waitingQueueSessionDto = waitingQueueSessionUseCase.getSession(SessionId(session.id))
+        val sessionId = SessionId(session.id)
 
-        if (waitingQueueSessionDto != null) {
-            waitingQueueSessionEventListener.forEach {
-                it.exitSession(waitingQueueSessionDto)
-            }
-            return
-        }
-
-        val sessionDto = sessionUseCase.getSession(SessionId(session.id))
+        val sessionDto = sessionManager.unregisterSession(sessionId)
             ?: return logger.error(InvalidWebSocketStatusException.message, InvalidWebSocketStatusException)
+
+        waitingQueueUseCase.remove(sessionDto.user, sessionDto.locale)
 
         when (status) {
             CloseStatus.NORMAL ->
                 sessionEventListener.forEach {
-                    it.exitSession(sessionDto)
+                    it.exitSession(sessionDto.user.id)
                 }
 
             else ->
                 sessionEventListener.forEach {
-                    it.disconnectSession(sessionDto)
+                    it.disconnectSession(sessionDto.user.id)
                 }
         }
     }

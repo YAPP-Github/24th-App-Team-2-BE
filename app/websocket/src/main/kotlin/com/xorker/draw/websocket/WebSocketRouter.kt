@@ -71,6 +71,8 @@ internal class WebSocketRouter(
 
                 mafiaGameUseCase.react(sessionDto.user, requestDto.reaction)
             }
+
+            RequestAction.PING -> sessionManager.setPing(SessionId(session.id))
         }
     }
 

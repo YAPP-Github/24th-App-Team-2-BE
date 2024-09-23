@@ -12,4 +12,5 @@ enum class RequestAction(
     ANSWER("마피아 정답 입력"),
     DECIDE_ANSWER("마피아 정답 확정"),
     REACTION("리액션"),
+    PING("웹소켓 Ping"),
 }

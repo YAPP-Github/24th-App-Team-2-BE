@@ -4,7 +4,6 @@ import com.xorker.draw.exception.InvalidRequestOtherPlayingException
 import com.xorker.draw.mafia.phase.MafiaPhaseUseCase
 import com.xorker.draw.notification.PushMessageUseCase
 import com.xorker.draw.user.User
-import com.xorker.draw.websocket.WaitingQueueUseCase
 import org.springframework.stereotype.Service
 
 @Service

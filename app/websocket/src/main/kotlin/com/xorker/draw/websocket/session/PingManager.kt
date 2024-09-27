@@ -1,7 +1,7 @@
 package com.xorker.draw.websocket.session
 
-import com.xorker.draw.websocket.SessionEventListener
-import com.xorker.draw.websocket.WaitingQueueUseCase
+import com.xorker.draw.mafia.UserConnectionUseCase
+import com.xorker.draw.mafia.WaitingQueueUseCase
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 internal class PingManager(
     private val sessionManager: SessionManager,
     private val waitingQueueUseCase: WaitingQueueUseCase,
-    private val sessionEventListener: List<SessionEventListener>,
+    private val userConnectionUseCase: UserConnectionUseCase,
 ) {
 
     @Scheduled(fixedRate = 1000, timeUnit = TimeUnit.MILLISECONDS)
@@ -31,9 +31,7 @@ internal class PingManager(
 
                 waitingQueueUseCase.remove(user, session.locale)
 
-                sessionEventListener.forEach {
-                    it.exitSession(user.id)
-                }
+                userConnectionUseCase.exitUser(user)
             }
         }
     }

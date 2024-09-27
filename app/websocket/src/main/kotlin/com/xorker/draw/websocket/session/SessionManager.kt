@@ -1,6 +1,8 @@
 package com.xorker.draw.websocket.session
 
+import com.xorker.draw.exception.UnSupportedException
 import com.xorker.draw.user.UserId
+import java.time.LocalDateTime
 import java.util.concurrent.ConcurrentHashMap
 import org.springframework.stereotype.Component
 
@@ -39,10 +41,8 @@ internal class SessionManager {
     }
 
     fun setPing(sessionId: SessionId) {
-        val session = sessionMap[sessionId]
+        val session = sessionMap[sessionId] ?: throw UnSupportedException
 
-        session?.let {
-            session.ping = true
-        }
+        session.ping = LocalDateTime.now()
     }
 }

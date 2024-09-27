@@ -2,6 +2,8 @@ package com.xorker.draw.websocket.session
 
 import com.xorker.draw.websocket.SessionEventListener
 import com.xorker.draw.websocket.WaitingQueueUseCase
+import java.time.Duration
+import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -13,12 +15,16 @@ internal class PingManager(
     private val sessionEventListener: List<SessionEventListener>,
 ) {
 
-    @Scheduled(fixedRate = 3000, timeUnit = TimeUnit.MILLISECONDS)
+    @Scheduled(fixedRate = 1000, timeUnit = TimeUnit.MILLISECONDS)
     fun checkSessionStatus() {
         val sessions = sessionManager.getSessions()
 
+        val now = LocalDateTime.now()
+
         sessions.forEach { session ->
-            if (session.ping.not()) {
+            val delay = Duration.between(session.ping, now).toSeconds()
+
+            if (delay > ALLOWED_DELAY_TIME) {
                 val user = session.user
 
                 sessionManager.unregisterSession(session.id)
@@ -28,9 +34,11 @@ internal class PingManager(
                 sessionEventListener.forEach {
                     it.exitSession(user.id)
                 }
-            } else {
-                session.ping = false
             }
         }
+    }
+
+    companion object {
+        private const val ALLOWED_DELAY_TIME = 2
     }
 }

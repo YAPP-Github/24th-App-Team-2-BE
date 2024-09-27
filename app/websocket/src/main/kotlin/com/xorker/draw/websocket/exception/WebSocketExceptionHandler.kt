@@ -6,7 +6,7 @@ import com.xorker.draw.exception.XorkerException
 import com.xorker.draw.exception.XorkerExceptionHandler
 import com.xorker.draw.support.logging.logger
 import com.xorker.draw.websocket.message.request.RequestAction
-import com.xorker.draw.websocket.parser.WebSocketResponseParser
+import com.xorker.draw.websocket.message.response.WebSocketResponseParser
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession

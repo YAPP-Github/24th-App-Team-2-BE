@@ -5,7 +5,18 @@ import com.xorker.draw.exception.MaxRoomException
 import com.xorker.draw.user.UserId
 
 @JvmInline
-value class RoomId(val value: String)
+value class RoomId private constructor(val value: String) {
+    companion object {
+        operator fun invoke(value: String): RoomId {
+            return RoomId(value)
+        }
+
+        operator fun invoke(value: String?): RoomId? {
+            if (value == null) return null
+            return RoomId(value)
+        }
+    }
+}
 
 interface Room<P : Player> {
     val id: RoomId

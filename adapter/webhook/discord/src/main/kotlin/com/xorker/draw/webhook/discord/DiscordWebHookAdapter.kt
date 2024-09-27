@@ -16,10 +16,6 @@ internal class DiscordWebHookAdapter(
     val logger = logger()
 
     override fun notifyMessage(notifyType: NotifyType) {
-        sendMessage(notifyType)
-    }
-
-    private fun sendMessage(notifyType: NotifyType) {
         try {
             when (notifyType) {
                 is NotifyType.DiscordRandomMatchingNotifyType ->

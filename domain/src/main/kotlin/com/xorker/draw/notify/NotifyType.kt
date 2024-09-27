@@ -6,39 +6,40 @@ import com.xorker.draw.room.RoomId
 sealed class NotifyType {
     class DiscordRandomMatchingNotifyType(
         name: String,
-        language: String,
+        language: LanguageType,
     ) : NotifyType() {
-        val message: String
+        val message: String = language.content + " ${name}님이 빠른 게임 상대를 기다리고 있어요."
 
-        private var _language: LanguageType? = null
+        companion object {
+            private fun from(name: String, language: String):
+                DiscordRandomMatchingNotifyType = DiscordRandomMatchingNotifyType(name, getLanguageType(language))
 
-        init {
-            _language = getLanguageType(language)
-            message = _language!!.content + " ${name}님이 빠른 게임 상대를 기다리고 있어요."
+            operator fun invoke(name: String, language: String): DiscordRandomMatchingNotifyType = from(name, language)
         }
     }
 
     class DiscordStartGameNotifyType(
         roomId: RoomId,
-        language: String,
+        language: LanguageType,
     ) : NotifyType() {
-        val message: String
+        val message: String = language.content + " ${roomId.value} 방에서 게임이 시작되었어요."
 
-        private var _language: LanguageType? = null
+        companion object {
+            private fun from(roomId: RoomId, language: String):
+                DiscordStartGameNotifyType = DiscordStartGameNotifyType(roomId, getLanguageType(language))
 
-        init {
-            _language = getLanguageType(language)
-            message = _language!!.content + " ${roomId.value} 방에서 게임이 시작되었어요."
+            operator fun invoke(roomId: RoomId, language: String): DiscordStartGameNotifyType = from(roomId, language)
         }
     }
 
-    fun getLanguageType(language: String): LanguageType {
-        if (language == "ko") {
-            return LanguageType.KOREAN
-        } else if (language == "en") {
-            return LanguageType.ENGLISH
+    companion object {
+        fun getLanguageType(language: String): LanguageType {
+            return when (language) {
+                "ko" -> LanguageType.KOREAN
+                "en" -> LanguageType.ENGLISH
+                else -> throw UnSupportedException
+            }
         }
-        throw UnSupportedException
     }
 }
 

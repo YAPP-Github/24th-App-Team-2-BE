@@ -57,7 +57,7 @@ internal class MafiaPhaseMessengerImpl(
 
             is MafiaPhase.Ready -> MafiaPhaseReadyMessage(
                 MafiaPhaseReadyBody(
-                    startTime = timerRepository.getTimerStartTime(room.id)!!,
+                    startTime = timerRepository.getTimerStartTime(room.id),
                     mafiaGameInfo = generateMafiaGameInfoMessage(
                         roomId = room.id,
                         isRandomMatching = room.isRandomMatching,
@@ -73,7 +73,7 @@ internal class MafiaPhaseMessengerImpl(
                 MafiaPhasePlayingBody(
                     round = phase.round,
                     turn = phase.turn,
-                    startTurnTime = timerRepository.getTimerStartTime(room.id)!!,
+                    startTurnTime = timerRepository.getTimerStartTime(room.id),
                     draw = phase.getDraw(),
                     currentDraw = phase.getCurrentDraw(),
                     mafiaGameInfo = generateMafiaGameInfoMessage(
@@ -89,7 +89,7 @@ internal class MafiaPhaseMessengerImpl(
 
             is MafiaPhase.Vote -> MafiaPhaseVoteMessage(
                 MafiaPhaseVoteBody(
-                    startTime = timerRepository.getTimerStartTime(room.id)!!,
+                    startTime = timerRepository.getTimerStartTime(room.id),
                     mafiaGameInfo = if (isOrigin.not()) {
                         generateMafiaGameInfoMessage(
                             roomId = room.id,
@@ -109,7 +109,7 @@ internal class MafiaPhaseMessengerImpl(
 
             is MafiaPhase.InferAnswer -> MafiaPhaseInferAnswerMessage(
                 MafiaPhaseInferAnswerBody(
-                    startTime = timerRepository.getTimerStartTime(room.id)!!,
+                    startTime = timerRepository.getTimerStartTime(room.id),
                     mafiaGameInfo = if (isOrigin.not()) {
                         generateMafiaGameInfoMessage(
                             roomId = room.id,
@@ -129,7 +129,7 @@ internal class MafiaPhaseMessengerImpl(
 
             is MafiaPhase.End -> MafiaPhaseEndMessage(
                 MafiaPhaseEndBody(
-                    startTime = timerRepository.getTimerStartTime(room.id)!!,
+                    startTime = timerRepository.getTimerStartTime(room.id),
                     mafiaGameInfo = if (isOrigin.not()) {
                         generateMafiaGameInfoMessage(
                             roomId = room.id,

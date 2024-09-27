@@ -68,7 +68,7 @@ internal class MafiaGameMessengerImpl(
         val body = MafiaGameTurnInfoBody(
             phase.round,
             phase.turn,
-            timerRepository.getTimerStartTime(roomId)!!,
+            timerRepository.getTimerStartTime(roomId),
             phase.turnList[phase.turn].userId,
             phase.drawData.map { it.second },
         )

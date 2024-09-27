@@ -2,9 +2,8 @@ package com.xorker.draw.mafia
 
 import com.xorker.draw.exception.InvalidMafiaPhaseException
 import com.xorker.draw.mafia.turn.TurnInfo
-import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
-import java.util.Vector
+import java.util.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -13,14 +12,12 @@ sealed class MafiaPhase {
     data object Wait : MafiaPhase()
 
     data class Ready(
-        override val jobKey: RoomId,
         override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
     ) : MafiaPhase(), MafiaPhaseWithTurnList, MafiaPhaseWithTimer {
         fun toPlaying(): Playing {
             return Playing(
-                jobKey = jobKey,
                 turnList = turnList,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
@@ -30,7 +27,6 @@ sealed class MafiaPhase {
     }
 
     class Playing(
-        override val jobKey: RoomId,
         override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
@@ -49,7 +45,6 @@ sealed class MafiaPhase {
                 players[player.userId] = Vector()
             }
             return Vote(
-                jobKey = jobKey,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
                 drawData = drawData,
@@ -89,7 +84,6 @@ sealed class MafiaPhase {
     }
 
     data class Vote(
-        override val jobKey: RoomId,
         override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
@@ -98,7 +92,6 @@ sealed class MafiaPhase {
     ) : MafiaPhase(), MafiaPhaseWithTurnList, MafiaPhaseWithTimer {
         fun toInferAnswer(): InferAnswer {
             return InferAnswer(
-                jobKey = jobKey,
                 turnList = turnList,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
@@ -108,7 +101,6 @@ sealed class MafiaPhase {
 
         fun toEnd(): End {
             return End(
-                jobKey = jobKey,
                 turnList = turnList,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
@@ -119,7 +111,6 @@ sealed class MafiaPhase {
     }
 
     class InferAnswer(
-        override val jobKey: RoomId,
         override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
@@ -128,7 +119,6 @@ sealed class MafiaPhase {
     ) : MafiaPhase(), MafiaPhaseWithTurnList, MafiaPhaseWithTimer {
         fun toEnd(): End {
             return End(
-                jobKey = jobKey,
                 turnList = turnList,
                 mafiaPlayer = mafiaPlayer,
                 keyword = keyword,
@@ -139,7 +129,6 @@ sealed class MafiaPhase {
     }
 
     class End(
-        override val jobKey: RoomId,
         override val turnList: List<MafiaPlayer>,
         val mafiaPlayer: MafiaPlayer,
         val keyword: MafiaKeyword,
@@ -161,9 +150,7 @@ interface MafiaPhaseWithTurnList {
     }
 }
 
-interface MafiaPhaseWithTimer {
-    val jobKey: RoomId
-}
+interface MafiaPhaseWithTimer
 
 @OptIn(ExperimentalContracts::class)
 inline fun <reified T : MafiaPhase> assertIs(phase: MafiaPhase) {

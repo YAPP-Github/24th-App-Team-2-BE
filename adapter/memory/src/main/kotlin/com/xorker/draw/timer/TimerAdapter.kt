@@ -1,5 +1,6 @@
 package com.xorker.draw.timer
 
+import com.xorker.draw.exception.UnSupportedException
 import com.xorker.draw.mafia.event.JobWithStartTime
 import com.xorker.draw.room.RoomId
 import java.time.Duration
@@ -32,8 +33,10 @@ internal class TimerAdapter : TimerRepository {
         jobs.remove(roomId)
     }
 
-    override fun getTimerStartTime(roomId: RoomId): LocalDateTime? {
-        return jobs[roomId]?.startTime
+    override fun getTimerStartTime(roomId: RoomId): LocalDateTime {
+        val job = jobs[roomId] ?: throw UnSupportedException
+
+        return job.startTime
     }
 
     private fun saveJob(roomId: RoomId, job: JobWithStartTime) {

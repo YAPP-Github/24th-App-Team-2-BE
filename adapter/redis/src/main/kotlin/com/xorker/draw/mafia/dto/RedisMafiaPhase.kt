@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.turn.TurnInfo
-import com.xorker.draw.room.RoomId
 import com.xorker.draw.user.UserId
 import java.util.*
 
 data class RedisMafiaPhase @JsonCreator constructor(
     @JsonProperty("status") val status: RedisMafiaPhaseStatus,
-    @JsonProperty("jobKey") val jobKey: String? = null,
     @JsonProperty("turnList") val turnList: List<RedisMafiaPlayer>? = null,
     @JsonProperty("mafiaPlayer") val mafiaPlayer: RedisMafiaPlayer? = null,
     @JsonProperty("keyword") val keyword: RedisMafiaKeyword? = null,
@@ -63,7 +61,6 @@ fun MafiaPhase.toRedisMafiaPhase(): RedisMafiaPhase {
 
         is MafiaPhase.Ready -> RedisMafiaPhase(
             status = RedisMafiaPhaseStatus.READY,
-            jobKey = jobKey.value,
             turnList = turnList.map { player ->
                 RedisMafiaPlayer(
                     id = player.userId.value,
@@ -86,7 +83,6 @@ fun MafiaPhase.toRedisMafiaPhase(): RedisMafiaPhase {
 
         is MafiaPhase.Playing -> RedisMafiaPhase(
             status = RedisMafiaPhaseStatus.PLAYING,
-            jobKey = jobKey.value,
             turnList = turnList.map { player ->
                 RedisMafiaPlayer(
                     id = player.userId.value,
@@ -114,7 +110,6 @@ fun MafiaPhase.toRedisMafiaPhase(): RedisMafiaPhase {
 
         is MafiaPhase.Vote -> RedisMafiaPhase(
             status = RedisMafiaPhaseStatus.VOTE,
-            jobKey = jobKey.value,
             turnList = turnList.map { player ->
                 RedisMafiaPlayer(
                     id = player.userId.value,
@@ -141,7 +136,6 @@ fun MafiaPhase.toRedisMafiaPhase(): RedisMafiaPhase {
 
         is MafiaPhase.InferAnswer -> RedisMafiaPhase(
             status = RedisMafiaPhaseStatus.INFER_ANSWER,
-            jobKey = jobKey.value,
             turnList = turnList.map { player ->
                 RedisMafiaPlayer(
                     id = player.userId.value,
@@ -168,7 +162,6 @@ fun MafiaPhase.toRedisMafiaPhase(): RedisMafiaPhase {
 
         is MafiaPhase.End -> RedisMafiaPhase(
             status = RedisMafiaPhaseStatus.END,
-            jobKey = jobKey.value,
             turnList = turnList.map { player ->
                 RedisMafiaPlayer(
                     id = player.userId.value,
@@ -200,7 +193,6 @@ fun MafiaPhase.toRedisMafiaPhase(): RedisMafiaPhase {
 fun RedisMafiaPhase.toMafiaPhase(): MafiaPhase = when (status) {
     RedisMafiaPhaseStatus.WAIT -> MafiaPhase.Wait
     RedisMafiaPhaseStatus.READY -> MafiaPhase.Ready(
-        jobKey = RoomId(jobKey!!),
         turnList = turnList!!.map { player ->
             player.toPlayer()
         },
@@ -209,7 +201,6 @@ fun RedisMafiaPhase.toMafiaPhase(): MafiaPhase = when (status) {
     )
 
     RedisMafiaPhaseStatus.PLAYING -> MafiaPhase.Playing(
-        jobKey = RoomId(jobKey!!),
         turnList = turnList!!.map { player ->
             player.toPlayer()
         },
@@ -222,7 +213,6 @@ fun RedisMafiaPhase.toMafiaPhase(): MafiaPhase = when (status) {
     )
 
     RedisMafiaPhaseStatus.VOTE -> MafiaPhase.Vote(
-        jobKey = RoomId(jobKey!!),
         turnList = turnList!!.map { player ->
             player.toPlayer()
         },
@@ -235,7 +225,6 @@ fun RedisMafiaPhase.toMafiaPhase(): MafiaPhase = when (status) {
     )
 
     RedisMafiaPhaseStatus.INFER_ANSWER -> MafiaPhase.InferAnswer(
-        jobKey = RoomId(jobKey!!),
         turnList = turnList!!.map { player ->
             player.toPlayer()
         },
@@ -248,7 +237,6 @@ fun RedisMafiaPhase.toMafiaPhase(): MafiaPhase = when (status) {
     )
 
     RedisMafiaPhaseStatus.END -> MafiaPhase.End(
-        jobKey = RoomId(jobKey!!),
         turnList = turnList!!.map { player ->
             player.toPlayer()
         },

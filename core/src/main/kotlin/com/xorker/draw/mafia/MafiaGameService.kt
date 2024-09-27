@@ -56,7 +56,9 @@ internal class MafiaGameService(
         val phase = gameInfo.phase
         assertTurn(phase, session.user.id)
 
-        timerRepository.cancelTimer(phase.jobKey)
+        val room = gameInfo.room
+
+        timerRepository.cancelTimer(room.id)
 
         mafiaPhasePlayGameProcessor.processNextTurn(gameInfo) {
             mafiaPhaseService.vote(gameInfo.room.id)
@@ -97,7 +99,9 @@ internal class MafiaGameService(
 
         phase.answer = answer
 
-        timerRepository.cancelTimer(phase.jobKey)
+        val room = gameInfo.room
+
+        timerRepository.cancelTimer(room.id)
 
         mafiaPhaseInferAnswerProcessor.processInferAnswer(gameInfo) {
             mafiaPhaseService.endGame(gameInfo.room.id)

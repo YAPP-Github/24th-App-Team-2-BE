@@ -8,5 +8,5 @@ import java.time.LocalDateTime
 interface TimerRepository {
     fun startTimer(roomId: RoomId, interval: Duration, callback: () -> Unit): JobWithStartTime
     fun cancelTimer(roomId: RoomId)
-    fun getTimerStartTime(roomId: RoomId): LocalDateTime?
+    fun getTimerStartTime(roomId: RoomId): LocalDateTime
 }

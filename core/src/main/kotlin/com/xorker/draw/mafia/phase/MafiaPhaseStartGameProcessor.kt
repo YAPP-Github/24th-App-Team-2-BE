@@ -29,7 +29,6 @@ internal class MafiaPhaseStartGameProcessor(
         timerRepository.startTimer(room.id, gameOption.readyTime, nextStep)
 
         val phase = MafiaPhase.Ready(
-            jobKey = room.id,
             turnList = turnList,
             mafiaPlayer = players[mafiaIndex],
             keyword = keyword,

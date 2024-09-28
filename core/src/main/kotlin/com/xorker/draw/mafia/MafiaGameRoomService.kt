@@ -1,5 +1,6 @@
 package com.xorker.draw.mafia
 
+import com.xorker.draw.event.mafia.MafiaGameInfoEventProducer
 import com.xorker.draw.exception.InvalidRequestValueException
 import com.xorker.draw.room.Room
 import com.xorker.draw.room.RoomId
@@ -11,9 +12,8 @@ import org.springframework.stereotype.Service
 @Service
 internal class MafiaGameRoomService(
     private val mafiaGameRepository: MafiaGameRepository,
-    private val mafiaGameMessenger: MafiaGameMessenger,
-    private val mafiaPhaseMessenger: MafiaPhaseMessenger,
     private val roomRepository: RoomRepository,
+    private val mafiaGameInfoEventProducer: MafiaGameInfoEventProducer,
 ) : UserConnectionUseCase {
 
     override fun connectUser(user: User, roomId: RoomId?, locale: String) {
@@ -23,8 +23,7 @@ internal class MafiaGameRoomService(
 
         val gameInfo = connectGame(user, roomIdNotNull, locale, false)
 
-        mafiaPhaseMessenger.unicastPhase(user.id, gameInfo)
-        mafiaGameMessenger.broadcastPlayerList(gameInfo)
+        mafiaGameInfoEventProducer.connectPlayer(gameInfo, user.id)
     }
 
     fun connectGame(user: User, roomId: RoomId, locale: String, isRandomMatching: Boolean): MafiaGameInfo {
@@ -63,7 +62,7 @@ internal class MafiaGameRoomService(
             mafiaGameRepository.removeGameInfo(gameInfo)
         } else {
             mafiaGameRepository.saveGameInfo(gameInfo)
-            mafiaGameMessenger.broadcastPlayerList(gameInfo)
+            mafiaGameInfoEventProducer.disconnectUser(gameInfo)
         }
     }
 
@@ -90,7 +89,7 @@ internal class MafiaGameRoomService(
         }
         mafiaGameRepository.removePlayer(player.userId)
         mafiaGameRepository.saveGameInfo(gameInfo)
-        mafiaGameMessenger.broadcastPlayerList(gameInfo)
+        mafiaGameInfoEventProducer.disconnectUser(gameInfo)
     }
 
     private fun generateColor(gameInfo: MafiaGameInfo?): String {

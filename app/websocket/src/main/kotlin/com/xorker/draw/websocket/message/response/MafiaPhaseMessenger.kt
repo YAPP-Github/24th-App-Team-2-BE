@@ -4,7 +4,6 @@ import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaGameOption
 import com.xorker.draw.mafia.MafiaKeyword
 import com.xorker.draw.mafia.MafiaPhase
-import com.xorker.draw.mafia.MafiaPhaseMessenger
 import com.xorker.draw.mafia.MafiaPlayer
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.timer.TimerRepository
@@ -28,16 +27,16 @@ import com.xorker.draw.websocket.message.response.mafia.toResponse
 import org.springframework.stereotype.Component
 
 @Component
-internal class MafiaPhaseMessengerImpl(
+internal class MafiaPhaseMessenger(
     private val broadcaster: WebSocketBroadcaster,
     private val timerRepository: TimerRepository,
-) : MafiaPhaseMessenger {
+) {
 
-    override fun unicastPhase(userId: UserId, gameInfo: MafiaGameInfo) {
+    fun unicastPhase(userId: UserId, gameInfo: MafiaGameInfo) {
         broadcaster.unicast(userId, gameInfo.generateMessage(false))
     }
 
-    override fun broadcastPhase(gameInfo: MafiaGameInfo) {
+    fun broadcastPhase(gameInfo: MafiaGameInfo) {
         val room = gameInfo.room
 
         broadcaster.broadcast(room.id, gameInfo.generateMessage())

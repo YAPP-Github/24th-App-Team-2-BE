@@ -1,0 +1,3 @@
+discord:
+    random-matching-url: ${WEBHOOK_RANDOM_MATCHING_URL}
+    start-game-url: ${WEBHOOK_START_GAME_URL}

@@ -3,6 +3,8 @@ package com.xorker.draw.mafia
 import com.xorker.draw.exception.InvalidRequestOtherPlayingException
 import com.xorker.draw.mafia.phase.MafiaPhaseUseCase
 import com.xorker.draw.notification.PushMessageUseCase
+import com.xorker.draw.notify.NotifyRepository
+import com.xorker.draw.notify.NotifyType
 import com.xorker.draw.user.User
 import org.springframework.stereotype.Service
 
@@ -14,6 +16,7 @@ internal class MafiaGameRandomMatchingService(
     private val mafiaPhaseUseCase: MafiaPhaseUseCase,
     private val mafiaGameRoomService: MafiaGameRoomService,
     private val pushMessageUseCase: PushMessageUseCase,
+    private val notifyRepository: NotifyRepository,
 ) : WaitingQueueUseCase {
 
     override fun enqueue(user: User, locale: String) {
@@ -36,6 +39,7 @@ internal class MafiaGameRandomMatchingService(
 
                 newGameStart(players, locale)
             } else {
+                notifyRepository.notifyMessage(NotifyType.DiscordRandomMatchingNotifyType(user.name, locale))
                 pushMessageUseCase.quickStart(locale, user.name)
             }
         }

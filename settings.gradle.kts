@@ -4,6 +4,7 @@ include(
     "adapter:oauth",
     "adapter:rdb",
     "adapter:redis",
+    "adapter:webhook:discord",
     "app:api",
     "app:support:auth",
     "app:support:exception",

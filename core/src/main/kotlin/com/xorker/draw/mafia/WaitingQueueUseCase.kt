@@ -1,4 +1,4 @@
-package com.xorker.draw.websocket
+package com.xorker.draw.mafia
 
 import com.xorker.draw.user.User
 

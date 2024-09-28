@@ -7,6 +7,7 @@ import com.xorker.draw.exception.NotFoundRoomException
 import com.xorker.draw.mafia.MafiaGameUseCase
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.UserConnectionUseCase
+import com.xorker.draw.mafia.WaitingQueueUseCase
 import com.xorker.draw.room.RoomId
 import com.xorker.draw.websocket.message.request.mafia.MafiaGameRandomMatchingRequest
 import com.xorker.draw.websocket.message.request.mafia.SessionInitializeRequest

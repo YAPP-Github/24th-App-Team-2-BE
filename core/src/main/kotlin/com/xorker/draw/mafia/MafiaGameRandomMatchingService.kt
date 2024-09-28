@@ -1,5 +1,6 @@
 package com.xorker.draw.mafia
 
+import com.xorker.draw.event.mafia.MafiaGameInfoEventProducer
 import com.xorker.draw.exception.InvalidRequestOtherPlayingException
 import com.xorker.draw.mafia.phase.MafiaPhaseUseCase
 import com.xorker.draw.notification.PushMessageUseCase
@@ -12,11 +13,11 @@ import org.springframework.stereotype.Service
 internal class MafiaGameRandomMatchingService(
     private val mafiaGameUseCase: MafiaGameUseCase,
     private val mafiaGameWaitingQueueRepository: MafiaGameWaitingQueueRepository,
-    private val mafiaGameMessenger: MafiaGameMessenger,
     private val mafiaPhaseUseCase: MafiaPhaseUseCase,
     private val mafiaGameRoomService: MafiaGameRoomService,
     private val pushMessageUseCase: PushMessageUseCase,
     private val notifyRepository: NotifyRepository,
+    private val mafiaGameInfoEventProducer: MafiaGameInfoEventProducer,
 ) : WaitingQueueUseCase {
 
     override fun enqueue(user: User, locale: String) {
@@ -24,7 +25,7 @@ internal class MafiaGameRandomMatchingService(
         if (gameInfo != null) throw InvalidRequestOtherPlayingException
 
         mafiaGameWaitingQueueRepository.enqueue(user, locale)
-        mafiaGameMessenger.unicastRandomMatching(user.id)
+        mafiaGameInfoEventProducer.joinRandomMatch(user.id)
 
         synchronized(this) {
             val size = mafiaGameWaitingQueueRepository.size(locale)

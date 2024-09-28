@@ -1,7 +1,6 @@
 package com.xorker.draw.websocket.message.response
 
 import com.xorker.draw.mafia.MafiaGameInfo
-import com.xorker.draw.mafia.MafiaGameMessenger
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.MafiaPhaseWithTurnList
 import com.xorker.draw.mafia.MafiaReactionType
@@ -27,12 +26,12 @@ import com.xorker.draw.websocket.message.response.mafia.toResponse
 import org.springframework.stereotype.Component
 
 @Component
-internal class MafiaGameMessengerImpl(
+internal class MafiaGameMessenger(
     private val broadcaster: WebSocketBroadcaster,
     private val timerRepository: TimerRepository,
-) : MafiaGameMessenger {
+) {
 
-    override fun broadcastPlayerList(gameInfo: MafiaGameInfo) {
+    fun broadcastPlayerList(gameInfo: MafiaGameInfo) {
         val roomId = gameInfo.room.id
 
         val phase = gameInfo.phase
@@ -53,13 +52,13 @@ internal class MafiaGameMessengerImpl(
         broadcaster.broadcast(roomId, message)
     }
 
-    override fun broadcastDraw(roomId: RoomId, data: Map<String, Any>) {
+    fun broadcastDraw(roomId: RoomId, data: Map<String, Any>) {
         val message = MafiaGameDrawMessage(data)
 
         broadcaster.broadcast(roomId, message)
     }
 
-    override fun broadcastNextTurn(gameInfo: MafiaGameInfo) {
+    fun broadcastNextTurn(gameInfo: MafiaGameInfo) {
         val roomId = gameInfo.room.id
 
         val phase = gameInfo.phase
@@ -76,7 +75,7 @@ internal class MafiaGameMessengerImpl(
         broadcaster.broadcast(roomId, MafiaGameTurnInfoMessage(body))
     }
 
-    override fun broadcastVoteStatus(gameInfo: MafiaGameInfo) {
+    fun broadcastVoteStatus(gameInfo: MafiaGameInfo) {
         val roomId = gameInfo.room.id
 
         val phase = gameInfo.phase
@@ -89,7 +88,7 @@ internal class MafiaGameMessengerImpl(
         broadcaster.broadcast(roomId, message)
     }
 
-    override fun broadcastAnswer(gameInfo: MafiaGameInfo, answer: String) {
+    fun broadcastAnswer(gameInfo: MafiaGameInfo, answer: String) {
         val roomId = gameInfo.room.id
 
         val phase = gameInfo.phase
@@ -102,7 +101,7 @@ internal class MafiaGameMessengerImpl(
         broadcaster.broadcast(roomId, message)
     }
 
-    override fun unicastRandomMatching(userId: UserId) {
+    fun unicastRandomMatching(userId: UserId) {
         val message = MafiaRandomMatchingMessage(
             MafiaRandomMatchingBody(),
         )
@@ -110,7 +109,7 @@ internal class MafiaGameMessengerImpl(
         broadcaster.unicast(userId, message)
     }
 
-    override fun broadcastReaction(gameInfo: MafiaGameInfo, reaction: MafiaReactionType) {
+    fun broadcastReaction(gameInfo: MafiaGameInfo, reaction: MafiaReactionType) {
         val roomId = gameInfo.room.id
 
         val phase = gameInfo.phase

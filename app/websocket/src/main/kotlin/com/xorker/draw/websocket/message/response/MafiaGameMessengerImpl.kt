@@ -7,6 +7,7 @@ import com.xorker.draw.mafia.MafiaPhaseWithTurnList
 import com.xorker.draw.mafia.MafiaReactionType
 import com.xorker.draw.mafia.assertIs
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.timer.TimerRepository
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
 import com.xorker.draw.websocket.message.response.mafia.MafiaGameAnswerBody
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Component
 @Component
 internal class MafiaGameMessengerImpl(
     private val broadcaster: WebSocketBroadcaster,
+    private val timerRepository: TimerRepository,
 ) : MafiaGameMessenger {
 
     override fun broadcastPlayerList(gameInfo: MafiaGameInfo) {
@@ -66,7 +68,7 @@ internal class MafiaGameMessengerImpl(
         val body = MafiaGameTurnInfoBody(
             phase.round,
             phase.turn,
-            phase.job.startTime,
+            timerRepository.getTimerStartTime(roomId),
             phase.turnList[phase.turn].userId,
             phase.drawData.map { it.second },
         )

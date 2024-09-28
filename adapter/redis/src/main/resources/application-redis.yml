@@ -1,0 +1,7 @@
+spring:
+    data:
+        redis:
+            port: ${REDIS_PORT}
+            host: ${REDIS_HOST}
+            url: jdbc:redis://${REDIS_USER}:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}
+            password: ${REDIS_PASSWORD}

@@ -2,6 +2,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 dependencies {
     api(project(":domain"))
+
     implementation("org.springframework.boot:spring-boot-starter:${Versions.SPRING_BOOT}")
 }
 

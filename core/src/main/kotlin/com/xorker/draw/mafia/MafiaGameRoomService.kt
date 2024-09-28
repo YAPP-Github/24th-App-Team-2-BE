@@ -1,11 +1,11 @@
 package com.xorker.draw.mafia
 
 import com.xorker.draw.exception.InvalidRequestValueException
-import com.xorker.draw.exception.NotFoundRoomException
 import com.xorker.draw.room.Room
-import com.xorker.draw.websocket.Session
-import com.xorker.draw.websocket.SessionEventListener
-import com.xorker.draw.websocket.SessionInitializeRequest
+import com.xorker.draw.room.RoomId
+import com.xorker.draw.room.RoomRepository
+import com.xorker.draw.user.User
+import org.slf4j.MDC
 import org.springframework.stereotype.Service
 
 @Service
@@ -13,56 +13,49 @@ internal class MafiaGameRoomService(
     private val mafiaGameRepository: MafiaGameRepository,
     private val mafiaGameMessenger: MafiaGameMessenger,
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
-) : SessionEventListener {
+    private val roomRepository: RoomRepository,
+) : UserConnectionUseCase {
 
-    override fun connectSession(session: Session, request: SessionInitializeRequest) {
-        var gameInfo = mafiaGameRepository.getGameInfo(session.roomId)
-        val userId = session.user.id
+    override fun connectUser(user: User, roomId: RoomId?, locale: String) {
+        val roomIdNotNull = roomId ?: generateRoomId()
+
+        MDC.put("roomId", roomIdNotNull.value)
+
+        val gameInfo = connectGame(user, roomIdNotNull, locale, false)
+
+        mafiaPhaseMessenger.unicastPhase(user.id, gameInfo)
+        mafiaGameMessenger.broadcastPlayerList(gameInfo)
+    }
+
+    fun connectGame(user: User, roomId: RoomId, locale: String, isRandomMatching: Boolean): MafiaGameInfo {
+        var gameInfo = mafiaGameRepository.getGameInfo(roomId)
 
         if (gameInfo == null) {
-            if (request.roomId != null) throw NotFoundRoomException
-            val player = MafiaPlayer(userId, request.nickname, generateColor(null))
-            gameInfo = createGameInfo(session, request.locale, player)
+            val player = MafiaPlayer(user.id, user.name, generateColor(null))
+            gameInfo = createGameInfo(roomId, locale, player, isRandomMatching)
         } else {
-            val player = gameInfo.findPlayer(userId)
+            val player = gameInfo.findPlayer(user.id)
             if (player != null) {
                 player.connect()
             } else {
-                gameInfo.room.add(MafiaPlayer(userId, request.nickname, generateColor(gameInfo)))
+                gameInfo.room.add(MafiaPlayer(user.id, user.name, generateColor(gameInfo)))
             }
         }
 
         mafiaGameRepository.saveGameInfo(gameInfo)
-        mafiaPhaseMessenger.unicastPhase(session.user.id, gameInfo)
-        mafiaGameMessenger.broadcastPlayerList(gameInfo)
+        return gameInfo
     }
 
-    override fun connectSession(session: Session, locale: String) {
-        var gameInfo = mafiaGameRepository.getGameInfo(session.roomId)
-        val user = session.user
-
-        if (gameInfo == null) {
-            val player = MafiaPlayer(user.id, user.name, generateColor(null))
-
-            gameInfo = createGameInfo(session, locale, player, true)
-        } else {
-            val room = gameInfo.room
-
-            room.add(MafiaPlayer(user.id, user.name, generateColor(gameInfo)))
-        }
-
-        mafiaGameRepository.saveGameInfo(gameInfo)
-    }
-
-    override fun disconnectSession(session: Session) {
-        val gameInfo = mafiaGameRepository.getGameInfo(session.roomId) ?: return
+    override fun disconnectUser(user: User) {
+        val userId = user.id
+        val gameInfo = mafiaGameRepository.getGameInfo(userId) ?: return
 
         if (gameInfo.phase == MafiaPhase.Wait) {
-            exitSession(session)
+            exitUser(user)
             return
         }
 
-        val player = gameInfo.findPlayer(session.user.id) ?: return
+        val player = gameInfo.findPlayer(userId) ?: return
 
         player.disconnect()
 
@@ -74,15 +67,16 @@ internal class MafiaGameRoomService(
         }
     }
 
-    override fun exitSession(session: Session) {
-        val gameInfo = mafiaGameRepository.getGameInfo(session.roomId) ?: return
+    override fun exitUser(user: User) {
+        val userId = user.id
+        val gameInfo = mafiaGameRepository.getGameInfo(userId) ?: return
 
         if (gameInfo.phase != MafiaPhase.Wait) {
-            disconnectSession(session)
+            disconnectUser(user)
             return
         }
 
-        val player = gameInfo.findPlayer(session.user.id) ?: return
+        val player = gameInfo.findPlayer(userId) ?: return
 
         gameInfo.room.remove(player)
 
@@ -108,8 +102,8 @@ internal class MafiaGameRoomService(
             .first()
     }
 
-    private fun createGameInfo(session: Session, locale: String, player: MafiaPlayer, isRandomMatching: Boolean = false): MafiaGameInfo {
-        val room = createRoom(session, locale, player, isRandomMatching)
+    private fun createGameInfo(roomId: RoomId, locale: String, player: MafiaPlayer, isRandomMatching: Boolean): MafiaGameInfo {
+        val room = createRoom(roomId, locale, player, isRandomMatching)
         return MafiaGameInfo(
             room = room,
             phase = MafiaPhase.Wait,
@@ -117,20 +111,33 @@ internal class MafiaGameRoomService(
         )
     }
 
-    private fun createRoom(session: Session, locale: String, player: MafiaPlayer, isRandomMatching: Boolean): Room<MafiaPlayer> {
+    private fun createRoom(roomId: RoomId, locale: String, player: MafiaPlayer, isRandomMatching: Boolean): Room<MafiaPlayer> {
         val language = locale.lowercase()
         if (language !in languages) {
             throw InvalidRequestValueException
         }
 
         val room = Room(
-            id = session.roomId,
+            id = roomId,
             locale = language,
             owner = player,
             maxMemberNum = 10,
             isRandomMatching = isRandomMatching,
         )
         return room
+    }
+
+    fun generateRoomId(): RoomId {
+        var value: String
+
+        do {
+            val charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+            value = (1..6)
+                .map { charset.random() }
+                .joinToString("")
+        } while (roomRepository.getRoom(RoomId(value)) != null)
+
+        return RoomId(value)
     }
 
     companion object {

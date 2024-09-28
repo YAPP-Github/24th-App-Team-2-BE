@@ -1,48 +1,31 @@
 package com.xorker.draw.mafia
 
 import com.xorker.draw.exception.UnSupportedException
-import com.xorker.draw.mafia.event.MafiaGameRandomMatchingEvent
-import com.xorker.draw.notification.PushMessageUseCase
-import com.xorker.draw.websocket.WaitingQueueSession
+import com.xorker.draw.user.User
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 
 @Component
-internal class MafiaGameWaitingQueueAdapter(
-    private val eventPublisher: ApplicationEventPublisher,
-    private val pushMessageUseCase: PushMessageUseCase,
-) : MafiaGameWaitingQueueRepository {
-    private val waitingQueue: ConcurrentHashMap<String, ConcurrentLinkedQueue<WaitingQueueSession>> = ConcurrentHashMap()
+internal class MafiaGameWaitingQueueAdapter : MafiaGameWaitingQueueRepository {
+    private val waitingQueue: ConcurrentHashMap<String, ConcurrentLinkedQueue<User>> = ConcurrentHashMap()
 
-    override fun enqueue(size: Int, session: WaitingQueueSession) {
-        val queue = waitingQueue.getOrPut(session.locale) { ConcurrentLinkedQueue() }
-
-        queue.add(session)
-
-        synchronized(this) {
-            if (queue.size >= size) {
-                val players = mutableListOf<WaitingQueueSession>()
-
-                (0 until size).forEach { _ ->
-                    queue.poll().let {
-                        players.add(it)
-                    }
-                }
-
-                val event = MafiaGameRandomMatchingEvent(players)
-
-                eventPublisher.publishEvent(event)
-            } else {
-                pushMessageUseCase.quickStart(session)
-            }
-        }
+    override fun size(locale: String): Int {
+        return waitingQueue[locale]?.size ?: 0
     }
 
-    override fun dequeue(session: WaitingQueueSession) {
-        val queue = waitingQueue[session.locale] ?: throw UnSupportedException
+    override fun enqueue(user: User, locale: String) {
+        val queue = waitingQueue.getOrPut(locale) { ConcurrentLinkedQueue() }
+        queue.add(user)
+    }
 
-        queue.remove(session)
+    override fun dequeue(locale: String): User {
+        val queue = waitingQueue[locale] ?: throw UnSupportedException
+
+        return queue.poll()
+    }
+
+    override fun remove(user: User, locale: String) {
+        waitingQueue[locale]?.remove(user)
     }
 }

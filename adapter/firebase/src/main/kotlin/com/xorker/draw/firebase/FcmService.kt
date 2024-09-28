@@ -5,7 +5,6 @@ import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.Notification
 import com.xorker.draw.i18n.MessageService
 import com.xorker.draw.notification.PushMessageUseCase
-import com.xorker.draw.websocket.WaitingQueueSession
 import java.util.Locale
 import org.springframework.stereotype.Service
 
@@ -14,11 +13,7 @@ class FcmService(
     private val messageService: MessageService,
 ) : PushMessageUseCase {
 
-    override fun quickStart(session: WaitingQueueSession) {
-        quickStart(session.locale, session.user.name)
-    }
-
-    fun quickStart(localeStr: String, nickname: String) {
+    override fun quickStart(localeStr: String, nickname: String) {
         val locale = Locale(localeStr)
 
         val notification = Notification.builder()

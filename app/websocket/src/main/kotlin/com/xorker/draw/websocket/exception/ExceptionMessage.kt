@@ -1,8 +1,8 @@
 package com.xorker.draw.websocket.exception
 
 import com.xorker.draw.exception.ExceptionResponse
-import com.xorker.draw.websocket.SessionMessage
 import com.xorker.draw.websocket.message.request.RequestAction
+import com.xorker.draw.websocket.message.response.SessionMessage
 
 internal class ExceptionMessage(
     val action: RequestAction,

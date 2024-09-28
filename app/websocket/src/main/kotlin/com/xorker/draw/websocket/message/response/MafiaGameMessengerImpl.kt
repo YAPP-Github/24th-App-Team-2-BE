@@ -7,27 +7,29 @@ import com.xorker.draw.mafia.MafiaPhaseWithTurnList
 import com.xorker.draw.mafia.MafiaReactionType
 import com.xorker.draw.mafia.assertIs
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.timer.TimerRepository
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.broker.WebSocketBroadcaster
-import com.xorker.draw.websocket.message.response.dto.game.MafiaGameAnswerBody
-import com.xorker.draw.websocket.message.response.dto.game.MafiaGameAnswerMessage
-import com.xorker.draw.websocket.message.response.dto.game.MafiaGameDrawMessage
-import com.xorker.draw.websocket.message.response.dto.game.MafiaGamePlayerListBody
-import com.xorker.draw.websocket.message.response.dto.game.MafiaGamePlayerListMessage
-import com.xorker.draw.websocket.message.response.dto.game.MafiaGameReactionBody
-import com.xorker.draw.websocket.message.response.dto.game.MafiaGameReactionMessage
-import com.xorker.draw.websocket.message.response.dto.game.MafiaGameTurnInfoBody
-import com.xorker.draw.websocket.message.response.dto.game.MafiaGameTurnInfoMessage
-import com.xorker.draw.websocket.message.response.dto.game.MafiaGameVoteStatusBody
-import com.xorker.draw.websocket.message.response.dto.game.MafiaGameVoteStatusMessage
-import com.xorker.draw.websocket.message.response.dto.game.MafiaRandomMatchingBody
-import com.xorker.draw.websocket.message.response.dto.game.MafiaRandomMatchingMessage
-import com.xorker.draw.websocket.message.response.dto.game.toResponse
+import com.xorker.draw.websocket.message.response.mafia.MafiaGameAnswerBody
+import com.xorker.draw.websocket.message.response.mafia.MafiaGameAnswerMessage
+import com.xorker.draw.websocket.message.response.mafia.MafiaGameDrawMessage
+import com.xorker.draw.websocket.message.response.mafia.MafiaGamePlayerListBody
+import com.xorker.draw.websocket.message.response.mafia.MafiaGamePlayerListMessage
+import com.xorker.draw.websocket.message.response.mafia.MafiaGameReactionBody
+import com.xorker.draw.websocket.message.response.mafia.MafiaGameReactionMessage
+import com.xorker.draw.websocket.message.response.mafia.MafiaGameTurnInfoBody
+import com.xorker.draw.websocket.message.response.mafia.MafiaGameTurnInfoMessage
+import com.xorker.draw.websocket.message.response.mafia.MafiaGameVoteStatusBody
+import com.xorker.draw.websocket.message.response.mafia.MafiaGameVoteStatusMessage
+import com.xorker.draw.websocket.message.response.mafia.MafiaRandomMatchingBody
+import com.xorker.draw.websocket.message.response.mafia.MafiaRandomMatchingMessage
+import com.xorker.draw.websocket.message.response.mafia.toResponse
 import org.springframework.stereotype.Component
 
 @Component
 internal class MafiaGameMessengerImpl(
     private val broadcaster: WebSocketBroadcaster,
+    private val timerRepository: TimerRepository,
 ) : MafiaGameMessenger {
 
     override fun broadcastPlayerList(gameInfo: MafiaGameInfo) {
@@ -66,7 +68,7 @@ internal class MafiaGameMessengerImpl(
         val body = MafiaGameTurnInfoBody(
             phase.round,
             phase.turn,
-            phase.job.startTime,
+            timerRepository.getTimerStartTime(roomId),
             phase.turnList[phase.turn].userId,
             phase.drawData.map { it.second },
         )

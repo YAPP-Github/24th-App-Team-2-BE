@@ -1,4 +1,4 @@
-#  Trouble Painter 🪄
+# Trouble Painter 🪄
 
 ![1](https://github.com/user-attachments/assets/e39f0b35-511d-4499-92a2-043c2239f872)
 
@@ -13,7 +13,7 @@
 ## Architecture ✨
 
 <div align=center>
-  
+
 <img width="700" src="https://github.com/user-attachments/assets/6a16defc-611a-4671-8c98-1998a461344a">
 
 </div>
@@ -22,18 +22,18 @@
 
 ## Teck Stack ✨
 
-| IDE | IntelliJ |
-|:---|:---|
-| Language | Kotlin |
-| Framework | Spring Boot 3.2.5, Gradle |
+| IDE            | IntelliJ                                       |
+|:---------------|:-----------------------------------------------|
+| Language       | Kotlin                                         |
+| Framework      | Spring Boot 3.2.5, Gradle                      |
 | Authentication | Spring Security, JSON Web Tokens, Opaque Token |
-| Orm | Spring Data JPA |
-| Database | MySQL |
-| External | Nginx, Docker, Redis, Kubernetes, ELK |
-| Monitoring | Prometheus, Grafana, Sentry |
-| CI/CD | ArgoCD, Github Action |
-| API Docs | Notion, Swagger |
-| Other Tool | Jira, Discord, Postman, Figma |
+| Orm            | Spring Data JPA                                |
+| Database       | MySQL                                          |
+| External       | Nginx, Docker, Redis, Kubernetes, ELK          |
+| Monitoring     | Prometheus, Grafana, Sentry                    |
+| CI/CD          | ArgoCD, Github Action                          |
+| API Docs       | Notion, Swagger                                |
+| Other Tool     | Jira, Discord, Postman, Figma                  |
 
 <br>
 
@@ -68,9 +68,9 @@
 - 일단 포트 역할하는 인터페이스도 이 모듈에 담는다.
 ```
 
-|             | app | adapter | core | support | domain |
-|-------------|-----|---------|------|---------|--------|
-| 사용가능한 모듈 여부 | -   | -       | -    | -       | -      |
+|             | app | adapter | core | event | support | domain |
+|-------------|-----|---------|------|-------|---------|--------|
+| 사용가능한 모듈 여부 | -   | -       | -    | -     | -       | -      |
 
 ### support: 서포트 모듈
 
@@ -79,9 +79,21 @@
 - TimeUtis 등
 ```
 
-|             | app | adapter | core | support | domain |
-|-------------|-----|---------|------|---------|--------|
-| 사용가능한 모듈 여부 | -   | -       | -    | -       | -      |
+|             | app | adapter | core | event | support | domain |
+|-------------|-----|---------|------|-------|---------|--------|
+| 사용가능한 모듈 여부 | -   | -       | -    | -     | -       | -      |
+
+### event: 이벤트 모듈
+
+```text
+- 이벤트 모듈
+- 객체간 연결을 느슨하게 하기 위한 객체
+- 이벤트 발생 및 전달을 주로 한다
+```
+
+|             | app | adapter | core | event | support | domain |
+|-------------|-----|---------|------|-------|---------|--------|
+| 사용가능한 모듈 여부 | -   | Runtime | -    | -     | O       | O      |
 
 ### core: 코어 모듈
 
@@ -90,10 +102,9 @@
 - 웹 통신 / DB 관련 객체는 가급적 사용을 피한다.
 ```
 
-|             | app | adapter | core | support | domain |
-|-------------|---|---------|------|---------|--------|
-| 사용가능한 모듈 여부 | - | Runtime | -    | O       | O      |
-
+|             | app | adapter | core | event | support | domain |
+|-------------|-----|---------|------|-------|---------|--------|
+| 사용가능한 모듈 여부 | -   | Runtime | -    | O     | O       | O      |
 
 ### adapter : 외부 통신 모듈
 
@@ -102,9 +113,9 @@
 - JPA / Kafka Producer / Http 통신 등이 해당 된다.
 ```
 
-|             | app | adapter | core | support | domain |
-|-------------|---|---|------|---------|--------|
-| 사용가능한 모듈 여부 | - | - | - | O       | O      |
+|             | app | adapter | core | event | support | domain |
+|-------------|-----|---------|------|-------|---------|--------|
+| 사용가능한 모듈 여부 | -   | -       | -    | O     | O       | O      |
 
 ### app : 요청 Receive 모듈
 
@@ -113,6 +124,6 @@
 - Web Controller / Kafka Consumer 등이 해당 된다.
 ```
 
-|             | app | adapter | core | support | domain |
-|-------------|---|---|------|---------|--------|
-| 사용가능한 모듈 여부 | - | - | O    | O       | O      |
+|             | app | adapter | core | event | support | domain |
+|-------------|-----|---------|------|-------|---------|--------|
+| 사용가능한 모듈 여부 | -   | -       | O    | O     | O       | O      |

@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":event"))
     implementation(project(":app:support:i18n"))
     implementation(project(":support:metric"))
 

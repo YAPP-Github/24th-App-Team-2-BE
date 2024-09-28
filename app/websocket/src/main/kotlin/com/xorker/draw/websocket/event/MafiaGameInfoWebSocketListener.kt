@@ -2,10 +2,12 @@ package com.xorker.draw.websocket.event
 
 import com.xorker.draw.event.mafia.MafiaGameActionListener
 import com.xorker.draw.event.mafia.MafiaGameInfoStatusChangedListener
+import com.xorker.draw.event.mafia.MafiaGameMatchListener
 import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaPhase
 import com.xorker.draw.mafia.MafiaReactionType
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
 import com.xorker.draw.websocket.message.response.MafiaGameMessenger
 import com.xorker.draw.websocket.message.response.MafiaPhaseMessenger
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Component
 internal class MafiaGameInfoWebSocketListener(
     private val mafiaPhaseMessenger: MafiaPhaseMessenger,
     private val mafiaGameMessenger: MafiaGameMessenger,
-) : MafiaGameInfoStatusChangedListener, MafiaGameActionListener {
+) : MafiaGameInfoStatusChangedListener, MafiaGameActionListener, MafiaGameMatchListener {
 
     override fun connectUser(gameInfo: MafiaGameInfo, userId: UserId) {
         mafiaPhaseMessenger.unicastPhase(userId, gameInfo)
@@ -34,8 +36,8 @@ internal class MafiaGameInfoWebSocketListener(
         }
     }
 
-    override fun joinRandomMatch(userId: UserId) {
-        mafiaGameMessenger.unicastRandomMatching(userId)
+    override fun startRandomMatch(user: User, locale: String, isLastPlayer: Boolean) {
+        mafiaGameMessenger.unicastRandomMatching(user.id)
     }
 
     override fun draw(roomId: RoomId, drawData: Map<String, Any>) {

@@ -3,6 +3,7 @@ package com.xorker.draw.event.mafia
 import com.xorker.draw.mafia.MafiaGameInfo
 import com.xorker.draw.mafia.MafiaReactionType
 import com.xorker.draw.room.RoomId
+import com.xorker.draw.user.User
 import com.xorker.draw.user.UserId
 import org.springframework.stereotype.Component
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component
 class MafiaGameInfoEventProducer(
     private val statusListeners: List<MafiaGameInfoStatusChangedListener>,
     private val actionListeners: List<MafiaGameActionListener>,
+    private val matchListeners: List<MafiaGameMatchListener>,
 ) {
 
     fun connectPlayer(gameInfo: MafiaGameInfo, userId: UserId) {
@@ -30,9 +32,9 @@ class MafiaGameInfoEventProducer(
         }
     }
 
-    fun joinRandomMatch(userId: UserId) {
-        statusListeners.forEach {
-            it.joinRandomMatch(userId)
+    fun startRandomMatch(user: User, locale: String, isLastPlayer: Boolean) {
+        matchListeners.forEach {
+            it.startRandomMatch(user, locale, isLastPlayer)
         }
     }
 

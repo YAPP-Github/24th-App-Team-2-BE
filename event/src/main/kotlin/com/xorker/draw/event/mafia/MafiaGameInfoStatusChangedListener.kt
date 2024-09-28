@@ -7,5 +7,4 @@ interface MafiaGameInfoStatusChangedListener {
     fun connectUser(gameInfo: MafiaGameInfo, userId: UserId)
     fun disconnectUser(gameInfo: MafiaGameInfo)
     fun changePhase(gameInfo: MafiaGameInfo)
-    fun joinRandomMatch(userId: UserId)
 }
